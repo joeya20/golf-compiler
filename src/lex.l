@@ -11,12 +11,35 @@ enum Token {
     T_FUNC,
     T_RETURN,
     T_VAR,
+    T_LOG_AND,
+    T_LOG_EQ,
+    T_LOG_NEQ,
+    T_LOG_NOT,
+    T_LOG_OR,
+    T_LOG_LT,
+    T_LOG_LTE,
+    T_LOG_GT,
+    T_LOG_GTE,
+    T_ADD,
+    T_SUB,
+    T_MULT,
+    T_DIV,
+    T_MOD,
+    T_EQ,
+    T_COMMA,
+    T_SEMICOLON,
+    T_OP_BRACKET,
+    T_CL_BRACKET,
+    T_OP_CUR_BRACKET,
+    T_CL_CUR_BRACKET,
     T_IDENTIFIER,
-    T_INT_LIT
-}; 
+    T_INT_LIT,
+    T_STR_LIT
+};
 
 uint64_t lineno;
 uint64_t charno;
+
 %}
 
 /* flex declarations */
@@ -42,6 +65,27 @@ letdig  {letter}|{digit}
 "func"                  { return T_FUNC; }
 "return"                { return T_RETURN; }
 "var"                   { return T_VAR; }
+"&&"                    { return T_LOG_AND; }
+"=="                    { return T_LOG_EQ; }
+"!="                    { return T_LOG_NEQ; }
+"!"                     { return T_LOG_NOT; }
+"||"                    { return T_LOG_OR; }
+"<"                     { return T_LOG_LT; }
+"<="                    { return T_LOG_LTE; }
+">"                     { return T_LOG_GT; }
+">="                    { return T_LOG_GTE; }
+"+"                     { return T_ADD; }
+"-"                     { return T_SUB; }
+"*"                     { return T_MULT; }
+"/"                     { return T_DIV; }
+"%"                     { return T_MOD; }
+"="                     { return T_EQ; }
+","                     { return T_COMMA; }
+";"                     { return T_SEMICOLON; }
+"("                     { return T_OP_BRACKET; }
+")"                     { return T_CL_BRACKET; }
+"{"                     { return T_OP_CUR_BRACKET; }
+"}"                     { return T_CL_CUR_BRACKET; }
 {letter}({letdig}*)     { return T_IDENTIFIER; }
 {digit}({digit}*)       { return T_INT_LIT; }
 .                       { charno += yyleng; fprintf(stderr, "lexer error \"%s\"\n", yytext); }
@@ -50,8 +94,15 @@ letdig  {letter}|{digit}
 /* whatever c code we want to write */
 
 int main(int argc, char *argv[]) {
-    yyin = fopen(argv[1], "r");
+    if(argc >= 1) {
+        yyin = fopen(argv[1], "r");
+    }
+    else {
+        //TODO: throw error
+    }
+
     if(yyin == NULL) {
+        //TODO: use error routine
         fprintf(stderr, "Error opening input file\n");
         exit(EXIT_FAILURE);
     }
