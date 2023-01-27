@@ -1,5 +1,6 @@
+#line 1 "src/lex.yy.c"
 
-#line 2 "lex.yy.c"
+#line 3 "src/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -162,8 +163,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -468,6 +488,12 @@ static const flex_int16_t yy_chk[108] =
        61,   61,   61,   61,   61,   61,   61
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[35] =
+    {   0,
+0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -482,54 +508,20 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lex.l"
-#line 2 "lex.l"
+#line 1 "src/lex.l"
+#line 2 "src/lex.l"
 #include <stdio.h>
 #include <stdlib.h>
+#include "util.h"
+#include "lexer.h"
 
-enum Token {
-    // it's important that this starts at 1
-    T_BREAK = 1,
-    T_IF,
-    T_ELSE,
-    T_FOR,
-    T_FUNC,
-    T_RETURN,
-    T_VAR,
-    T_LOG_AND,
-    T_LOG_EQ,
-    T_LOG_NEQ,
-    T_LOG_NOT,
-    T_LOG_OR,
-    T_LOG_LT,
-    T_LOG_LTE,
-    T_LOG_GT,
-    T_LOG_GTE,
-    T_ADD,
-    T_SUB,
-    T_MULT,
-    T_DIV,
-    T_MOD,
-    T_EQ,
-    T_COMMA,
-    T_SEMICOLON,
-    T_OP_BRACKET,
-    T_CL_BRACKET,
-    T_OP_CUR_BRACKET,
-    T_CL_CUR_BRACKET,
-    T_IDENTIFIER,
-    T_INT_LIT,
-    T_STR_LIT
-};
-
-uint64_t lineno;
-uint64_t charno;
-#line 527 "lex.yy.c"
+int charno = 0;
+#line 519 "src/lex.yy.c"
 /* flex declarations */
-/* always have this for school server */
+/* always have noyywrap for school server */
 /* rules; i.e. mapping of patterns (regex) to actions */
 /* no return in actions will keep going; no tokens returned */
-#line 532 "lex.yy.c"
+#line 524 "src/lex.yy.c"
 
 #define INITIAL 0
 
@@ -746,9 +738,9 @@ YY_DECL
 		}
 
 	{
-#line 57 "lex.l"
+#line 23 "src/lex.l"
 
-#line 751 "lex.yy.c"
+#line 743 "src/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -794,6 +786,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -807,176 +809,179 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 58 "lex.l"
+#line 24 "src/lex.l"
 { charno += yyleng; }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 59 "lex.l"
-{ charno = 0; lineno++; }
+#line 25 "src/lex.l"
+{ charno = 0; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 60 "lex.l"
+#line 26 "src/lex.l"
 { return T_BREAK; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 61 "lex.l"
+#line 27 "src/lex.l"
 { return T_IF; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 62 "lex.l"
+#line 28 "src/lex.l"
 { return T_ELSE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 63 "lex.l"
+#line 29 "src/lex.l"
 { return T_FOR; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 64 "lex.l"
+#line 30 "src/lex.l"
 { return T_FUNC; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 65 "lex.l"
+#line 31 "src/lex.l"
 { return T_RETURN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 66 "lex.l"
+#line 32 "src/lex.l"
 { return T_VAR; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 67 "lex.l"
+#line 33 "src/lex.l"
 { return T_LOG_AND; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 68 "lex.l"
+#line 34 "src/lex.l"
 { return T_LOG_EQ; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 69 "lex.l"
+#line 35 "src/lex.l"
 { return T_LOG_NEQ; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 70 "lex.l"
+#line 36 "src/lex.l"
 { return T_LOG_NOT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 71 "lex.l"
+#line 37 "src/lex.l"
 { return T_LOG_OR; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 72 "lex.l"
+#line 38 "src/lex.l"
 { return T_LOG_LT; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 73 "lex.l"
+#line 39 "src/lex.l"
 { return T_LOG_LTE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 74 "lex.l"
+#line 40 "src/lex.l"
 { return T_LOG_GT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 75 "lex.l"
+#line 41 "src/lex.l"
 { return T_LOG_GTE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 76 "lex.l"
+#line 42 "src/lex.l"
 { return T_ADD; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 77 "lex.l"
+#line 43 "src/lex.l"
 { return T_SUB; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 78 "lex.l"
+#line 44 "src/lex.l"
 { return T_MULT; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 79 "lex.l"
+#line 45 "src/lex.l"
 { return T_DIV; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 80 "lex.l"
+#line 46 "src/lex.l"
 { return T_MOD; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 81 "lex.l"
+#line 47 "src/lex.l"
 { return T_EQ; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 82 "lex.l"
+#line 48 "src/lex.l"
 { return T_COMMA; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 83 "lex.l"
+#line 49 "src/lex.l"
 { return T_SEMICOLON; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 84 "lex.l"
-{ return T_OP_BRACKET; }
+#line 50 "src/lex.l"
+{ return T_LPAREN; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 85 "lex.l"
-{ return T_CL_BRACKET; }
+#line 51 "src/lex.l"
+{ return T_RPAREN; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 86 "lex.l"
-{ return T_OP_CUR_BRACKET; }
+#line 52 "src/lex.l"
+{ return T_LBRACE; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 87 "lex.l"
-{ return T_CL_CUR_BRACKET; }
+#line 53 "src/lex.l"
+{ return T_RBRACE; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 88 "lex.l"
+#line 54 "src/lex.l"
 { return T_IDENTIFIER; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 89 "lex.l"
+#line 55 "src/lex.l"
 { return T_INT_LIT; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 90 "lex.l"
-{ charno += yyleng; fprintf(stderr, "lexer error \"%s\"\n", yytext); }
+#line 57 "src/lex.l"
+{ 
+        charno += yyleng;
+        warning("Invalid token", yylineno, charno); 
+    }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 91 "lex.l"
+#line 61 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 979 "lex.yy.c"
+#line 984 "src/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1344,6 +1349,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1420,6 +1429,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1887,6 +1901,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -1981,29 +1998,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 91 "lex.l"
+#line 61 "src/lex.l"
 
-
-/* whatever c code we want to write */
-
-int main(int argc, char *argv[]) {
-    if(argc >= 1) {
-        yyin = fopen(argv[1], "r");
-    }
-    else {
-        //TODO: throw error
-    }
-
-    if(yyin == NULL) {
-        //TODO: use error routine
-        fprintf(stderr, "Error opening input file\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // yylex will run until EOF (returns 0)
-    enum Token currentToken;
-    while((currentToken = yylex()) != 0) {
-        printf("the token we just lexed is %s at line number %lu, char number %lu with type %i\n", yytext, lineno, charno, currentToken);
-        charno += yyleng;
-    }    //calls lexer; i.e. execute patterns/actions on stdin by default
-}

@@ -6,11 +6,11 @@ This repository contains the CPSC 411 course project, a compiler that translates
 ## Instructions
 
 ### Dependencies:
-1. Flex - "\<sudo\> apt install flex"
+1. Flex - "sudo apt install flex"
 
 ### Building and running program
 1. Run Makefile - "make"
-2. Run executable - "./bin/golf"
+2. Run executable - "./bin/golf \<input file\>"
 
 ### Cleaning
-1. Run "make clean"
+1. Run Makefile "make clean"

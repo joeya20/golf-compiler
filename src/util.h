@@ -1,12 +1,11 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <string>
-#include <iostream>
-#include <cstdlib>
+#include <stdlib.h>
+#include <stdio.h>
 
 // prints error message and terminates program
-void printError(std::string msg);
-void printError(std::string msg, uint64_t lineno, uint64_t charno);
+void error(const char *msg, int lineno, int charno);
+void warning(const char *msg, int lineno, int charno);
 
 #endif
