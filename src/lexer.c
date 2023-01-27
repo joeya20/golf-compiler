@@ -64,6 +64,8 @@ const char* tokenToString(const enum Token token) {
             return "T_RBRACE";
         case T_IDENTIFIER:
             return "T_IDENTIFIER";
+        case T_BOOL_LIT:
+            return "T_BOOL_LIT";
         case T_INT_LIT:
             return "T_INT_LIT";
         case T_STR_LIT:

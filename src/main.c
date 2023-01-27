@@ -18,9 +18,8 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    enum Token currentToken;
     while((currentToken = lex()) != 0) {
-        printf("The token we just lexed is %s at line number %i, char number %i with type %i\n", yytext, yylineno, charno, currentToken);
+        printf("%s\t[%s] @ line %i @ char %i\n", tokenToString(currentToken), yytext, lineno, charno);
         charno += yyleng;
     }
 }

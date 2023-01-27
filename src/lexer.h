@@ -5,10 +5,10 @@
 #include <stdio.h>
 
 extern int yyleng;
-extern int yylineno;
 extern FILE *yyin;
 extern char *yytext;
 extern int charno;
+extern int lineno;
 
 enum Token {
     // it's important that this starts at 1
@@ -41,6 +41,7 @@ enum Token {
     T_LBRACE,
     T_RBRACE,
     T_IDENTIFIER,
+    T_BOOL_LIT,
     T_INT_LIT,
     T_STR_LIT
 };
