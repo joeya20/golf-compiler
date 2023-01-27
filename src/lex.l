@@ -4,7 +4,7 @@
 #include "util.h"
 #include "lexer.h"
 
-int charno = 0;
+int charno = 1;
 int lineno = 1;
 extern enum Token currentToken;
 %}
@@ -36,7 +36,7 @@ digit   [0-9]
                                         unput('\n');
                                         return T_SEMICOLON;
                                     }
-                                    charno = 0;
+                                    charno = 1;
                                     ++lineno;
                                 }
 "break"                         { return T_BREAK; }
@@ -46,10 +46,12 @@ digit   [0-9]
 "func"                          { return T_FUNC; }
 "return"                        { return T_RETURN; }
 "var"                           { return T_VAR; }
+"&"                             { error("Bitwise AND not supported in GoLF", lineno, charno); }
 "&&"                            { return T_LOG_AND; }
 "=="                            { return T_LOG_EQ; }
 "!="                            { return T_LOG_NEQ; }
 "!"                             { return T_LOG_NOT; }
+"|"                             { error("Bitwise OR not supported in GoLF", lineno, charno); }
 "||"                            { return T_LOG_OR; }
 "<"                             { return T_LOG_LT; }
 "<="                            { return T_LOG_LTE; }
@@ -66,7 +68,15 @@ digit   [0-9]
 "("                             { return T_LPAREN; }
 ")"                             { return T_RPAREN; }
 "{"                             { return T_LBRACE; }
-"}"                             { return T_RBRACE; }
+"}"                             { 
+                                    /* this might move in the future */
+                                    if(currentToken != T_SEMICOLON) {
+                                        yytext = "";
+                                        unput('}');
+                                        return T_SEMICOLON;
+                                    }
+                                    return T_RBRACE;
+                                }
 {letter}(({letter}|{digit})*)   { return T_IDENTIFIER; }
 {digit}({digit}*)               { return T_INT_LIT; }
 \"                              { yymore(); BEGIN(STRING); }
@@ -87,8 +97,8 @@ digit   [0-9]
                                     }
                                     yyterminate();
                                 }
-.   { 
-        charno += yyleng;
+.   {
         warning("Invalid token in input file.", lineno, charno);
+        charno += yyleng;
     }
 %%

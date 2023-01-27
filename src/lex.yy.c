@@ -356,8 +356,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 39
-#define YY_END_OF_BUFFER 40
+#define YY_NUM_RULES 41
+#define YY_END_OF_BUFFER 42
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -367,13 +367,13 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[70] =
     {   0,
-        0,    0,    0,    0,   40,   38,    2,    3,   14,   34,
-       24,   38,   28,   29,   22,   20,   26,   21,   23,   33,
-       27,   16,   25,   18,   32,   32,   32,   32,   32,   32,
-       32,   30,   38,   31,   37,   36,   35,    2,   13,   11,
-        1,   33,   17,   12,   19,   32,   32,   32,   32,   32,
-        5,   32,   32,   15,    1,   32,   32,    7,   32,   32,
-       10,   32,    6,    8,   32,    4,   32,    9,    0
+        0,    0,    0,    0,   42,   40,    2,    3,   15,   36,
+       26,   11,   30,   31,   24,   22,   28,   23,   25,   35,
+       29,   18,   27,   20,   34,   34,   34,   34,   34,   34,
+       34,   32,   16,   33,   39,   38,   37,    2,   14,   12,
+        1,   35,   19,   13,   21,   34,   34,   34,   34,   34,
+        5,   34,   34,   17,    1,   34,   34,    7,   34,   34,
+       10,   34,    6,    8,   34,    4,   34,    9,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -497,7 +497,7 @@ char *yytext;
 #include "util.h"
 #include "lexer.h"
 
-int charno = 0;
+int charno = 1;
 int lineno = 1;
 extern enum Token currentToken;
 #line 503 "src/lex.yy.c"
@@ -814,7 +814,7 @@ YY_RULE_SETUP
                                         unput('\n');
                                         return T_SEMICOLON;
                                     }
-                                    charno = 0;
+                                    charno = 1;
                                     ++lineno;
                                 }
 	YY_BREAK
@@ -856,142 +856,160 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 49 "src/lex.l"
-{ return T_LOG_AND; }
+{ error("Bitwise AND not supported in GoLF", lineno, charno); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 50 "src/lex.l"
-{ return T_LOG_EQ; }
+{ return T_LOG_AND; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 51 "src/lex.l"
-{ return T_LOG_NEQ; }
+{ return T_LOG_EQ; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 52 "src/lex.l"
-{ return T_LOG_NOT; }
+{ return T_LOG_NEQ; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 53 "src/lex.l"
-{ return T_LOG_OR; }
+{ return T_LOG_NOT; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 54 "src/lex.l"
-{ return T_LOG_LT; }
+{ error("Bitwise OR not supported in GoLF", lineno, charno); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 55 "src/lex.l"
-{ return T_LOG_LTE; }
+{ return T_LOG_OR; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 56 "src/lex.l"
-{ return T_LOG_GT; }
+{ return T_LOG_LT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 57 "src/lex.l"
-{ return T_LOG_GTE; }
+{ return T_LOG_LTE; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 58 "src/lex.l"
-{ return T_ADD; }
+{ return T_LOG_GT; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 59 "src/lex.l"
-{ return T_SUB; }
+{ return T_LOG_GTE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 60 "src/lex.l"
-{ return T_MULT; }
+{ return T_ADD; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 61 "src/lex.l"
-{ return T_DIV; }
+{ return T_SUB; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 62 "src/lex.l"
-{ return T_MOD; }
+{ return T_MULT; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 63 "src/lex.l"
-{ return T_EQ; }
+{ return T_DIV; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 64 "src/lex.l"
-{ return T_COMMA; }
+{ return T_MOD; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 65 "src/lex.l"
-{ return T_SEMICOLON; }
+{ return T_EQ; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 66 "src/lex.l"
-{ return T_LPAREN; }
+{ return T_COMMA; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 67 "src/lex.l"
-{ return T_RPAREN; }
+{ return T_SEMICOLON; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 68 "src/lex.l"
-{ return T_LBRACE; }
+{ return T_LPAREN; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 69 "src/lex.l"
-{ return T_RBRACE; }
+{ return T_RPAREN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 70 "src/lex.l"
-{ return T_IDENTIFIER; }
+{ return T_LBRACE; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 71 "src/lex.l"
-{ return T_INT_LIT; }
+{ 
+                                    /* this might move in the future */
+                                    if(currentToken != T_SEMICOLON) {
+                                        yytext = "";
+                                        unput('}');
+                                        return T_SEMICOLON;
+                                    }
+                                    return T_RBRACE;
+                                }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 72 "src/lex.l"
-{ yymore(); BEGIN(STRING); }
+#line 80 "src/lex.l"
+{ return T_IDENTIFIER; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 73 "src/lex.l"
-{ BEGIN(INITIAL); return T_STR_LIT; }
+#line 81 "src/lex.l"
+{ return T_INT_LIT; }
 	YY_BREAK
 case 36:
-/* rule 36 can match eol */
 YY_RULE_SETUP
-#line 74 "src/lex.l"
-{ warning("Invalid string literal", yylineno, charno); BEGIN(INITIAL); }
+#line 82 "src/lex.l"
+{ yymore(); BEGIN(STRING); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 75 "src/lex.l"
+#line 83 "src/lex.l"
+{ BEGIN(INITIAL); return T_STR_LIT; }
+	YY_BREAK
+case 38:
+/* rule 38 can match eol */
+YY_RULE_SETUP
+#line 84 "src/lex.l"
+{ warning("Invalid string literal", lineno, charno); BEGIN(INITIAL); }
+	YY_BREAK
+case 39:
+YY_RULE_SETUP
+#line 85 "src/lex.l"
 { yymore(); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
-#line 76 "src/lex.l"
+#line 86 "src/lex.l"
 {
                                     /* this might move in the future */
                                     if(currentToken == T_IDENTIFIER || 
@@ -1007,20 +1025,20 @@ case YY_STATE_EOF(STRING):
                                     yyterminate();
                                 }
 	YY_BREAK
-case 38:
+case 40:
 YY_RULE_SETUP
-#line 90 "src/lex.l"
-{ 
+#line 100 "src/lex.l"
+{
+        warning("Invalid token in input file.", lineno, charno);
         charno += yyleng;
-        warning("Invalid token in input file.", yylineno, charno);
     }
 	YY_BREAK
-case 39:
+case 41:
 YY_RULE_SETUP
-#line 94 "src/lex.l"
+#line 104 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 1023 "src/lex.yy.c"
+#line 1041 "src/lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2023,5 +2041,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 94 "src/lex.l"
+#line 104 "src/lex.l"
 
