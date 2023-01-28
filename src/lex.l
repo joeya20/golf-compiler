@@ -11,7 +11,6 @@ extern enum Token currentToken;
 
 /* always have noyywrap for school server */
 %option noyywrap
-%option noinput
 
 %x STRING
 
@@ -25,13 +24,14 @@ digit   [0-9]
 [ \t]+                          { charno += yyleng; }
 \n                              {
                                     /* this might move in the future */
-                                    if(currentToken == T_IDENTIFIER || 
+                                    if(currentToken != 0 && 
+                                        (currentToken  == T_IDENTIFIER || 
                                         currentToken == T_INT_LIT || 
                                         currentToken == T_STR_LIT || 
                                         currentToken == T_BREAK || 
                                         currentToken == T_RETURN || 
                                         currentToken == T_RPAREN || 
-                                        currentToken == T_RBRACE) {
+                                        currentToken == T_RBRACE)) {
                                         yytext = "";
                                         unput('\n');
                                         return T_SEMICOLON;
@@ -70,7 +70,7 @@ digit   [0-9]
 "{"                             { return T_LBRACE; }
 "}"                             { 
                                     /* this might move in the future */
-                                    if(currentToken != T_SEMICOLON) {
+                                    if(currentToken != 0 && currentToken != T_SEMICOLON) {
                                         yytext = "";
                                         unput('}');
                                         return T_SEMICOLON;
@@ -81,17 +81,34 @@ digit   [0-9]
 {digit}({digit}*)               { return T_INT_LIT; }
 \"                              { yymore(); BEGIN(STRING); }
 <STRING>\"                      { BEGIN(INITIAL); return T_STR_LIT; }
-<STRING>\n                      { warning("Invalid string literal", lineno, charno); BEGIN(INITIAL); }
-<STRING>.                       { yymore(); }
+<STRING>[^\n\\]                 { yymore(); }
+<STRING>\\                      {
+                                    char nextChar = input();
+                                    if(nextChar == 'b' || 
+                                    nextChar == 'f'  || 
+                                    nextChar == 'n'  || 
+                                    nextChar == 'r'  || 
+                                    nextChar == 't'  || 
+                                    nextChar == '"'  || 
+                                    nextChar == '\\') {
+                                        yymore();
+                                        unput(nextChar);
+                                    } else {
+                                        error("Invalid escape in string literal", lineno, charno);
+                                    }
+                                }
+<STRING>\n                      { error("Invalid newline in string literal", lineno, charno); }
+<STRING><<EOF>>                 { error("String literal termined with EOF", lineno, charno); }
 <<EOF>>                         {
                                     /* this might move in the future */
-                                    if(currentToken == T_IDENTIFIER || 
+                                    if(currentToken != 0 && 
+                                        (currentToken == T_IDENTIFIER || 
                                         currentToken == T_INT_LIT || 
                                         currentToken == T_STR_LIT || 
                                         currentToken == T_BREAK || 
                                         currentToken == T_RETURN || 
                                         currentToken == T_RPAREN || 
-                                        currentToken == T_RBRACE) {
+                                        currentToken == T_RBRACE)) {
                                         yytext = "";
                                         return T_SEMICOLON;
                                     }

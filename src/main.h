@@ -6,6 +6,6 @@
 #include "lexer.h"
 #include "util.h"
 
-enum Token currentToken;
+enum Token currentToken = 0;
 
 #endif
