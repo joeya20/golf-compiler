@@ -1,7 +1,9 @@
 #include "lexer.h"
 
 int lex() {
-    return yylex();
+    int token = yylex();
+    charno += yyleng;
+    return token;
 }
 
 const char* tokenToString(const enum Token token) {

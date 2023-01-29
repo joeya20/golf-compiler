@@ -19,7 +19,6 @@ int main(int argc, char **argv) {
     }
 
     while((currentToken = lex()) != 0) {
-        printf("%s\t[%s] @ line %i @ char %i\n", tokenToString(currentToken), yytext, lineno, charno);
-        charno += yyleng;
+        printf("%s\t[%s] @ line %i @ char %i\n", tokenToString(currentToken), yytext, lineno, charno-yyleng);
     }
 }

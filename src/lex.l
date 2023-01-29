@@ -6,6 +6,7 @@
 
 int charno = 1;
 int lineno = 1;
+
 extern enum Token currentToken;
 %}
 
@@ -14,8 +15,6 @@ extern enum Token currentToken;
 
 %x STRING
 
-alph    [a-zA-Z]
-alphNum [a-zA-Z0-9]
 letter  [a-zA-Z\_]
 digit   [0-9]
 
@@ -46,12 +45,12 @@ digit   [0-9]
 "func"                          { return T_FUNC; }
 "return"                        { return T_RETURN; }
 "var"                           { return T_VAR; }
-"&"                             { error("Bitwise AND not supported in GoLF", lineno, charno); }
+"&"                             { error(3, "Bitwise AND not supported in GoLF", lineno, charno); }
 "&&"                            { return T_LOG_AND; }
 "=="                            { return T_LOG_EQ; }
 "!="                            { return T_LOG_NEQ; }
 "!"                             { return T_LOG_NOT; }
-"|"                             { error("Bitwise OR not supported in GoLF", lineno, charno); }
+"|"                             { error(3, "Bitwise OR not supported in GoLF", lineno, charno); }
 "||"                            { return T_LOG_OR; }
 "<"                             { return T_LOG_LT; }
 "<="                            { return T_LOG_LTE; }
@@ -79,26 +78,19 @@ digit   [0-9]
                                 }
 {letter}(({letter}|{digit})*)   { return T_IDENTIFIER; }
 {digit}({digit}*)               { return T_INT_LIT; }
-\"                              { yymore(); BEGIN(STRING); }
-<STRING>\"                      { BEGIN(INITIAL); return T_STR_LIT; }
-<STRING>[^\n\\]                 { yymore(); }
-<STRING>\\                      {
-                                    char nextChar = input();
-                                    if(nextChar == 'b' || 
-                                    nextChar == 'f'  || 
-                                    nextChar == 'n'  || 
-                                    nextChar == 'r'  || 
-                                    nextChar == 't'  || 
-                                    nextChar == '"'  || 
-                                    nextChar == '\\') {
-                                        yymore();
-                                        unput(nextChar);
-                                    } else {
-                                        error("Invalid escape in string literal", lineno, charno);
-                                    }
+\"                              {
+                                    yymore();
+                                    BEGIN(STRING);
                                 }
-<STRING>\n                      { error("Invalid newline in string literal", lineno, charno); }
-<STRING><<EOF>>                 { error("String literal termined with EOF", lineno, charno); }
+<STRING>\"                      { BEGIN(INITIAL); return T_STR_LIT; }
+<STRING>[\\]{1}[bfnrt\"\\]{1}   { yymore(); }
+<STRING>\\                      {
+                                    char badChar = input();
+                                    error(4, "Invalid escape in string literal", lineno, yyleng+charno, badChar);
+                                }
+<STRING>\n                      { error(2, "Invalid newline in string literal", lineno); }
+<STRING>.                       { yymore(); }
+<STRING><<EOF>>                 { error(2, "String literal termined with EOF", lineno); }
 <<EOF>>                         {
                                     /* this might move in the future */
                                     if(currentToken != 0 && 

@@ -12,6 +12,7 @@ extern int lineno;
 
 enum Token {
     // it's important that this starts at 1
+    // because EOF = 0
     T_BREAK = 1,
     T_IF,
     T_ELSE,
