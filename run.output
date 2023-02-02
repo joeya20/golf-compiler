@@ -1,0 +1,678 @@
+Run started on Thu Feb  2 08:58:44 2023
+
+Hostname: csx2.cs.ucalgary.ca
+
+-------------------------------------------------------------------------------
+Running make |
+--------------
+
+% /usr/bin/make
+
+STDOUT:
+make: 'golf' is up to date.
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Locating GoLF compiler |
+------------------------
+
+Compiler will be run as ./golf
+
+-------------------------------------------------------------------------------
+Test: too few arguments |
+-------------------------
+
+% ./golf
+
+STDOUT:
+
+
+STDERR:
+error: (null): No input file provided
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: too many arguments |
+--------------------------
+
+% ./golf /dev/null /dev/zero
+
+STDOUT:
+
+
+STDERR:
+error: (null): Too many input files provided
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: nonexistent file |
+------------------------
+
+% ./golf /i/do/not/exist
+
+STDOUT:
+
+
+STDERR:
+error: /i/do/not/exist: Error opening input file
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: empty file |
+------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t1
+
+STDOUT:
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: comment ending in EOF |
+-----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t2
+
+STDOUT:
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: comment only |
+--------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t3
+
+STDOUT:
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: illegal whitespace |
+--------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t4
+
+STDOUT:
+
+
+STDERR:
+warning: /home/profs/aycock/411/TEST/ms1/scan.t4:2:1: Skipping invalid character:  '\v'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t4:3:1: Skipping invalid character:  '\f'
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: legal whitespace |
+------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t5
+
+STDOUT:
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: "}" with no previous token |
+----------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t6
+
+STDOUT:
+T_RBRACE	[}] @ line 1 @ col 1
+T_SEMICOLON	[] @ line 1 @ col 2
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: the carat schtick |
+-------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t7
+
+STDOUT:
+
+
+STDERR:
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:2:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:3:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:4:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:5:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:6:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:7:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:8:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:9:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:10:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:11:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:12:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:13:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:14:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:15:1: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t7:16:1: Skipping invalid character:  '^'
+error: /home/profs/aycock/411/TEST/ms1/scan.t7: Too many warnings
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: NUL character |
+---------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t8
+
+STDOUT:
+
+
+STDERR:
+warning: /home/profs/aycock/411/TEST/ms1/scan.t8:2:1: Skipping NUL character
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: non-7-bit chars |
+-----------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t9
+
+STDOUT:
+
+
+STDERR:
+warning: /home/profs/aycock/411/TEST/ms1/scan.t9:2:1: Skipping non-ascii character
+warning: /home/profs/aycock/411/TEST/ms1/scan.t9:2:2: Skipping non-ascii character
+warning: /home/profs/aycock/411/TEST/ms1/scan.t9:2:3: Skipping non-ascii character
+warning: /home/profs/aycock/411/TEST/ms1/scan.t9:2:4: Skipping non-ascii character
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: whitespace inside && token pair |
+---------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t10
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t10:2:1: Bitwise AND not supported in GoLF
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: whitespace inside || token pair |
+---------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t11
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t11:2:1: Bitwise OR not supported in GoLF
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: leading 0 on number |
+---------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t12
+
+STDOUT:
+T_INT_LIT	[0600] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 5
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: comment inside && token pair |
+------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t13
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t13:3:1: Bitwise AND not supported in GoLF
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: illegal characters |
+--------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t14
+
+STDOUT:
+
+
+STDERR:
+warning: /home/profs/aycock/411/TEST/ms1/scan.t14:3:1: Skipping invalid character:  '\\'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t14:3:3: Skipping invalid character:  '^'
+warning: /home/profs/aycock/411/TEST/ms1/scan.t14:3:5: Skipping invalid character:  '#'
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: legit token salad |
+-------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t15
+
+STDOUT:
+T_ADD	[+] @ line 3 @ col 1
+T_SUB	[-] @ line 4 @ col 1
+T_MULT	[*] @ line 5 @ col 1
+T_DIV	[/] @ line 6 @ col 1
+T_MOD	[%] @ line 7 @ col 1
+T_LPAREN	[(] @ line 8 @ col 1
+T_RPAREN	[)] @ line 9 @ col 1
+T_SEMICOLON	[] @ line 9 @ col 2
+T_LBRACE	[{] @ line 10 @ col 1
+T_SEMICOLON	[] @ line 11 @ col 1
+T_RBRACE	[}] @ line 11 @ col 2
+T_SEMICOLON	[] @ line 11 @ col 3
+T_SEMICOLON	[;] @ line 12 @ col 1
+T_COMMA	[,] @ line 13 @ col 1
+T_NOT	[!] @ line 17 @ col 1
+T_NEQ	[!=] @ line 17 @ col 3
+T_ASSIGN	[=] @ line 18 @ col 1
+T_EQ	[==] @ line 18 @ col 3
+T_LT	[<] @ line 19 @ col 1
+T_LTE	[<=] @ line 19 @ col 3
+T_GT	[>] @ line 20 @ col 1
+T_GTE	[>=] @ line 20 @ col 3
+T_GT	[>] @ line 22 @ col 1
+T_ASSIGN	[=] @ line 22 @ col 3
+T_AND	[&&] @ line 26 @ col 1
+T_OR	[||] @ line 27 @ col 1
+T_BREAK	[break] @ line 31 @ col 1
+T_SEMICOLON	[] @ line 31 @ col 6
+T_ELSE	[else] @ line 32 @ col 1
+T_FOR	[for] @ line 33 @ col 1
+T_FUNC	[func] @ line 34 @ col 1
+T_IF	[if] @ line 35 @ col 1
+T_RETURN	[return] @ line 36 @ col 1
+T_SEMICOLON	[] @ line 36 @ col 7
+T_VAR	[var] @ line 37 @ col 1
+T_IDENTIFIER	[Break] @ line 41 @ col 1
+T_SEMICOLON	[] @ line 41 @ col 6
+T_IDENTIFIER	[switch] @ line 42 @ col 1
+T_SEMICOLON	[] @ line 42 @ col 7
+T_IDENTIFIER	[case] @ line 43 @ col 1
+T_SEMICOLON	[] @ line 43 @ col 5
+T_IDENTIFIER	[goto] @ line 44 @ col 1
+T_SEMICOLON	[] @ line 44 @ col 5
+T_IDENTIFIER	[continue] @ line 45 @ col 1
+T_SEMICOLON	[] @ line 45 @ col 9
+T_IDENTIFIER	[while] @ line 46 @ col 1
+T_SEMICOLON	[] @ line 46 @ col 6
+T_IDENTIFIER	[prints] @ line 47 @ col 1
+T_SEMICOLON	[] @ line 47 @ col 7
+T_IDENTIFIER	[printi] @ line 48 @ col 1
+T_SEMICOLON	[] @ line 48 @ col 7
+T_IDENTIFIER	[printb] @ line 49 @ col 1
+T_SEMICOLON	[] @ line 49 @ col 7
+T_IDENTIFIER	[printc] @ line 50 @ col 1
+T_SEMICOLON	[] @ line 50 @ col 7
+T_IDENTIFIER	[halt] @ line 51 @ col 1
+T_SEMICOLON	[] @ line 51 @ col 5
+T_IDENTIFIER	[getchar] @ line 52 @ col 1
+T_SEMICOLON	[] @ line 52 @ col 8
+T_IDENTIFIER	[true] @ line 53 @ col 1
+T_SEMICOLON	[] @ line 53 @ col 5
+T_IDENTIFIER	[bool] @ line 54 @ col 1
+T_SEMICOLON	[] @ line 54 @ col 5
+T_IDENTIFIER	[false] @ line 55 @ col 1
+T_SEMICOLON	[] @ line 55 @ col 6
+T_IDENTIFIER	[string] @ line 56 @ col 1
+T_SEMICOLON	[] @ line 56 @ col 7
+T_IDENTIFIER	[int] @ line 57 @ col 1
+T_SEMICOLON	[] @ line 57 @ col 4
+T_IDENTIFIER	[main] @ line 58 @ col 1
+T_SEMICOLON	[] @ line 58 @ col 5
+T_IDENTIFIER	[abcdef] @ line 59 @ col 1
+T_SEMICOLON	[] @ line 59 @ col 7
+T_IDENTIFIER	[abc123] @ line 60 @ col 1
+T_SEMICOLON	[] @ line 60 @ col 7
+T_IDENTIFIER	[_] @ line 61 @ col 1
+T_SEMICOLON	[] @ line 61 @ col 2
+T_IDENTIFIER	[_abc_0] @ line 62 @ col 1
+T_SEMICOLON	[] @ line 62 @ col 7
+T_IDENTIFIER	[_42] @ line 63 @ col 1
+T_SEMICOLON	[] @ line 63 @ col 4
+T_INT_LIT	[0] @ line 67 @ col 1
+T_SEMICOLON	[] @ line 67 @ col 2
+T_INT_LIT	[12345678901234567890] @ line 68 @ col 1
+T_SEMICOLON	[] @ line 68 @ col 21
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: semicolon insertion post-break at EOF |
+---------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t16
+
+STDOUT:
+T_BREAK	[break] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 6
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: semicolon insertion post-return at EOF |
+----------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t17
+
+STDOUT:
+T_RETURN	[return] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 7
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: semicolon insertion post-id at EOF |
+------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t18
+
+STDOUT:
+T_IDENTIFIER	[asdf] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 5
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: semicolon insertion post-number at EOF |
+----------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t19
+
+STDOUT:
+T_INT_LIT	[12345] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 6
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: semicolon insertion post-string at EOF |
+----------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t20
+
+STDOUT:
+T_STR_LIT	["asdf"] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 7
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: semicolon insertion post-) at EOF |
+-----------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t21
+
+STDOUT:
+T_RPAREN	[)] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 2
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: semicolon insertion post-} at EOF |
+-----------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t22
+
+STDOUT:
+T_RBRACE	[}] @ line 2 @ col 1
+T_SEMICOLON	[] @ line 2 @ col 2
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: string ending in EOF |
+----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t23
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t23:2: String literal terminated with EOF
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: partial string containing newline |
+-----------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t24
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t24:2: Invalid newline in string literal
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: string containing newline |
+---------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t25
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t25:2: Invalid newline in string literal
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: unescaped double quote in string |
+----------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t26
+
+STDOUT:
+T_STR_LIT	["abc"] @ line 2 @ col 1
+T_IDENTIFIER	[def] @ line 2 @ col 6
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t26:2: Invalid newline in string literal
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: string escape at EOF |
+----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t27
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t27:2: String literal terminated with EOF
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: string escape then newline |
+----------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t28
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t28:2: Invalid newline in string literal
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: legal strings |
+---------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t29
+
+STDOUT:
+T_STR_LIT	["abc"] @ line 3 @ col 1
+T_SEMICOLON	[] @ line 3 @ col 6
+T_STR_LIT	["ab\t\ndef"] @ line 4 @ col 1
+T_SEMICOLON	[] @ line 4 @ col 12
+T_STR_LIT	["ab\"cd"] @ line 5 @ col 1
+T_SEMICOLON	[] @ line 5 @ col 9
+T_STR_LIT	["ab\\\"cd"] @ line 6 @ col 1
+T_SEMICOLON	[] @ line 6 @ col 11
+T_STR_LIT	["a\b\r\fcd"] @ line 7 @ col 1
+T_SEMICOLON	[] @ line 7 @ col 12
+T_STR_LIT	["abc'def"] @ line 8 @ col 1
+T_SEMICOLON	[] @ line 8 @ col 10
+T_STR_LIT	["abc
+def"] @ line 9 @ col 1
+T_SEMICOLON	[] @ line 9 @ col 10
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: illegal "x" string escape |
+---------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t30
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t30:3:5: Invalid escape in string literal '\x'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: illegal "a" string escape |
+---------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t31
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t31:3:5: Invalid escape in string literal '\a'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: illegal "u" string escape |
+---------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms1/scan.t32
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms1/scan.t32:3:5: Invalid escape in string literal '\u'
+
+
+RETURN CODE: 1
+
+Run ended on Thu Feb  2 08:58:44 2023
+

@@ -6,12 +6,15 @@ char *inputFilePath;
 int main(int argc, char **argv) {
 
     //check that input file was provided
-    if(argc > 1) {
+    if(argc == 1) {
+        error(1, "No input file provided");
+    }
+    else if(argc == 2){        
         inputFilePath = argv[1];
         yyin = fopen(argv[1], "r");
     }
     else {
-        error(1, "No input file provided");
+        error(1, "Too many input files provided");
     }
 
     //check that file was opened successfully
