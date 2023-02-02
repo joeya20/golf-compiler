@@ -1,23 +1,25 @@
 #include "main.h"
 
-int main(int argc, char **argv) {    
+enum Token currentToken = 0;
+char *inputFilePath;
+
+int main(int argc, char **argv) {
+
+    //check that input file was provided
     if(argc > 1) {
+        inputFilePath = argv[1];
         yyin = fopen(argv[1], "r");
     }
     else {
-        //TODO: use error routine
-        fprintf(stderr, "No input file provided\n");
-        fprintf(stderr, "Program terminating...\n");
-        exit(EXIT_FAILURE);
+        error(1, "No input file provided");
     }
 
+    //check that file was opened successfully
     if(yyin == NULL) {
-        //TODO: use error routine
-        fprintf(stderr, "Error opening input file\n");
-        fprintf(stderr, "Program terminating...\n");
-        exit(EXIT_FAILURE);
+        error(1, "Error opening input file");
     }
 
+    //get all tokens from input file
     while((currentToken = lex()) != 0) {
         printf("%s\t[%s] @ line %i @ char %i\n", tokenToString(currentToken), yytext, lineno, charno-yyleng);
     }

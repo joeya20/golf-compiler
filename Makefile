@@ -7,7 +7,7 @@ SRC_PATH := src
 BIN_PATH := bin
 BUILD_PATH := build
 
-$(BIN_PATH)/golf: $(BUILD_PATH)/main.o $(BUILD_PATH)/lexer.o $(BUILD_PATH)/lex.yy.o $(BUILD_PATH)/util.o
+golf: $(BUILD_PATH)/main.o $(BUILD_PATH)/lexer.o $(BUILD_PATH)/lex.yy.o $(BUILD_PATH)/util.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 $(BUILD_PATH)/main.o: $(SRC_PATH)/main.c $(SRC_PATH)/main.h
@@ -26,4 +26,4 @@ $(SRC_PATH)/lex.yy.c:  $(SRC_PATH)/lex.l
 	flex -o $@ $(SRC_PATH)/lex.l
 
 clean:
-	-rm $(BUILD_PATH)/*.o $(BIN_PATH)/golf $(SRC_PATH)/lex.yy.c
+	-rm $(BUILD_PATH)/*.o $(SRC_PATH)/lex.yy.c golf

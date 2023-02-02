@@ -4,12 +4,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// externs declared in flex
 extern int yyleng;
 extern FILE *yyin;
 extern char *yytext;
 extern int charno;
 extern int lineno;
 
+// enum for token types
 enum Token {
     // it's important that this starts at 1
     // because EOF = 0
@@ -20,21 +22,21 @@ enum Token {
     T_FUNC,
     T_RETURN,
     T_VAR,
-    T_LOG_AND,
-    T_LOG_EQ,
-    T_LOG_NEQ,
-    T_LOG_NOT,
-    T_LOG_OR,
-    T_LOG_LT,
-    T_LOG_LTE,
-    T_LOG_GT,
-    T_LOG_GTE,
+    T_AND,
+    T_EQ,
+    T_NEQ,
+    T_NOT,
+    T_OR,
+    T_LT,
+    T_LTE,
+    T_GT,
+    T_GTE,
     T_ADD,
     T_SUB,
     T_MULT,
     T_DIV,
     T_MOD,
-    T_EQ,
+    T_ASSIGN,
     T_COMMA,
     T_SEMICOLON,
     T_LPAREN,
