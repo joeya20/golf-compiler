@@ -21,6 +21,6 @@ int main(int argc, char **argv) {
 
     //get all tokens from input file
     while((currentToken = lex()) != 0) {
-        printf("%s\t[%s] @ line %i @ char %i\n", tokenToString(currentToken), yytext, lineno, charno-yyleng);
+        printf("%s\t[%s] @ line %i @ col %i\n", tokenToString(currentToken), yytext, lineno, charno-yyleng);
     }
 }
