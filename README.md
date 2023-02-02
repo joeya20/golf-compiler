@@ -14,7 +14,7 @@ This repository contains the CPSC 411 course project, a compiler that translates
 
 ```bash
 make
-./golf <input file>     # should really be ./bin/golf but spec say executable should be in root directory
+./golf <input file>     # should really be ./bin/golf but spec says executable should be in root directory
 ```
 
 ### Cleaning

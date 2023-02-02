@@ -27,14 +27,14 @@ void warning(const int argNum, ...) {
         char *msg = va_arg(args, char*);
         int lineno = va_arg(args, int);
         int charno = va_arg(args, int);
-        fprintf(stderr, "warning: %s:%i:%i %s\n", inputFilePath, lineno, charno, msg);
+        fprintf(stderr, "warning: %s:%i:%i: %s\n", inputFilePath, lineno, charno, msg);
     }
     else {
         char *msg = va_arg(args, char*);
         int lineno = va_arg(args, int);
         int charno = va_arg(args, int);
         char *badString = va_arg(args,  char*);
-        fprintf(stderr, "warning: %s:%i:%i %s '%s'\n", inputFilePath, lineno, charno, msg, badString);
+        fprintf(stderr, "warning: %s:%i:%i: %s '%s'\n", inputFilePath, lineno, charno, msg, badString);
     }
     va_end(args);
 }
@@ -56,14 +56,14 @@ void error(const int argNum, ...) {
         char *msg = va_arg(args, char*);
         int lineno = va_arg(args, int);
         int charno = va_arg(args, int);
-        fprintf(stderr, "error: %s:%i:%i %s\n", inputFilePath, lineno, charno, msg);
+        fprintf(stderr, "error: %s:%i:%i: %s\n", inputFilePath, lineno, charno, msg);
     }
     else {
         char *msg = va_arg(args, char*);
         int lineno = va_arg(args, int);
         int charno = va_arg(args, int);
         char *badString = va_arg(args,  char*);
-        fprintf(stderr, "error: %s:%i:%i %s '%s'\n", inputFilePath, lineno, charno, msg, badString);
+        fprintf(stderr, "error: %s:%i:%i: %s '%s'\n", inputFilePath, lineno, charno, msg, badString);
     }
     va_end(args);
     exit(EXIT_FAILURE);
