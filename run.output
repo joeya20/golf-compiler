@@ -1,4 +1,4 @@
-Run started on Thu Feb  2 08:58:44 2023
+Run started on Thu Feb  2 09:42:16 2023
 
 Hostname: csx2.cs.ucalgary.ca
 
@@ -9,7 +9,12 @@ Running make |
 % /usr/bin/make
 
 STDOUT:
-make: 'golf' is up to date.
+gcc -c -Wall src/main.c -o build/main.o
+gcc -c -Wall src/lexer.c -o build/lexer.o
+flex -o src/lex.yy.c src/lex.l
+gcc -c -Wall src/lex.yy.c -o build/lex.yy.o
+gcc -c -Wall src/util.c -o build/util.o
+gcc -Wall build/main.o build/lexer.o build/lex.yy.o build/util.o -o golf
 
 
 STDERR:
@@ -674,5 +679,5 @@ error: /home/profs/aycock/411/TEST/ms1/scan.t32:3:5: Invalid escape in string li
 
 RETURN CODE: 1
 
-Run ended on Thu Feb  2 08:58:44 2023
+Run ended on Thu Feb  2 09:42:17 2023
 
