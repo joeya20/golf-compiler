@@ -32,7 +32,7 @@
 
 
 /**
- ** \file src/parse.tab.hh
+ ** \file parse.tab.hh
  ** Define the  GoLF ::parser class.
  */
 
@@ -42,10 +42,10 @@
 // especially those whose name start with YY_ or yy_.  They are
 // private implementation details that can be changed or removed.
 
-#ifndef YY_YY_SRC_PARSE_TAB_HH_INCLUDED
-# define YY_YY_SRC_PARSE_TAB_HH_INCLUDED
+#ifndef YY_YY_PARSE_TAB_HH_INCLUDED
+# define YY_YY_PARSE_TAB_HH_INCLUDED
 // "%code requires" blocks.
-#line 9 "src/parse.y"
+#line 10 "parse.y"
 
     // prologue
     // you can put C code here as well!
@@ -54,7 +54,7 @@
 
     int yylex(void);
 
-#line 58 "src/parse.tab.hh"
+#line 58 "parse.tab.hh"
 
 
 # include <cstdlib> // std::abort
@@ -188,9 +188,9 @@
 # define YYDEBUG 0
 #endif
 
-#line 6 "src/parse.y"
+#line 7 "parse.y"
 namespace  GoLF  {
-#line 194 "src/parse.tab.hh"
+#line 194 "parse.tab.hh"
 
 
 
@@ -208,11 +208,11 @@ namespace  GoLF  {
     /// Symbol semantic values.
     union value_type
     {
-#line 23 "src/parse.y"
+#line 24 "parse.y"
 
     
 
-#line 216 "src/parse.tab.hh"
+#line 216 "parse.tab.hh"
 
     };
 #endif
@@ -793,11 +793,11 @@ namespace  GoLF  {
   };
 
 
-#line 6 "src/parse.y"
+#line 7 "parse.y"
 } //  GoLF 
-#line 799 "src/parse.tab.hh"
+#line 799 "parse.tab.hh"
 
 
 
 
-#endif // !YY_YY_SRC_PARSE_TAB_HH_INCLUDED
+#endif // !YY_YY_PARSE_TAB_HH_INCLUDED

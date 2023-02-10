@@ -1,5 +1,6 @@
 
 %language "c++"
+%require "3.2"  // needed to not generate position.hh and stack.hh
 %locations
 %defines
 %define api.parser.class { Parser }
@@ -17,6 +18,7 @@
 
 %code top {
     #include "parse.tab.hh"
+    #include "location.hh"
 }
 
 // declarations
@@ -62,11 +64,13 @@
 %type <myAst> addExpr mulExpr factor */
 
 %start start
+
 %%
 
 start: 
 
 %%
+
 auto GoLF::Parser::error (const location_type& loc, const std::string& msg) -> void {
     std::cerr << msg << '\n';
 }

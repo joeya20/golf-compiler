@@ -35,11 +35,11 @@
 // private implementation details that can be changed or removed.
 
 // "%code top" blocks.
-#line 18 "src/parse.y"
+#line 19 "parse.y"
 
     #include "parse.tab.hh"
 
-#line 43 "src/parse.tab.cc"
+#line 43 "parse.tab.cc"
 
 
 
@@ -137,9 +137,9 @@
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 6 "src/parse.y"
+#line 7 "parse.y"
 namespace  GoLF  {
-#line 143 "src/parse.tab.cc"
+#line 143 "parse.tab.cc"
 
   /// Build a parser object.
    Parser :: Parser  ()
@@ -609,7 +609,7 @@ namespace  GoLF  {
           switch (yyn)
             {
 
-#line 613 "src/parse.tab.cc"
+#line 613 "parse.tab.cc"
 
             default:
               break;
@@ -1035,7 +1035,7 @@ namespace  GoLF  {
   const signed char
    Parser ::yyrline_[] =
   {
-       0,    67,    67
+       0,    69,    69
   };
 
   void
@@ -1112,11 +1112,12 @@ namespace  GoLF  {
       return symbol_kind::S_YYUNDEF;
   }
 
-#line 6 "src/parse.y"
+#line 7 "parse.y"
 } //  GoLF 
-#line 1118 "src/parse.tab.cc"
+#line 1118 "parse.tab.cc"
 
-#line 69 "src/parse.y"
+#line 71 "parse.y"
+
 
 auto GoLF::Parser::error (const location_type& loc, const std::string& msg) -> void {
     std::cerr << msg << '\n';
