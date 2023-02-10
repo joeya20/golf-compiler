@@ -2,20 +2,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include "util.hpp"
+#include "parse.tab.hh"
+#include "location.hh"
 #include "lexer.hpp"
 
 // vars to store line and char no
 int colno = 1;
 bool eofReached = false;
-extern enum GoLFLexer::Token currentToken;
+// extern enum Lexer::Token currentToken;
 
+// using namespace GoLF;
 %}
 
 /* always have noyywrap for school server */
 %option noyywrap
 %option c++
-%option yyclass="GoLFLexer"
+%option yyclass="Lexer"
 %option yylineno
 
 %x STRING
@@ -28,65 +32,65 @@ digit   [0-9]
 [\x20\x09\x0D]+                 { /* skip allowed (0x20, 0x09, 0x0D) whitespace */ colno += YYLeng(); }
 \x0A                            {   // newline
                                     /* this might move in the future */
-                                    if(currentToken != GoLFLexer::Token::T_EOF && 
-                                        (currentToken  == GoLFLexer::Token::T_IDENTIFIER || 
-                                        currentToken == GoLFLexer::Token::T_INT_LIT || 
-                                        currentToken == GoLFLexer::Token::T_STR_LIT || 
-                                        currentToken == GoLFLexer::Token::T_BREAK || 
-                                        currentToken == GoLFLexer::Token::T_RETURN || 
-                                        currentToken == GoLFLexer::Token::T_RPAREN || 
-                                        currentToken == GoLFLexer::Token::T_RBRACE)) {
-                                        yyless(0);
-                                        return GoLFLexer::Token::T_SEMICOLON;
-                                    }
+                                    // if(currentToken != Lexer::Token::T_EOF && 
+                                    //     (currentToken  == Lexer::Token::T_IDENTIFIER || 
+                                    //     currentToken == Lexer::Token::T_INT_LIT || 
+                                    //     currentToken == Lexer::Token::T_STR_LIT || 
+                                    //     currentToken == Lexer::Token::T_BREAK || 
+                                    //     currentToken == Lexer::Token::T_RETURN || 
+                                    //     currentToken == Lexer::Token::T_RPAREN || 
+                                    //     currentToken == Lexer::Token::T_RBRACE)) {
+                                    //     yyless(0);
+                                    //     return GoLF::Parser::make_SEMICOLON(std::string(yytext), GoLF::location());
+                                    // }
                                     colno = 1;
                                 }
-"break"                         { colno += YYLeng(); return GoLFLexer::Token::T_BREAK; }
-"if"                            { colno += YYLeng(); return GoLFLexer::Token::T_IF; }
-"else"                          { colno += YYLeng(); return GoLFLexer::Token::T_ELSE; }
-"for"                           { colno += YYLeng(); return GoLFLexer::Token::T_FOR; }
-"func"                          { colno += YYLeng(); return GoLFLexer::Token::T_FUNC; }
-"return"                        { colno += YYLeng(); return GoLFLexer::Token::T_RETURN; }
-"var"                           { colno += YYLeng(); return GoLFLexer::Token::T_VAR; }
+"break"                         { colno += YYLeng(); return GoLF::Parser::make_BREAK(std::string(yytext), GoLF::location()); }
+"if"                            { colno += YYLeng(); return GoLF::Parser::make_IF(std::string(yytext), GoLF::location()); }
+"else"                          { colno += YYLeng(); return GoLF::Parser::make_ELSE(std::string(yytext), GoLF::location()); }
+"for"                           { colno += YYLeng(); return GoLF::Parser::make_FOR(std::string(yytext), GoLF::location()); }
+"func"                          { colno += YYLeng(); return GoLF::Parser::make_FUNC(std::string(yytext), GoLF::location()); }
+"return"                        { colno += YYLeng(); return GoLF::Parser::make_RETURN(std::string(yytext), GoLF::location()); }
+"var"                           { colno += YYLeng(); return GoLF::Parser::make_VAR(std::string(yytext), GoLF::location()); }
 "&"                             { error(3, "Bitwise AND not supported in GoLF", yylineno, colno); }
-"&&"                            { colno += YYLeng(); return GoLFLexer::Token::T_AND; }
-"=="                            { colno += YYLeng(); return GoLFLexer::Token::T_EQ; }
-"!="                            { colno += YYLeng(); return GoLFLexer::Token::T_NEQ; }
-"!"                             { colno += YYLeng(); return GoLFLexer::Token::T_NOT; }
+"&&"                            { colno += YYLeng(); return GoLF::Parser::make_AND(std::string(yytext), GoLF::location()); }
+"=="                            { colno += YYLeng(); return GoLF::Parser::make_EQ(std::string(yytext), GoLF::location()); }
+"!="                            { colno += YYLeng(); return GoLF::Parser::make_NEQ(std::string(yytext), GoLF::location()); }
+"!"                             { colno += YYLeng(); return GoLF::Parser::make_NOT(std::string(yytext), GoLF::location()); }
 "|"                             { error(3, "Bitwise OR not supported in GoLF", yylineno, colno); }
-"||"                            { colno += YYLeng(); return GoLFLexer::Token::T_OR; }
-"<"                             { colno += YYLeng(); return GoLFLexer::Token::T_LT; }
-"<="                            { colno += YYLeng(); return GoLFLexer::Token::T_LTE; }
-">"                             { colno += YYLeng(); return GoLFLexer::Token::T_GT; }
-">="                            { colno += YYLeng(); return GoLFLexer::Token::T_GTE; }
-"+"                             { colno += YYLeng(); return GoLFLexer::Token::T_ADD; }
-"-"                             { colno += YYLeng(); return GoLFLexer::Token::T_SUB; }
-"*"                             { colno += YYLeng(); return GoLFLexer::Token::T_MULT; }
-"/"                             { colno += YYLeng(); return GoLFLexer::Token::T_DIV; }
-"%"                             { colno += YYLeng(); return GoLFLexer::Token::T_MOD; }
-"="                             { colno += YYLeng(); return GoLFLexer::Token::T_ASSIGN; }
-","                             { colno += YYLeng(); return GoLFLexer::Token::T_COMMA; }
-";"                             { colno += YYLeng(); return GoLFLexer::Token::T_SEMICOLON; }
-"("                             { colno += YYLeng(); return GoLFLexer::Token::T_LPAREN; }
-")"                             { colno += YYLeng(); return GoLFLexer::Token::T_RPAREN; }
-"{"                             { colno += YYLeng(); return GoLFLexer::Token::T_LBRACE; }
+"||"                            { colno += YYLeng(); return GoLF::Parser::make_OR(std::string(yytext), GoLF::location()); }
+"<"                             { colno += YYLeng(); return GoLF::Parser::make_LT(std::string(yytext), GoLF::location()); }
+"<="                            { colno += YYLeng(); return GoLF::Parser::make_LTE(std::string(yytext), GoLF::location()); }
+">"                             { colno += YYLeng(); return GoLF::Parser::make_GT(std::string(yytext), GoLF::location()); }
+">="                            { colno += YYLeng(); return GoLF::Parser::make_GTE(std::string(yytext), GoLF::location()); }
+"+"                             { colno += YYLeng(); return GoLF::Parser::make_ADD(std::string(yytext), GoLF::location()); }
+"-"                             { colno += YYLeng(); return GoLF::Parser::make_SUB(std::string(yytext), GoLF::location()); }
+"*"                             { colno += YYLeng(); return GoLF::Parser::make_MULT(std::string(yytext), GoLF::location()); }
+"/"                             { colno += YYLeng(); return GoLF::Parser::make_DIV(std::string(yytext), GoLF::location()); }
+"%"                             { colno += YYLeng(); return GoLF::Parser::make_MOD(std::string(yytext), GoLF::location()); }
+"="                             { colno += YYLeng(); return GoLF::Parser::make_ASSIGN(std::string(yytext), GoLF::location()); }
+","                             { colno += YYLeng(); return GoLF::Parser::make_COMMA(std::string(yytext), GoLF::location()); }
+";"                             { colno += YYLeng(); return GoLF::Parser::make_SEMICOLON(std::string(yytext), GoLF::location()); }
+"("                             { colno += YYLeng(); return GoLF::Parser::make_LPAREN(std::string(yytext), GoLF::location()); }
+")"                             { colno += YYLeng(); return GoLF::Parser::make_RPAREN(std::string(yytext), GoLF::location()); }
+"{"                             { colno += YYLeng(); return GoLF::Parser::make_LBRACE(std::string(yytext), GoLF::location()); }
 "}"                             {
                                     /* this might move in the future */
-                                    if(currentToken != GoLFLexer::Token::T_EOF && currentToken != GoLFLexer::Token::T_SEMICOLON) {
-                                        yyless(0);
-                                        return GoLFLexer::Token::T_SEMICOLON;
-                                    }
+                                    // if(currentToken != Lexer::Token::T_EOF && currentToken != Lexer::Token::T_SEMICOLON) {
+                                    //     yyless(0);
+                                    //     return Lexer::Token::T_SEMICOLON;
+                                    // }
                                     ++colno;
-                                    return GoLFLexer::Token::T_RBRACE;
+                                    return GoLF::Parser::make_RBRACE(std::string(yytext), GoLF::location());;
                                 }
-{letter}(({letter}|{digit})*)   { colno += YYLeng(); return GoLFLexer::Token::T_IDENTIFIER; }
-{digit}({digit}*)               { colno += YYLeng(); return GoLFLexer::Token::T_INT_LIT; }
+{letter}(({letter}|{digit})*)   { colno += YYLeng(); return GoLF::Parser::make_ID(std::string(yytext), GoLF::location()); }
+{digit}({digit}*)               { colno += YYLeng(); return GoLF::Parser::make_INT_LIT(std::string(yytext), GoLF::location()); }
 \"                              {
                                     // double-quote is the start of a string
                                     yymore();
                                     BEGIN(STRING);
                                 }
-<STRING>\"                      {  /* double-quote is the end of a string */ BEGIN(INITIAL); colno += YYLeng(); return GoLFLexer::Token::T_STR_LIT; }
+<STRING>\"                      {  /* double-quote is the end of a string */ BEGIN(INITIAL); colno += YYLeng(); return GoLF::Parser::make_STR_LIT(std::string(yytext), GoLF::location()); }
 <STRING>[\\]{1}[bfnrt\"\\]{1}   {  /* valid escape character */ yymore(); }
 <STRING>\\                      {
                                     // invalid escape character
@@ -108,18 +112,19 @@ digit   [0-9]
 <STRING><<EOF>>                 { error(3, "String literal terminated with EOF", yylineno, colno+YYLeng()-1); }
 <<EOF>>                         {
                                     /* this might move in the future */
-                                    if(currentToken != GoLFLexer::Token::T_EOF && 
-                                        (currentToken == GoLFLexer::Token::T_IDENTIFIER || 
-                                        currentToken == GoLFLexer::Token::T_INT_LIT || 
-                                        currentToken == GoLFLexer::Token::T_STR_LIT || 
-                                        currentToken == GoLFLexer::Token::T_BREAK || 
-                                        currentToken == GoLFLexer::Token::T_RETURN || 
-                                        currentToken == GoLFLexer::Token::T_RPAREN || 
-                                        currentToken == GoLFLexer::Token::T_RBRACE)) {
-                                        eofReached = true;
-                                        return GoLFLexer::Token::T_SEMICOLON;
-                                    }
-                                    yyterminate();
+                                    // if(currentToken != Lexer::Token::T_EOF && 
+                                    //     (currentToken == Lexer::Token::T_IDENTIFIER || 
+                                    //     currentToken == Lexer::Token::T_INT_LIT || 
+                                    //     currentToken == Lexer::Token::T_STR_LIT || 
+                                    //     currentToken == Lexer::Token::T_BREAK || 
+                                    //     currentToken == Lexer::Token::T_RETURN || 
+                                    //     currentToken == Lexer::Token::T_RPAREN || 
+                                    //     currentToken == Lexer::Token::T_RBRACE)) {
+                                    //     eofReached = true;
+                                    //     return GoLF::Parser::make_SEMICOLON(std::string(yytext), GoLF::location());
+                                    // }
+                                    // yyterminate();
+                                    GoLF::Parser::make_YYEOF(GoLF::location());
                                 }
 \a                              {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, "\\a");

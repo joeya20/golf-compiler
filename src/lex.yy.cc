@@ -329,7 +329,7 @@ int yyFlexLexer::yylex()
 	return 0;
 	}
 
-#define YY_DECL int GoLFLexer::yylex()
+#define YY_DECL int Lexer::yylex()
 
 /* Done after the current pattern has been matched and before the
  * corresponding action - sets up yytext.
@@ -488,18 +488,22 @@ static const flex_int32_t yy_rule_can_match_eol[52] =
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include "util.hpp"
+#include "parse.tab.hh"
+#include "location.hh"
 #include "lexer.hpp"
 
 // vars to store line and char no
 int colno = 1;
 bool eofReached = false;
-extern enum GoLFLexer::Token currentToken;
+// extern enum Lexer::Token currentToken;
 
-#line 499 "src/lex.yy.cc"
+// using namespace GoLF;
+#line 503 "src/lex.yy.cc"
 /* always have noyywrap for school server */
 
-#line 502 "src/lex.yy.cc"
+#line 506 "src/lex.yy.cc"
 
 #define INITIAL 0
 #define STRING 1
@@ -632,9 +636,9 @@ YY_DECL
 		}
 
 	{
-#line 26 "src/lex.l"
+#line 30 "src/lex.l"
 
-#line 637 "src/lex.yy.cc"
+#line 641 "src/lex.yy.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -709,205 +713,205 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 27 "src/lex.l"
+#line 31 "src/lex.l"
 { /* ignore comments */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 28 "src/lex.l"
+#line 32 "src/lex.l"
 { /* skip allowed (0x20, 0x09, 0x0D) whitespace */ colno += YYLeng(); }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 29 "src/lex.l"
+#line 33 "src/lex.l"
 {   // newline
                                     /* this might move in the future */
-                                    if(currentToken != GoLFLexer::Token::T_EOF && 
-                                        (currentToken  == GoLFLexer::Token::T_IDENTIFIER || 
-                                        currentToken == GoLFLexer::Token::T_INT_LIT || 
-                                        currentToken == GoLFLexer::Token::T_STR_LIT || 
-                                        currentToken == GoLFLexer::Token::T_BREAK || 
-                                        currentToken == GoLFLexer::Token::T_RETURN || 
-                                        currentToken == GoLFLexer::Token::T_RPAREN || 
-                                        currentToken == GoLFLexer::Token::T_RBRACE)) {
-                                        yyless(0);
-                                        return GoLFLexer::Token::T_SEMICOLON;
-                                    }
+                                    // if(currentToken != Lexer::Token::T_EOF && 
+                                    //     (currentToken  == Lexer::Token::T_IDENTIFIER || 
+                                    //     currentToken == Lexer::Token::T_INT_LIT || 
+                                    //     currentToken == Lexer::Token::T_STR_LIT || 
+                                    //     currentToken == Lexer::Token::T_BREAK || 
+                                    //     currentToken == Lexer::Token::T_RETURN || 
+                                    //     currentToken == Lexer::Token::T_RPAREN || 
+                                    //     currentToken == Lexer::Token::T_RBRACE)) {
+                                    //     yyless(0);
+                                    //     return GoLF::Parser::make_SEMICOLON(std::string(yytext), GoLF::location());
+                                    // }
                                     colno = 1;
                                 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 44 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_BREAK; }
+#line 48 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_BREAK(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 45 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_IF; }
+#line 49 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_IF(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 46 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_ELSE; }
+#line 50 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_ELSE(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 47 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_FOR; }
+#line 51 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_FOR(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 48 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_FUNC; }
+#line 52 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_FUNC(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 49 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_RETURN; }
+#line 53 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_RETURN(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 50 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_VAR; }
+#line 54 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_VAR(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 51 "src/lex.l"
+#line 55 "src/lex.l"
 { error(3, "Bitwise AND not supported in GoLF", yylineno, colno); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 52 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_AND; }
+#line 56 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_AND(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 53 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_EQ; }
+#line 57 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_EQ(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 54 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_NEQ; }
+#line 58 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_NEQ(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 55 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_NOT; }
+#line 59 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_NOT(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 56 "src/lex.l"
+#line 60 "src/lex.l"
 { error(3, "Bitwise OR not supported in GoLF", yylineno, colno); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 57 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_OR; }
+#line 61 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_OR(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 58 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_LT; }
+#line 62 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_LT(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 59 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_LTE; }
+#line 63 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_LTE(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 60 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_GT; }
+#line 64 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_GT(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 61 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_GTE; }
+#line 65 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_GTE(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 62 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_ADD; }
+#line 66 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_ADD(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 63 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_SUB; }
+#line 67 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_SUB(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 64 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_MULT; }
+#line 68 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_MULT(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 65 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_DIV; }
+#line 69 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_DIV(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 66 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_MOD; }
+#line 70 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_MOD(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 67 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_ASSIGN; }
+#line 71 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_ASSIGN(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 68 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_COMMA; }
+#line 72 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_COMMA(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 69 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_SEMICOLON; }
+#line 73 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_SEMICOLON(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 70 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_LPAREN; }
+#line 74 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_LPAREN(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 71 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_RPAREN; }
+#line 75 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_RPAREN(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 72 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_LBRACE; }
+#line 76 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_LBRACE(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 73 "src/lex.l"
+#line 77 "src/lex.l"
 {
                                     /* this might move in the future */
-                                    if(currentToken != GoLFLexer::Token::T_EOF && currentToken != GoLFLexer::Token::T_SEMICOLON) {
-                                        yyless(0);
-                                        return GoLFLexer::Token::T_SEMICOLON;
-                                    }
+                                    // if(currentToken != Lexer::Token::T_EOF && currentToken != Lexer::Token::T_SEMICOLON) {
+                                    //     yyless(0);
+                                    //     return Lexer::Token::T_SEMICOLON;
+                                    // }
                                     ++colno;
-                                    return GoLFLexer::Token::T_RBRACE;
+                                    return GoLF::Parser::make_RBRACE(std::string(yytext), GoLF::location());;
                                 }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 82 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_IDENTIFIER; }
+#line 86 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_ID(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 83 "src/lex.l"
-{ colno += YYLeng(); return GoLFLexer::Token::T_INT_LIT; }
+#line 87 "src/lex.l"
+{ colno += YYLeng(); return GoLF::Parser::make_INT_LIT(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 84 "src/lex.l"
+#line 88 "src/lex.l"
 {
                                     // double-quote is the start of a string
                                     yymore();
@@ -916,17 +920,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 89 "src/lex.l"
-{  /* double-quote is the end of a string */ BEGIN(INITIAL); colno += YYLeng(); return GoLFLexer::Token::T_STR_LIT; }
+#line 93 "src/lex.l"
+{  /* double-quote is the end of a string */ BEGIN(INITIAL); colno += YYLeng(); return GoLF::Parser::make_STR_LIT(std::string(yytext), GoLF::location()); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 90 "src/lex.l"
+#line 94 "src/lex.l"
 {  /* valid escape character */ yymore(); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 91 "src/lex.l"
+#line 95 "src/lex.l"
 {
                                     // invalid escape character
                                     // check if newline or EOF is after; those take precedence but doesn't matter either way
@@ -946,39 +950,40 @@ YY_RULE_SETUP
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 106 "src/lex.l"
+#line 110 "src/lex.l"
 { error(3, "Invalid newline in string literal", yylineno, colno+YYLeng()-1); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 107 "src/lex.l"
+#line 111 "src/lex.l"
 { yymore(); }
 	YY_BREAK
 case YY_STATE_EOF(STRING):
-#line 108 "src/lex.l"
+#line 112 "src/lex.l"
 { error(3, "String literal terminated with EOF", yylineno, colno+YYLeng()-1); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 109 "src/lex.l"
+#line 113 "src/lex.l"
 {
                                     /* this might move in the future */
-                                    if(currentToken != GoLFLexer::Token::T_EOF && 
-                                        (currentToken == GoLFLexer::Token::T_IDENTIFIER || 
-                                        currentToken == GoLFLexer::Token::T_INT_LIT || 
-                                        currentToken == GoLFLexer::Token::T_STR_LIT || 
-                                        currentToken == GoLFLexer::Token::T_BREAK || 
-                                        currentToken == GoLFLexer::Token::T_RETURN || 
-                                        currentToken == GoLFLexer::Token::T_RPAREN || 
-                                        currentToken == GoLFLexer::Token::T_RBRACE)) {
-                                        eofReached = true;
-                                        return GoLFLexer::Token::T_SEMICOLON;
-                                    }
-                                    yyterminate();
+                                    // if(currentToken != Lexer::Token::T_EOF && 
+                                    //     (currentToken == Lexer::Token::T_IDENTIFIER || 
+                                    //     currentToken == Lexer::Token::T_INT_LIT || 
+                                    //     currentToken == Lexer::Token::T_STR_LIT || 
+                                    //     currentToken == Lexer::Token::T_BREAK || 
+                                    //     currentToken == Lexer::Token::T_RETURN || 
+                                    //     currentToken == Lexer::Token::T_RPAREN || 
+                                    //     currentToken == Lexer::Token::T_RBRACE)) {
+                                    //     eofReached = true;
+                                    //     return GoLF::Parser::make_SEMICOLON(std::string(yytext), GoLF::location());
+                                    // }
+                                    // yyterminate();
+                                    GoLF::Parser::make_YYEOF(GoLF::location());
                                 }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 124 "src/lex.l"
+#line 129 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, "\\a");
                                     colno += YYLeng();
@@ -986,7 +991,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 128 "src/lex.l"
+#line 133 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, "\\b");
                                     colno += YYLeng();
@@ -994,7 +999,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 132 "src/lex.l"
+#line 137 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, "\\f");
                                     colno += YYLeng();
@@ -1002,7 +1007,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 136 "src/lex.l"
+#line 141 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, "\\v");
                                     colno += YYLeng();
@@ -1010,7 +1015,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 140 "src/lex.l"
+#line 145 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, "\\\\");
                                     colno += YYLeng();
@@ -1018,7 +1023,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 144 "src/lex.l"
+#line 149 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, "\\'");
                                     colno += YYLeng();
@@ -1026,7 +1031,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 148 "src/lex.l"
+#line 153 "src/lex.l"
 { 
                                     warning(3, "Skipping NUL character", yylineno, colno);
                                     colno += YYLeng();
@@ -1034,7 +1039,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 152 "src/lex.l"
+#line 157 "src/lex.l"
 { 
                                     warning(3, "Skipping non-ascii character", yylineno, colno);
                                     colno += YYLeng();
@@ -1042,7 +1047,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 156 "src/lex.l"
+#line 161 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", yylineno, colno, yytext);
                                     colno += YYLeng();
@@ -1050,10 +1055,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 160 "src/lex.l"
+#line 165 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 1056 "src/lex.yy.cc"
+#line 1061 "src/lex.yy.cc"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2023,5 +2028,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 160 "src/lex.l"
+#line 165 "src/lex.l"
 

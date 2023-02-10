@@ -43,7 +43,7 @@
         return lexer.lex();
     }
 
-#line 47 "src/parse.tab.cc"
+#line 47 "parse.tab.cc"
 
 
 
@@ -143,7 +143,7 @@
 
 #line 28 "src/parse.y"
 namespace  GoLF  {
-#line 147 "src/parse.tab.cc"
+#line 147 "parse.tab.cc"
 
   /// Build a parser object.
    Parser :: Parser  (GoLF::Lexer &lexer_yyarg)
@@ -239,10 +239,7 @@ namespace  GoLF  {
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< operator > (YY_MOVE (that.value));
         break;
 
       default:
@@ -288,10 +285,7 @@ namespace  GoLF  {
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.move< std::string > (YY_MOVE (that.value));
+        value.move< operator > (YY_MOVE (that.value));
         break;
 
       default:
@@ -337,10 +331,7 @@ namespace  GoLF  {
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.copy< std::string > (that.value);
+        value.copy< operator > (that.value);
         break;
 
       default:
@@ -385,10 +376,7 @@ namespace  GoLF  {
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.move< std::string > (that.value);
+        value.move< operator > (that.value);
         break;
 
       default:
@@ -678,10 +666,7 @@ namespace  GoLF  {
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        yylhs.value.emplace< std::string > ();
+        yylhs.value.emplace< operator > ();
         break;
 
       default:
@@ -705,7 +690,7 @@ namespace  GoLF  {
           switch (yyn)
             {
 
-#line 709 "src/parse.tab.cc"
+#line 694 "parse.tab.cc"
 
             default:
               break;
@@ -1100,13 +1085,13 @@ namespace  GoLF  {
   const signed char
    Parser ::yystos_[] =
   {
-       0,    35,     0
+       0,    32,     0
   };
 
   const signed char
    Parser ::yyr1_[] =
   {
-       0,    34,    35
+       0,    31,    32
   };
 
   const signed char
@@ -1126,8 +1111,8 @@ namespace  GoLF  {
   "\")\"", "\"{\"", "\"}\"", "\"&&\"", "\"==\"", "\"!=\"", "\"!\"",
   "\"||\"", "\"<\"", "\"<=\"", "\">\"", "\">=\"", "\"+\"", "\"-\"",
   "\"*\"", "\"/\"", "\"%\"", "\"=\"", "\",\"", "\"break\"", "\"if\"",
-  "\"else\"", "\"for\"", "\"func\"", "\"return\"", "\"var\"", "INT_LIT",
-  "STR_LIT", "ID", "$accept", "start", YY_NULLPTR
+  "\"else\"", "\"for\"", "\"func\"", "\"return\"", "\"var\"", "$accept",
+  "start", YY_NULLPTR
   };
 #endif
 
@@ -1136,7 +1121,7 @@ namespace  GoLF  {
   const signed char
    Parser ::yyrline_[] =
   {
-       0,    74,    74
+       0,    70,    70
   };
 
   void
@@ -1169,9 +1154,9 @@ namespace  GoLF  {
 
 #line 28 "src/parse.y"
 } //  GoLF 
-#line 1173 "src/parse.tab.cc"
+#line 1158 "parse.tab.cc"
 
-#line 76 "src/parse.y"
+#line 72 "src/parse.y"
 
 
 auto GoLF::Parser::error (const location_type& loc, const std::string& msg) -> void {

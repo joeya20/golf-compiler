@@ -32,7 +32,7 @@
 
 
 /**
- ** \file src/parse.tab.hh
+ ** \file parse.tab.hh
  ** Define the  GoLF ::parser class.
  */
 
@@ -42,8 +42,8 @@
 // especially those whose name start with YY_ or yy_.  They are
 // private implementation details that can be changed or removed.
 
-#ifndef YY_YY_SRC_PARSE_TAB_HH_INCLUDED
-# define YY_YY_SRC_PARSE_TAB_HH_INCLUDED
+#ifndef YY_YY_PARSE_TAB_HH_INCLUDED
+# define YY_YY_PARSE_TAB_HH_INCLUDED
 // "%code requires" blocks.
 #line 6 "src/parse.y"
 
@@ -57,7 +57,7 @@
         class Lexer;
     }
 
-#line 61 "src/parse.tab.hh"
+#line 61 "parse.tab.hh"
 
 
 # include <cstdlib> // std::abort
@@ -193,7 +193,7 @@
 
 #line 28 "src/parse.y"
 namespace  GoLF  {
-#line 197 "src/parse.tab.hh"
+#line 197 "parse.tab.hh"
 
 
 
@@ -417,10 +417,7 @@ namespace  GoLF  {
       // "func"
       // "return"
       // "var"
-      // INT_LIT
-      // STR_LIT
-      // ID
-      char dummy1[sizeof (std::string)];
+      char dummy1[sizeof (operator)];
     };
 
     /// The size of the largest semantic type.
@@ -497,10 +494,7 @@ namespace  GoLF  {
     FOR = 282,                     // "for"
     FUNC = 283,                    // "func"
     RETURN = 284,                  // "return"
-    VAR = 285,                     // "var"
-    INT_LIT = 286,                 // INT_LIT
-    STR_LIT = 287,                 // STR_LIT
-    ID = 288                       // ID
+    VAR = 285                      // "var"
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -517,7 +511,7 @@ namespace  GoLF  {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 34, ///< Number of tokens.
+        YYNTOKENS = 31, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -550,11 +544,8 @@ namespace  GoLF  {
         S_FUNC = 28,                             // "func"
         S_RETURN = 29,                           // "return"
         S_VAR = 30,                              // "var"
-        S_INT_LIT = 31,                          // INT_LIT
-        S_STR_LIT = 32,                          // STR_LIT
-        S_ID = 33,                               // ID
-        S_YYACCEPT = 34,                         // $accept
-        S_start = 35                             // start
+        S_YYACCEPT = 31,                         // $accept
+        S_start = 32                             // start
       };
     };
 
@@ -619,10 +610,7 @@ namespace  GoLF  {
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.move< std::string > (std::move (that.value));
+        value.move< operator > (std::move (that.value));
         break;
 
       default:
@@ -649,13 +637,13 @@ namespace  GoLF  {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, std::string&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, operator&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const std::string& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const operator& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -714,10 +702,7 @@ switch (yykind)
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.template destroy< std::string > ();
+        value.template destroy< operator > ();
         break;
 
       default:
@@ -817,10 +802,10 @@ switch (yykind)
 #endif
       {}
 #if 201103L <= YY_CPLUSPLUS
-      symbol_type (int tok, std::string v, location_type l)
+      symbol_type (int tok, operator v, location_type l)
         : super_type (token_kind_type (tok), std::move (v), std::move (l))
 #else
-      symbol_type (int tok, const std::string& v, const location_type& l)
+      symbol_type (int tok, const operator& v, const location_type& l)
         : super_type (token_kind_type (tok), v, l)
 #endif
       {}
@@ -920,14 +905,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_SEMICOLON (std::string v, location_type l)
+      make_SEMICOLON (operator v, location_type l)
       {
         return symbol_type (token::SEMICOLON, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_SEMICOLON (const std::string& v, const location_type& l)
+      make_SEMICOLON (const operator& v, const location_type& l)
       {
         return symbol_type (token::SEMICOLON, v, l);
       }
@@ -935,14 +920,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_LPAREN (std::string v, location_type l)
+      make_LPAREN (operator v, location_type l)
       {
         return symbol_type (token::LPAREN, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_LPAREN (const std::string& v, const location_type& l)
+      make_LPAREN (const operator& v, const location_type& l)
       {
         return symbol_type (token::LPAREN, v, l);
       }
@@ -950,14 +935,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_RPAREN (std::string v, location_type l)
+      make_RPAREN (operator v, location_type l)
       {
         return symbol_type (token::RPAREN, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_RPAREN (const std::string& v, const location_type& l)
+      make_RPAREN (const operator& v, const location_type& l)
       {
         return symbol_type (token::RPAREN, v, l);
       }
@@ -965,14 +950,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_LBRACE (std::string v, location_type l)
+      make_LBRACE (operator v, location_type l)
       {
         return symbol_type (token::LBRACE, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_LBRACE (const std::string& v, const location_type& l)
+      make_LBRACE (const operator& v, const location_type& l)
       {
         return symbol_type (token::LBRACE, v, l);
       }
@@ -980,14 +965,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_RBRACE (std::string v, location_type l)
+      make_RBRACE (operator v, location_type l)
       {
         return symbol_type (token::RBRACE, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_RBRACE (const std::string& v, const location_type& l)
+      make_RBRACE (const operator& v, const location_type& l)
       {
         return symbol_type (token::RBRACE, v, l);
       }
@@ -995,14 +980,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_AND (std::string v, location_type l)
+      make_AND (operator v, location_type l)
       {
         return symbol_type (token::AND, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_AND (const std::string& v, const location_type& l)
+      make_AND (const operator& v, const location_type& l)
       {
         return symbol_type (token::AND, v, l);
       }
@@ -1010,14 +995,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_EQ (std::string v, location_type l)
+      make_EQ (operator v, location_type l)
       {
         return symbol_type (token::EQ, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_EQ (const std::string& v, const location_type& l)
+      make_EQ (const operator& v, const location_type& l)
       {
         return symbol_type (token::EQ, v, l);
       }
@@ -1025,14 +1010,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_NEQ (std::string v, location_type l)
+      make_NEQ (operator v, location_type l)
       {
         return symbol_type (token::NEQ, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_NEQ (const std::string& v, const location_type& l)
+      make_NEQ (const operator& v, const location_type& l)
       {
         return symbol_type (token::NEQ, v, l);
       }
@@ -1040,14 +1025,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_NOT (std::string v, location_type l)
+      make_NOT (operator v, location_type l)
       {
         return symbol_type (token::NOT, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_NOT (const std::string& v, const location_type& l)
+      make_NOT (const operator& v, const location_type& l)
       {
         return symbol_type (token::NOT, v, l);
       }
@@ -1055,14 +1040,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_OR (std::string v, location_type l)
+      make_OR (operator v, location_type l)
       {
         return symbol_type (token::OR, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_OR (const std::string& v, const location_type& l)
+      make_OR (const operator& v, const location_type& l)
       {
         return symbol_type (token::OR, v, l);
       }
@@ -1070,14 +1055,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_LT (std::string v, location_type l)
+      make_LT (operator v, location_type l)
       {
         return symbol_type (token::LT, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_LT (const std::string& v, const location_type& l)
+      make_LT (const operator& v, const location_type& l)
       {
         return symbol_type (token::LT, v, l);
       }
@@ -1085,14 +1070,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_LTE (std::string v, location_type l)
+      make_LTE (operator v, location_type l)
       {
         return symbol_type (token::LTE, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_LTE (const std::string& v, const location_type& l)
+      make_LTE (const operator& v, const location_type& l)
       {
         return symbol_type (token::LTE, v, l);
       }
@@ -1100,14 +1085,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_GT (std::string v, location_type l)
+      make_GT (operator v, location_type l)
       {
         return symbol_type (token::GT, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_GT (const std::string& v, const location_type& l)
+      make_GT (const operator& v, const location_type& l)
       {
         return symbol_type (token::GT, v, l);
       }
@@ -1115,14 +1100,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_GTE (std::string v, location_type l)
+      make_GTE (operator v, location_type l)
       {
         return symbol_type (token::GTE, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_GTE (const std::string& v, const location_type& l)
+      make_GTE (const operator& v, const location_type& l)
       {
         return symbol_type (token::GTE, v, l);
       }
@@ -1130,14 +1115,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_ADD (std::string v, location_type l)
+      make_ADD (operator v, location_type l)
       {
         return symbol_type (token::ADD, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_ADD (const std::string& v, const location_type& l)
+      make_ADD (const operator& v, const location_type& l)
       {
         return symbol_type (token::ADD, v, l);
       }
@@ -1145,14 +1130,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_SUB (std::string v, location_type l)
+      make_SUB (operator v, location_type l)
       {
         return symbol_type (token::SUB, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_SUB (const std::string& v, const location_type& l)
+      make_SUB (const operator& v, const location_type& l)
       {
         return symbol_type (token::SUB, v, l);
       }
@@ -1160,14 +1145,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_MULT (std::string v, location_type l)
+      make_MULT (operator v, location_type l)
       {
         return symbol_type (token::MULT, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_MULT (const std::string& v, const location_type& l)
+      make_MULT (const operator& v, const location_type& l)
       {
         return symbol_type (token::MULT, v, l);
       }
@@ -1175,14 +1160,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_DIV (std::string v, location_type l)
+      make_DIV (operator v, location_type l)
       {
         return symbol_type (token::DIV, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_DIV (const std::string& v, const location_type& l)
+      make_DIV (const operator& v, const location_type& l)
       {
         return symbol_type (token::DIV, v, l);
       }
@@ -1190,14 +1175,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_MOD (std::string v, location_type l)
+      make_MOD (operator v, location_type l)
       {
         return symbol_type (token::MOD, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_MOD (const std::string& v, const location_type& l)
+      make_MOD (const operator& v, const location_type& l)
       {
         return symbol_type (token::MOD, v, l);
       }
@@ -1205,14 +1190,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_ASSIGN (std::string v, location_type l)
+      make_ASSIGN (operator v, location_type l)
       {
         return symbol_type (token::ASSIGN, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_ASSIGN (const std::string& v, const location_type& l)
+      make_ASSIGN (const operator& v, const location_type& l)
       {
         return symbol_type (token::ASSIGN, v, l);
       }
@@ -1220,14 +1205,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_COMMA (std::string v, location_type l)
+      make_COMMA (operator v, location_type l)
       {
         return symbol_type (token::COMMA, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_COMMA (const std::string& v, const location_type& l)
+      make_COMMA (const operator& v, const location_type& l)
       {
         return symbol_type (token::COMMA, v, l);
       }
@@ -1235,14 +1220,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_BREAK (std::string v, location_type l)
+      make_BREAK (operator v, location_type l)
       {
         return symbol_type (token::BREAK, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_BREAK (const std::string& v, const location_type& l)
+      make_BREAK (const operator& v, const location_type& l)
       {
         return symbol_type (token::BREAK, v, l);
       }
@@ -1250,14 +1235,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_IF (std::string v, location_type l)
+      make_IF (operator v, location_type l)
       {
         return symbol_type (token::IF, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_IF (const std::string& v, const location_type& l)
+      make_IF (const operator& v, const location_type& l)
       {
         return symbol_type (token::IF, v, l);
       }
@@ -1265,14 +1250,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_ELSE (std::string v, location_type l)
+      make_ELSE (operator v, location_type l)
       {
         return symbol_type (token::ELSE, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_ELSE (const std::string& v, const location_type& l)
+      make_ELSE (const operator& v, const location_type& l)
       {
         return symbol_type (token::ELSE, v, l);
       }
@@ -1280,14 +1265,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_FOR (std::string v, location_type l)
+      make_FOR (operator v, location_type l)
       {
         return symbol_type (token::FOR, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_FOR (const std::string& v, const location_type& l)
+      make_FOR (const operator& v, const location_type& l)
       {
         return symbol_type (token::FOR, v, l);
       }
@@ -1295,14 +1280,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_FUNC (std::string v, location_type l)
+      make_FUNC (operator v, location_type l)
       {
         return symbol_type (token::FUNC, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_FUNC (const std::string& v, const location_type& l)
+      make_FUNC (const operator& v, const location_type& l)
       {
         return symbol_type (token::FUNC, v, l);
       }
@@ -1310,14 +1295,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_RETURN (std::string v, location_type l)
+      make_RETURN (operator v, location_type l)
       {
         return symbol_type (token::RETURN, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_RETURN (const std::string& v, const location_type& l)
+      make_RETURN (const operator& v, const location_type& l)
       {
         return symbol_type (token::RETURN, v, l);
       }
@@ -1325,61 +1310,16 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_VAR (std::string v, location_type l)
+      make_VAR (operator v, location_type l)
       {
         return symbol_type (token::VAR, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_VAR (const std::string& v, const location_type& l)
+      make_VAR (const operator& v, const location_type& l)
       {
         return symbol_type (token::VAR, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_INT_LIT (std::string v, location_type l)
-      {
-        return symbol_type (token::INT_LIT, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_INT_LIT (const std::string& v, const location_type& l)
-      {
-        return symbol_type (token::INT_LIT, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_STR_LIT (std::string v, location_type l)
-      {
-        return symbol_type (token::STR_LIT, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_STR_LIT (const std::string& v, const location_type& l)
-      {
-        return symbol_type (token::STR_LIT, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_ID (std::string v, location_type l)
-      {
-        return symbol_type (token::ID, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_ID (const std::string& v, const location_type& l)
-      {
-        return symbol_type (token::ID, v, l);
       }
 #endif
 
@@ -1761,10 +1701,10 @@ switch (yykind)
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    31,    32,    33
+      25,    26,    27,    28,    29,    30
     };
     // Last valid token kind.
-    const int code_max = 288;
+    const int code_max = 285;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -1811,10 +1751,7 @@ switch (yykind)
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.copy< std::string > (YY_MOVE (that.value));
+        value.copy< operator > (YY_MOVE (that.value));
         break;
 
       default:
@@ -1876,10 +1813,7 @@ switch (yykind)
       case symbol_kind::S_FUNC: // "func"
       case symbol_kind::S_RETURN: // "return"
       case symbol_kind::S_VAR: // "var"
-      case symbol_kind::S_INT_LIT: // INT_LIT
-      case symbol_kind::S_STR_LIT: // STR_LIT
-      case symbol_kind::S_ID: // ID
-        value.move< std::string > (YY_MOVE (s.value));
+        value.move< operator > (YY_MOVE (s.value));
         break;
 
       default:
@@ -1949,9 +1883,9 @@ switch (yykind)
 
 #line 28 "src/parse.y"
 } //  GoLF 
-#line 1953 "src/parse.tab.hh"
+#line 1887 "parse.tab.hh"
 
 
 
 
-#endif // !YY_YY_SRC_PARSE_TAB_HH_INCLUDED
+#endif // !YY_YY_PARSE_TAB_HH_INCLUDED

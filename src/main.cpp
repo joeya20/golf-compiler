@@ -1,7 +1,6 @@
 #include "main.hpp"
 
 std::string inputFilePath;
-enum GoLFLexer::Token currentToken = GoLFLexer::Token::T_EOF;
 
 int main(int argc, char **argv) {
     std::ifstream inputFile;
