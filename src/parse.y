@@ -1,4 +1,3 @@
-
 %language "c++"
 %require "3.2"  // needed to not generate position.hh and stack.hh
 %locations
@@ -65,7 +64,7 @@
     INT_LIT
     STR_LIT
     ID
-    
+
 /* %type <AstNode>  */
 
 %start start
