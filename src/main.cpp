@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
         error(1, "Error opening input file");
     }
 
-    GoLFLexer *lexer = new GoLFLexer(inputFile, std::cout);
+    GoLF::Lexer *lexer = new GoLF::Lexer(inputFile, std::cout);
     while((currentToken = lexer->lex()) != GoLFLexer::Token::T_EOF && !eofReached) {
         printf("%s\t[%s] @ line %i @ col %i\n", GoLFLexer::tokenToString(currentToken), lexer->YYText(), lexer->lineno(), colno-lexer->YYLeng());
     }
@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
 
     //delete lexer
     delete(lexer);
+    
     //close input file stream
     inputFile.close();
 }
