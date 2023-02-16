@@ -1,6 +1,6 @@
 #include "main.hpp"
 
-std::string inputFilePath;
+std::string inputFileName;
 
 int main(int argc, char **argv) {
     std::ifstream inputFile;
@@ -10,8 +10,8 @@ int main(int argc, char **argv) {
         error(1, "No input file provided");
     }
     else if(argc == 2){        
-        inputFilePath = argv[1];
-        inputFile.open(inputFilePath);
+        inputFileName = argv[1];
+        inputFile.open(inputFileName);
     }
     else {
         error(1, "Too many input files provided");
@@ -20,19 +20,18 @@ int main(int argc, char **argv) {
     if(!inputFile.is_open()) {
         error(1, "Error opening input file");
     }
-
-    GoLF::Lexer *lexer = new GoLF::Lexer(inputFile, std::cout);
-    while((currentToken = lexer->lex()) != GoLFLexer::Token::T_EOF && !eofReached) {
-        printf("%s\t[%s] @ line %i @ col %i\n", GoLFLexer::tokenToString(currentToken), lexer->YYText(), lexer->lineno(), colno-lexer->YYLeng());
-    }
-    //last check to see if we have a final semicolon to print
-    if(currentToken != GoLFLexer::Token::T_EOF) {
-        printf("%s\t[%s] @ line %i @ col %i\n", GoLFLexer::tokenToString(currentToken), lexer->YYText(), lexer->lineno(), colno-lexer->YYLeng());
-    }
-
-    //delete lexer
-    delete(lexer);
     
+    GoLF::Lexer lexer {inputFile, std::cout};
+    GoLF::AstNode *root;
+    GoLF::Parser parser {lexer, root};
+
+    parser();
+    std::cout << "done!!" << std::endl;
+    
+    // tear down ast
+    //root will never be null :)
+    delete root;
+
     //close input file stream
     inputFile.close();
 }

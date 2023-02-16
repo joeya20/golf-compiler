@@ -1,0 +1,258 @@
+%language "c++"
+%require "3.2"  // needed to not generate position.hh and stack.hh
+%locations
+
+%code requires {
+    #include<stdio.h>
+    #include<stdlib.h>
+    #include "location.hh"
+    #include <string>
+
+    //forward declaration needed because we are passing lexer as a param
+    namespace GoLF {
+        class Lexer;
+    }
+}   
+
+%code top {
+    #include <FlexLexer.h>
+    #include "lexer.hpp"
+    GoLF::Parser::symbol_type yylex(GoLF::Lexer &lexer) {
+        return lexer.getNextToken();
+    }
+}
+
+%defines
+%define api.parser.class { Parser }
+%define api.namespace { GoLF }
+%define api.token.constructor
+%define api.value.type variant
+%define parse.error verbose
+
+%param { GoLF::Lexer &lexer }
+
+// is the string necessary here?
+%token <std::string>
+    SEMICOLON   ";"
+    LPAREN      "("
+    RPAREN      ")"
+    LBRACE      "{"
+    RBRACE      "}"
+    AND         "&&"
+    EQ          "=="
+    NEQ         "!="
+    NOT         "!"
+    OR          "||"
+    LT          "<"
+    LTE         "<="
+    GT          ">"
+    GTE         ">="
+    ADD         "+"
+    SUB         "-"
+    MULT        "*"
+    DIV         "/"
+    MOD         "%"
+    ASSIGN      "="
+    COMMA       ","
+    BREAK       "break"
+    IF          "if"
+    ELSE        "else"
+    FOR         "for"
+    FUNC        "func"
+    RETURN      "return"
+    VAR         "var"
+    INT_LIT
+    STR_LIT
+    ID
+
+/* %type <AstNode>  */
+
+%start SourceFile
+
+%%
+SourceFile  : %empty
+            | SourceFile TopLevelDecl ";"
+            ;
+
+TopLevelDecl    : Decl 
+                | FunctionDecl
+                ;
+
+Decl    : VarDecl
+        ;
+
+VarDecl : "var" VarSpec
+        ;
+
+VarSpec : ID Type
+        ;
+
+Type    : TypeName
+        ;
+
+TypeName    : ID
+            ;
+
+FunctionDecl    : "func" FunctionName Signature FunctionBody
+                ;
+
+FunctionName    : ID
+                ;
+
+FunctionBody    : Block
+                ;
+
+Signature       : Parameters
+                | Parameters Result
+                ;
+
+Result          : Type
+                ;
+
+Parameters      : "(" ")"
+                |  "(" ParameterList ")"
+                |  "(" ParameterList "," ")"
+                ;
+
+ParameterList   : ParameterDecl
+                | ParameterList "," ParameterDecl
+                ;
+
+ParameterDecl   : ID Type
+                ;
+
+Operand         : Literal | OperandName | "(" Expr ")"
+                ;
+
+Literal         : BasicLiteral
+                ;
+
+BasicLiteral    : INT_LIT 
+                | STR_LIT
+                ;
+
+OperandName     : ID
+                ;
+
+PrimaryExpr     : Operand 
+                | PrimaryExpr Arguments
+                ;
+
+Arguments       : "(" ")"
+                |  "(" ExprList ")"
+                |  "(" ExprList "," ")"
+                ;
+
+ExprList    : Expr
+            | ExprList "," Expr
+            ;
+
+Expr        : Expr "||" AndExpr
+            | AndExpr 
+            ;
+
+AndExpr     : AndExpr "&&" RelExpr
+            | RelExpr
+            ;
+
+RelExpr     : RelExpr RelOp AddExpr
+            | AddExpr
+            ;
+
+AddExpr     : AddExpr AddOp MultExpr
+            | MultExpr
+            ;
+
+MultExpr    : MultExpr MultOp UnaryExpr
+            | UnaryExpr
+            ;
+
+UnaryExpr   : PrimaryExpr 
+            | UnaryOp UnaryExpr
+            ;
+
+UnaryOp     : "-"
+            | "!"
+            ;
+
+/* not used because it does not enforce operation precedence */
+/* BinaryOp    : "||"
+            | "&&"
+            | RelOp
+            | AddOp
+            | MultOp
+            ; */
+
+RelOp       : "==" 
+            | "!="
+            | "<"
+            | "<="
+            | ">"
+            | ">="
+            ;
+
+AddOp       : "+"
+            | "-"
+            ;
+
+MultOp      : "*"
+            | "/"
+            | "%"
+            ;
+
+Block       : "{" StmtList "}"
+            ;
+
+StmtList    : %empty
+            | StmtList Stmt ";"
+            ;
+
+Stmt        : Decl
+            | SimpleStmt
+            | ReturnStmt
+            | BreakStmt
+            | Block
+            | IfStmt
+            | ForStmt
+            ;
+
+SimpleStmt  : EmptyStmt
+            | ExprStmt
+            | AssignStmt
+            ;
+    
+ReturnStmt  : "return"
+            | "return" Expr
+            ;
+
+BreakStmt   : "break"
+            ;
+
+IfStmt      : "if" Expr Block
+            | "if" Expr Block ElseStmt
+            ;
+
+ElseStmt    : "else" IfStmt
+            | "else" Block
+            ;
+
+ForStmt     : "for" Block
+            | "for" ConditionStmt Block
+            ;
+
+ConditionStmt   : Expr
+                ;
+
+EmptyStmt       : /* empty */
+                ;
+
+ExprStmt        : Expr;
+
+AssignStmt      : Expr "=" Expr
+                ;
+%%
+
+//TODO: call error routine
+void GoLF::Parser::error (const location_type& loc, const std::string& msg) {
+    std::cerr << msg << '\n';
+}

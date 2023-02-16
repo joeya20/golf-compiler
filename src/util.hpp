@@ -6,10 +6,10 @@
 #include <stdarg.h>
 #include <string>
 
-extern std::string inputFilePath;
+// defined in main from command line arg
+extern std::string inputFileName;
 
 // prints error message and terminates program
-// void error(const char *msg, int lineno, int charno);
 void error(const int argNum, ...);
 void warning(const int argNum, ...);
 

@@ -45,19 +45,22 @@
 #ifndef YY_YY_SRC_PARSE_TAB_HH_INCLUDED
 # define YY_YY_SRC_PARSE_TAB_HH_INCLUDED
 // "%code requires" blocks.
-#line 6 "src/parse.y"
+#line 5 "src/parse.y"
 
     #include<stdio.h>
     #include<stdlib.h>
     #include "location.hh"
+    #include "AstNode.hpp"
     #include <string>
-
+    #include <iostream>
+    #include <memory>
+    
     //forward declaration needed because we are passing lexer as a param
     namespace GoLF {
         class Lexer;
     }
 
-#line 61 "src/parse.tab.hh"
+#line 64 "src/parse.tab.hh"
 
 
 # include <cstdlib> // std::abort
@@ -191,9 +194,9 @@
 # define YYDEBUG 0
 #endif
 
-#line 28 "src/parse.y"
+#line 30 "src/parse.y"
 namespace  GoLF  {
-#line 197 "src/parse.tab.hh"
+#line 200 "src/parse.tab.hh"
 
 
 
@@ -389,6 +392,45 @@ namespace  GoLF  {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // TopLevelDecl
+      // GlobVarDecl
+      // VarDecl
+      // Type
+      // FuncDecl
+      // FuncName
+      // FuncBody
+      // Signature
+      // Parameters
+      // ParameterList
+      // ParameterDecl
+      // Operand
+      // PrimaryExpr
+      // Arguments
+      // ExprList
+      // Expr
+      // AndExpr
+      // RelExpr
+      // AddExpr
+      // MultExpr
+      // UnaryExpr
+      // UnaryOp
+      // RelOp
+      // AddOp
+      // MultOp
+      // Block
+      // StmtList
+      // Stmt
+      // SimpleStmt
+      // ReturnStmt
+      // BreakStmt
+      // IfStmt
+      // ElseStmt
+      // ForStmt
+      // EmptyStmt
+      // ExprStmt
+      // AssignStmt
+      char dummy1[sizeof (AstNode*)];
+
       // ";"
       // "("
       // ")"
@@ -420,7 +462,7 @@ namespace  GoLF  {
       // INT_LIT
       // STR_LIT
       // ID
-      char dummy1[sizeof (std::string)];
+      char dummy2[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -554,7 +596,45 @@ namespace  GoLF  {
         S_STR_LIT = 32,                          // STR_LIT
         S_ID = 33,                               // ID
         S_YYACCEPT = 34,                         // $accept
-        S_start = 35                             // start
+        S_SourceFile = 35,                       // SourceFile
+        S_Program = 36,                          // Program
+        S_TopLevelDecl = 37,                     // TopLevelDecl
+        S_GlobVarDecl = 38,                      // GlobVarDecl
+        S_VarDecl = 39,                          // VarDecl
+        S_Type = 40,                             // Type
+        S_FuncDecl = 41,                         // FuncDecl
+        S_FuncName = 42,                         // FuncName
+        S_FuncBody = 43,                         // FuncBody
+        S_Signature = 44,                        // Signature
+        S_Parameters = 45,                       // Parameters
+        S_ParameterList = 46,                    // ParameterList
+        S_ParameterDecl = 47,                    // ParameterDecl
+        S_Operand = 48,                          // Operand
+        S_PrimaryExpr = 49,                      // PrimaryExpr
+        S_Arguments = 50,                        // Arguments
+        S_ExprList = 51,                         // ExprList
+        S_Expr = 52,                             // Expr
+        S_AndExpr = 53,                          // AndExpr
+        S_RelExpr = 54,                          // RelExpr
+        S_AddExpr = 55,                          // AddExpr
+        S_MultExpr = 56,                         // MultExpr
+        S_UnaryExpr = 57,                        // UnaryExpr
+        S_UnaryOp = 58,                          // UnaryOp
+        S_RelOp = 59,                            // RelOp
+        S_AddOp = 60,                            // AddOp
+        S_MultOp = 61,                           // MultOp
+        S_Block = 62,                            // Block
+        S_StmtList = 63,                         // StmtList
+        S_Stmt = 64,                             // Stmt
+        S_SimpleStmt = 65,                       // SimpleStmt
+        S_ReturnStmt = 66,                       // ReturnStmt
+        S_BreakStmt = 67,                        // BreakStmt
+        S_IfStmt = 68,                           // IfStmt
+        S_ElseStmt = 69,                         // ElseStmt
+        S_ForStmt = 70,                          // ForStmt
+        S_EmptyStmt = 71,                        // EmptyStmt
+        S_ExprStmt = 72,                         // ExprStmt
+        S_AssignStmt = 73                        // AssignStmt
       };
     };
 
@@ -591,6 +671,46 @@ namespace  GoLF  {
       {
         switch (this->kind ())
     {
+      case symbol_kind::S_TopLevelDecl: // TopLevelDecl
+      case symbol_kind::S_GlobVarDecl: // GlobVarDecl
+      case symbol_kind::S_VarDecl: // VarDecl
+      case symbol_kind::S_Type: // Type
+      case symbol_kind::S_FuncDecl: // FuncDecl
+      case symbol_kind::S_FuncName: // FuncName
+      case symbol_kind::S_FuncBody: // FuncBody
+      case symbol_kind::S_Signature: // Signature
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_ParameterList: // ParameterList
+      case symbol_kind::S_ParameterDecl: // ParameterDecl
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_Block: // Block
+      case symbol_kind::S_StmtList: // StmtList
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_SimpleStmt: // SimpleStmt
+      case symbol_kind::S_ReturnStmt: // ReturnStmt
+      case symbol_kind::S_BreakStmt: // BreakStmt
+      case symbol_kind::S_IfStmt: // IfStmt
+      case symbol_kind::S_ElseStmt: // ElseStmt
+      case symbol_kind::S_ForStmt: // ForStmt
+      case symbol_kind::S_EmptyStmt: // EmptyStmt
+      case symbol_kind::S_ExprStmt: // ExprStmt
+      case symbol_kind::S_AssignStmt: // AssignStmt
+        value.move< AstNode* > (std::move (that.value));
+        break;
+
       case symbol_kind::S_SEMICOLON: // ";"
       case symbol_kind::S_LPAREN: // "("
       case symbol_kind::S_RPAREN: // ")"
@@ -649,6 +769,20 @@ namespace  GoLF  {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, AstNode*&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const AstNode*& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -686,6 +820,46 @@ namespace  GoLF  {
         // Value type destructor.
 switch (yykind)
     {
+      case symbol_kind::S_TopLevelDecl: // TopLevelDecl
+      case symbol_kind::S_GlobVarDecl: // GlobVarDecl
+      case symbol_kind::S_VarDecl: // VarDecl
+      case symbol_kind::S_Type: // Type
+      case symbol_kind::S_FuncDecl: // FuncDecl
+      case symbol_kind::S_FuncName: // FuncName
+      case symbol_kind::S_FuncBody: // FuncBody
+      case symbol_kind::S_Signature: // Signature
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_ParameterList: // ParameterList
+      case symbol_kind::S_ParameterDecl: // ParameterDecl
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_Block: // Block
+      case symbol_kind::S_StmtList: // StmtList
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_SimpleStmt: // SimpleStmt
+      case symbol_kind::S_ReturnStmt: // ReturnStmt
+      case symbol_kind::S_BreakStmt: // BreakStmt
+      case symbol_kind::S_IfStmt: // IfStmt
+      case symbol_kind::S_ElseStmt: // ElseStmt
+      case symbol_kind::S_ForStmt: // ForStmt
+      case symbol_kind::S_EmptyStmt: // EmptyStmt
+      case symbol_kind::S_ExprStmt: // ExprStmt
+      case symbol_kind::S_AssignStmt: // AssignStmt
+        value.template destroy< AstNode* > ();
+        break;
+
       case symbol_kind::S_SEMICOLON: // ";"
       case symbol_kind::S_LPAREN: // "("
       case symbol_kind::S_RPAREN: // ")"
@@ -827,7 +1001,7 @@ switch (yykind)
     };
 
     /// Build a parser object.
-     Parser  (GoLF::Lexer &lexer_yyarg);
+     Parser  (Lexer &lexer_yyarg, AstNode *& root_yyarg);
     virtual ~ Parser  ();
 
 #if 201103L <= YY_CPLUSPLUS
@@ -1485,7 +1659,7 @@ switch (yykind)
 
 #if YYDEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const signed char yyrline_[];
+    static const short yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r) const;
     /// Print the state stack on the debug stream.
@@ -1712,14 +1886,15 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 0,     ///< Last index in yytable_.
-      yynnts_ = 2,  ///< Number of nonterminal symbols.
+      yylast_ = 113,     ///< Last index in yytable_.
+      yynnts_ = 40,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
 
 
     // User arguments.
-    GoLF::Lexer &lexer;
+    Lexer &lexer;
+    AstNode *& root;
 
   };
 
@@ -1783,6 +1958,46 @@ switch (yykind)
   {
     switch (this->kind ())
     {
+      case symbol_kind::S_TopLevelDecl: // TopLevelDecl
+      case symbol_kind::S_GlobVarDecl: // GlobVarDecl
+      case symbol_kind::S_VarDecl: // VarDecl
+      case symbol_kind::S_Type: // Type
+      case symbol_kind::S_FuncDecl: // FuncDecl
+      case symbol_kind::S_FuncName: // FuncName
+      case symbol_kind::S_FuncBody: // FuncBody
+      case symbol_kind::S_Signature: // Signature
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_ParameterList: // ParameterList
+      case symbol_kind::S_ParameterDecl: // ParameterDecl
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_Block: // Block
+      case symbol_kind::S_StmtList: // StmtList
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_SimpleStmt: // SimpleStmt
+      case symbol_kind::S_ReturnStmt: // ReturnStmt
+      case symbol_kind::S_BreakStmt: // BreakStmt
+      case symbol_kind::S_IfStmt: // IfStmt
+      case symbol_kind::S_ElseStmt: // ElseStmt
+      case symbol_kind::S_ForStmt: // ForStmt
+      case symbol_kind::S_EmptyStmt: // EmptyStmt
+      case symbol_kind::S_ExprStmt: // ExprStmt
+      case symbol_kind::S_AssignStmt: // AssignStmt
+        value.copy< AstNode* > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_SEMICOLON: // ";"
       case symbol_kind::S_LPAREN: // "("
       case symbol_kind::S_RPAREN: // ")"
@@ -1848,6 +2063,46 @@ switch (yykind)
     super_type::move (s);
     switch (this->kind ())
     {
+      case symbol_kind::S_TopLevelDecl: // TopLevelDecl
+      case symbol_kind::S_GlobVarDecl: // GlobVarDecl
+      case symbol_kind::S_VarDecl: // VarDecl
+      case symbol_kind::S_Type: // Type
+      case symbol_kind::S_FuncDecl: // FuncDecl
+      case symbol_kind::S_FuncName: // FuncName
+      case symbol_kind::S_FuncBody: // FuncBody
+      case symbol_kind::S_Signature: // Signature
+      case symbol_kind::S_Parameters: // Parameters
+      case symbol_kind::S_ParameterList: // ParameterList
+      case symbol_kind::S_ParameterDecl: // ParameterDecl
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_Block: // Block
+      case symbol_kind::S_StmtList: // StmtList
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_SimpleStmt: // SimpleStmt
+      case symbol_kind::S_ReturnStmt: // ReturnStmt
+      case symbol_kind::S_BreakStmt: // BreakStmt
+      case symbol_kind::S_IfStmt: // IfStmt
+      case symbol_kind::S_ElseStmt: // ElseStmt
+      case symbol_kind::S_ForStmt: // ForStmt
+      case symbol_kind::S_EmptyStmt: // EmptyStmt
+      case symbol_kind::S_ExprStmt: // ExprStmt
+      case symbol_kind::S_AssignStmt: // AssignStmt
+        value.move< AstNode* > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_SEMICOLON: // ";"
       case symbol_kind::S_LPAREN: // "("
       case symbol_kind::S_RPAREN: // ")"
@@ -1947,9 +2202,9 @@ switch (yykind)
   }
 
 
-#line 28 "src/parse.y"
+#line 30 "src/parse.y"
 } //  GoLF 
-#line 1953 "src/parse.tab.hh"
+#line 2208 "src/parse.tab.hh"
 
 
 

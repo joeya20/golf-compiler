@@ -53,7 +53,7 @@
 #  endif
 # endif
 
-#line 28 "src/parse.y"
+#line 30 "src/parse.y"
 namespace  GoLF  {
 #line 59 "src/location.hh"
 
@@ -299,7 +299,7 @@ namespace  GoLF  {
     return ostr;
   }
 
-#line 28 "src/parse.y"
+#line 30 "src/parse.y"
 } //  GoLF 
 #line 305 "src/location.hh"
 

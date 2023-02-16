@@ -9,7 +9,7 @@ SRC_PATH := src
 BIN_PATH := bin
 BUILD_PATH := build
 
-golf: $(BUILD_PATH)/util.o $(BUILD_PATH)/lex.yy.o $(BUILD_PATH)/lexer.o $(BUILD_PATH)/AstNode.o $(BUILD_PATH)/parse.tab.o $(BUILD_PATH)/main.o
+golf: $(BUILD_PATH)/util.o $(BUILD_PATH)/AstNode.o $(BUILD_PATH)/lex.yy.o $(BUILD_PATH)/lexer.o $(BUILD_PATH)/parse.tab.o $(BUILD_PATH)/main.o
 	$(CXX) $(CFLAGS) $^ -o $@
 
 $(BUILD_PATH)/main.o: $(SRC_PATH)/main.cpp $(SRC_PATH)/main.hpp

@@ -5,6 +5,7 @@
 #include <string>
 #include "util.hpp"
 #include "parse.tab.hh"
+#include "location.hh"
 
 // from http://www.jonathanbeard.io/tutorials/FlexBisonC++
 #if !defined(yyFlexLexerOnce)
@@ -16,18 +17,34 @@
 #undef YY_DECL
 #define YY_DECL GoLF::Parser::symbol_type GoLF::Lexer::lex()
 
+// colno defined in Flex-generated file
 extern int colno;
+extern std::string inputFileName;
+
 namespace GoLF {
 
 class Lexer : public yyFlexLexer {
+    private:
+        // vars needed because of semicolon insertion on new line and eof
+        Parser::symbol_kind_type currentTokenKind;
+        bool eofReached;
+
+        // checks if a semicolon must be inserted based on currentTokenKind
+        bool checkCurrentToken();
+
     public:
-        GoLF::Parser::symbol_type lex();
+        GoLF::position startPos;
+
+        // re-defined yylex() function that Flex implements
+        Parser::symbol_type lex();
+
+        // wrapper around lex() to do some internal stuff
+        // gets called by bison parser
+        Parser::symbol_type getNextToken();
 
         Lexer(std::istream& istream, std::ostream& ostream);
 
-        static const char* symbolToString(const GoLF::Parser::symbol_type& symbol);
+        static const char* symbolToString(const Parser::symbol_type& symbol);
 };
 
 }
-
-#endif

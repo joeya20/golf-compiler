@@ -1,0 +1,6 @@
+var i int;
+
+func main() {
+    var j int
+    var k str
+}
