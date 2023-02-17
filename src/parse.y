@@ -75,12 +75,11 @@
     VarDecl
     Type
     FuncDecl
-    FuncName
-    FuncBody
-    Signature
-    Parameters
-    ParameterList
-    ParameterDecl
+    FuncSign
+    FuncCall
+    Params
+    ParamList
+    ParamDecl
     Operand
     PrimaryExpr
     Arguments
@@ -111,11 +110,12 @@
 %start SourceFile
 
 %%
-//TODO
-SourceFile  : %empty                       { root = new AstNode(AstNode::Kind::Program); }
-            | SourceFile Program YYEOF     { /* Janky workaround; maybe fix one day */ }
+//DONE
+SourceFile  : %empty                    { root = new AstNode(AstNode::Kind::Program); }
+            | SourceFile Program YYEOF  { /* Janky workaround; maybe fix one day */   }
             ;
 
+//DONE
 Program     : TopLevelDecl ";"          { root->addChild($1); }
             | Program TopLevelDecl ";"  { root->addChild($2); }
             ;
@@ -133,6 +133,7 @@ GlobVarDecl     : "var" ID Type {
                                     $$->addChild($3); 
                                 }
         ;
+
 //DONE
 VarDecl : "var" ID Type { 
                             $$ = new AstNode(AstNode::Kind::VarDecl);
@@ -144,88 +145,165 @@ VarDecl : "var" ID Type {
 
 //DONE
 Type    : ID    { 
-                    $$ = new AstNode(AstNode::Kind::Ident, $1); 
+                    $$ = new AstNode(AstNode::Kind::Type, $1); 
                 }
         ;
 
-//TODO
-FuncDecl    : "func" FuncName Signature FuncBody { std::cout << "funcdecl" << std::endl; }
-                ;
+//DONE
+FuncDecl    : "func" ID FuncSign Block  { 
+                                            $$ = new AstNode(AstNode::Kind::FuncDecl);
+                                            AstNode* id = new AstNode(AstNode::Kind::Ident, $2);
+                                            $$->addChild(id);
+                                            $$->addChild($3);
+                                            $$->addChild($4);
+                                        }
+            ;
 
 //DONE
-//kind of redundant but w/e -- "more readable"
-FuncName    : ID    { 
-                            $$ = new AstNode(AstNode::Kind::Ident, $1); 
+FuncSign    : Params        { 
+                                $$ = new AstNode(AstNode::Kind::FuncSign);
+                                AstNode* type = new AstNode(AstNode::Kind::Type, "$void"); 
+                                $$->addChild($1);
+                                $$->addChild(type);
+                            }
+            | Params Type   {
+                                $$ = new AstNode(AstNode::Kind::FuncSign);
+                                $$->addChild($1);
+                                $$->addChild($2);
+                            }
+            ;
+
+//DONE
+Params      : "(" ")"                   { $$ = new AstNode(AstNode::Kind::Params); }
+            |  "(" ParamList ")"        { 
+                                            $$ = new AstNode(AstNode::Kind::Params);
+                                            $$->addChild($2);
+                                        }
+            |  "(" ParamList "," ")"    { 
+                                            $$ = new AstNode(AstNode::Kind::Params);
+                                            $$->addChild($2);
+                                        }
+            ;
+
+//DONE
+ParamList   : ParamDecl                 { 
+                                            $$ = new AstNode(AstNode::Kind::ParamList);
+                                            $$->addChild($1);
+                                        }
+            | ParamList "," ParamDecl   { 
+                                            $1->addChild($3);
+                                            $$ = $1;
+                                        }
+            ;
+
+//DONE
+ParamDecl   : ID Type   { 
+                            $$ = new AstNode(AstNode::Kind::ParamDecl);
+                            AstNode* id = new AstNode(AstNode::Kind::Ident, $1);
+                            $$->addChild(id);
+                            $$->addChild($2);
                         }
                 ;
 
 //DONE
-//kind of redundant but w/e -- "more readable"
-FuncBody    : Block {
-                            $$ = $1;
-                        }
-                ;
-
-//DONE
-Signature       : Parameters        { 
-                                        $$ = new AstNode(AstNode::Kind::FuncSignStmt);
-                                        $$->addChild($1);
-                                    }
-                | Parameters ID     { 
-                                        $$ = new AstNode(AstNode::Kind::FuncSignStmt);
-                                        AstNode* id = new AstNode(AstNode::Kind::Ident, $2);
-                                        $$->addChild($1);
-                                        $$->addChild(id);
-                                    }
-                ;
-
-//DONE
-Parameters      : "(" ")"                       { $$ = new AstNode(AstNode::Kind::EmptyStmt); }
-                |  "(" ParameterList ")"        { 
-                                                    $$ = $2;
-                                                }
-                |  "(" ParameterList "," ")"    { 
-                                                    $$ = $2;
-                                                }
-                ;
-
-//DONE
-ParameterList   : ParameterDecl                     { 
-                                                        $$ = new AstNode(AstNode::Kind::ParameterList);
-                                                        $$->addChild($1);
-                                                    }
-                | ParameterList "," ParameterDecl   { 
-                                                        $1->addChild($3);
-                                                        $$ = $1;
-                                                    }
-                ;
-
-//DONE
-ParameterDecl   : ID Type       { 
-                                    $$ = new AstNode(AstNode::Kind::ParameterDecl);
-                                    AstNode* id = new AstNode(AstNode::Kind::Ident, $1);
-                                    $$->addChild(id);
+Block       : "{" StmtList "}"  { 
+                                    $$ = new AstNode(AstNode::Block);
                                     $$->addChild($2);
                                 }
-                ;
+            ;
 
 //DONE
-Operand         : INT_LIT       { $$ = new AstNode(AstNode::Kind::IntLit, $1); }
-                | STR_LIT       { $$ = new AstNode(AstNode::Kind::StrLit, $1); }
-                | ID            { $$ = new AstNode(AstNode::Kind::Ident, $1); }
-                | "(" Expr ")"  { $$ = $2; }
-                ;
+StmtList    : %empty            { $$ = new AstNode(AstNode::Kind::StmtList); }
+            | StmtList Stmt ";" {
+                                    $1->addChild($2);
+                                    $$ = $1;
+                                }
+            ;
 
-//TODO - check reference compiler
-PrimaryExpr     : Operand                   { $$ = $1; }
-                | PrimaryExpr Arguments     { std::cout << "prim" << std::endl; }
-                ;
+//DONE
+Stmt        : VarDecl           { $$ = $1; }    
+            | SimpleStmt        { $$ = $1; }        
+            | ReturnStmt        { $$ = $1; }        
+            | BreakStmt         { $$ = $1; }    
+            | Block             { $$ = $1; }
+            | IfStmt            { $$ = $1; }    
+            | ForStmt           { $$ = $1; }    
+            ;
 
-//TODO - check emptystmt and no arguments node handling
-Arguments       : "(" ")"                   { $$ = new AstNode(AstNode::Kind::EmptyStmt); }
-                |  "(" ExprList ")"         { $$ = $2; }
-                |  "(" ExprList "," ")"     { $$ = $2; }
-                ;
+//DONE
+SimpleStmt  : EmptyStmt         { $$ = $1; }
+            | ExprStmt          { $$ = $1; }
+            | AssignStmt        { $$ = $1; }
+            ;
+
+//DONE
+ReturnStmt  : "return"          { $$ = new AstNode(AstNode::Kind::ReturnStmt); }
+            | "return" Expr     { 
+                                    $$ = new AstNode(AstNode::Kind::ReturnStmt);
+                                    $$->addChild($2);
+                                }
+            ;
+
+//DONE
+BreakStmt   : "break" { $$ = new AstNode(AstNode::Kind::BreakStmt); }
+            ;
+
+//DONE
+IfStmt      : "if" Expr Block           {
+                                            $$ = new AstNode(AstNode::Kind::IfStmt);
+                                            $$->addChild($2);
+                                            $$->addChild($3);
+                                        }
+            | "if" Expr Block ElseStmt  {
+                                            $$ = new AstNode(AstNode::Kind::IfStmt);
+                                            $$->addChild($2);
+                                            $$->addChild($3);
+                                            $$->addChild($4);
+                                        }
+            ;
+
+//DONE
+ElseStmt    : "else" IfStmt             {
+                                            // just return the IfStmt
+                                            $$ = $2;
+                                        }
+            | "else" Block              {
+                                            // just return the block
+                                            $$ = $2;
+                                        }
+            ;
+
+//DONE
+ForStmt     : "for" Block       { 
+                                    $$ = new AstNode(AstNode::Kind::ForStmt); 
+                                    $$->addChild($2); 
+                                }
+            | "for" Expr Block  { 
+                                    $$ = new AstNode(AstNode::Kind::ForStmt);
+                                    //intentionally add Expr after Block
+                                    $$->addChild($3);
+                                    $$->addChild($2); 
+                                }
+            ;
+
+//DONE
+EmptyStmt   : %empty  { $$ = new AstNode(AstNode::Kind::EmptyStmt); }
+            ;
+
+//DONE
+ExprStmt    : Expr  { 
+                        $$ = new AstNode(AstNode::Kind::ExprStmt);
+                        $$->addChild($1); 
+                    }
+            ;
+
+//DONE
+AssignStmt  : Expr "=" Expr {   
+                                $$ = new AstNode(AstNode::Kind::AssignStmt); 
+                                $$->addChild($1); 
+                                $$->addChild($3);
+                            }
+            ;
 
 //DONE
 ExprList    : Expr                  { 
@@ -283,10 +361,8 @@ MultExpr    : MultExpr MultOp UnaryExpr {
             | UnaryExpr                 { $$ = $1; }
             ;
 
-//TODO
+//DONE
 UnaryExpr   : PrimaryExpr           {
-                                        //skip creating a redundant UnaryExpr node
-                                        //and just point directly to the PrimaryExpr
                                         $$ = $1;    
                                     }
             | UnaryOp UnaryExpr     {
@@ -296,8 +372,33 @@ UnaryExpr   : PrimaryExpr           {
             ;
 
 //DONE
-UnaryOp     : "-"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | "!"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
+PrimaryExpr     : Operand           { $$ = $1; }
+                | FuncCall          { std::cout << "prim" << std::endl; }
+                ;
+
+//DONE
+FuncCall        : Operand Arguments {
+                                        $$ = new AstNode(AstNode::Kind::FuncCall);
+                                        $$->addChild($1);
+                                        $$->addChild($2);
+                                    }
+
+//DONE
+Arguments       : "(" ")"                   { $$ = new AstNode(AstNode::Kind::ExprList); }
+                |  "(" ExprList ")"         { $$ = $2; }
+                |  "(" ExprList "," ")"     { $$ = $2; }
+                ;
+                
+//DONE
+Operand         : INT_LIT       { $$ = new AstNode(AstNode::Kind::IntLit, $1); }
+                | STR_LIT       { $$ = new AstNode(AstNode::Kind::StrLit, $1); }
+                | ID            { $$ = new AstNode(AstNode::Kind::Ident, $1); }
+                | "(" Expr ")"  { $$ = $2; }
+                ;
+
+//DONE
+UnaryOp     : "-"   { $$ = new AstNode(AstNode::Kind::UnaryExpr, $1); }
+            | "!"   { $$ = new AstNode(AstNode::Kind::UnaryExpr, $1); }
             ;
 
 //DONE
@@ -318,91 +419,6 @@ AddOp       : "+"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
 MultOp      : "*"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
             | "/"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
             | "%"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            ;
-
-//DONE
-Block       : "{" StmtList "}"  { 
-                                    $$ = new AstNode(AstNode::Block);
-                                    $$->addChild($2);
-                                }
-            ;
-
-//DONE
-StmtList    : %empty            { $$ = new AstNode(AstNode::Kind::StmtList); }
-            | StmtList Stmt ";" {
-                                    $1->addChild($2);
-                                    $$ = $1;
-                                }
-            ;
-
-//DONE
-Stmt        : VarDecl           { $$ = $1; }    
-            | SimpleStmt        { $$ = $1; }        
-            | ReturnStmt        { $$ = $1; }        
-            | BreakStmt         { $$ = $1; }    
-            | Block             { $$ = $1; }
-            | IfStmt            { $$ = $1; }    
-            | ForStmt           { $$ = $1; }    
-            ;
-
-//DONE
-SimpleStmt  : EmptyStmt         { $$ = $1; }
-            | ExprStmt          { $$ = $1; }
-            | AssignStmt        { $$ = $1; }
-            ;
-
-//DONE
-ReturnStmt  : "return"          { $$ = new AstNode(AstNode::Kind::ReturnStmt); }
-            | "return" Expr     { 
-                                    $$ = new AstNode(AstNode::Kind::ReturnStmt);
-                                    $$->addChild($2);
-                                }
-            ;
-
-//DONE
-BreakStmt   : "break" { $$ = new AstNode(AstNode::Kind::BreakStmt); }
-            ;
-
-//TODO
-IfStmt      : "if" Expr Block           { std::cout << "if" << std::endl; }
-            | "if" Expr Block ElseStmt  { std::cout << "if" << std::endl; }
-            ;
-
-//TODO
-ElseStmt    : "else" IfStmt             { std::cout << "else" << std::endl; }
-            | "else" Block              { std::cout << "else" << std::endl; }
-            ;
-
-//DONE
-ForStmt     : "for" Block       { 
-                                    $$ = new AstNode(AstNode::Kind::ForStmt); 
-                                    $$->addChild($2); 
-                                }
-            | "for" Expr Block  { 
-                                    $$ = new AstNode(AstNode::Kind::ForStmt);
-                                    //intentionally add Expr after Block
-                                    $$->addChild($3);
-                                    $$->addChild($2); 
-                                }
-            ;
-
-//DONE
-EmptyStmt   : %empty  { $$ = new AstNode(AstNode::Kind::EmptyStmt); }
-            ;
-
-//DONE
-ExprStmt    : Expr  { 
-                        $$ = new AstNode(AstNode::Kind::ExprStmt);
-                        $$->addChild($1); 
-                    }
-            ;
-
-//DONE
-AssignStmt  : Expr "=" Expr {   
-                                $$ = new AstNode(AstNode::Kind::AssignStmt); 
-                                $$->addChild($1); 
-                                $$->addChild($3);
-                            }
             ;
 %%
 

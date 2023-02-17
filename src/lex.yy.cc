@@ -495,15 +495,12 @@ static const flex_int32_t yy_rule_can_match_eol[52] =
 #include "lexer.hpp"
 #include <iostream>
 
-// vars to store line and char no
-// int colno = 1;
-
 // filename from main to use for location
 extern std::string inputFileName;
-#line 503 "src/lex.yy.cc"
+#line 500 "src/lex.yy.cc"
 /* always have noyywrap for school server */
 
-#line 506 "src/lex.yy.cc"
+#line 503 "src/lex.yy.cc"
 
 #define INITIAL 0
 #define STRING 1
@@ -636,9 +633,9 @@ YY_DECL
 		}
 
 	{
-#line 30 "src/lex.l"
+#line 27 "src/lex.l"
 
-#line 641 "src/lex.yy.cc"
+#line 638 "src/lex.yy.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -713,12 +710,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 31 "src/lex.l"
+#line 28 "src/lex.l"
 { /* ignore comments */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 32 "src/lex.l"
+#line 29 "src/lex.l"
 {   /* skip allowed (0x20, 0x09, 0x0D) whitespace */ 
                                     // colno += YYLeng();
                                     startPos.columns(YYLeng());
@@ -727,7 +724,7 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 36 "src/lex.l"
+#line 33 "src/lex.l"
 {   // newline
                                     if(checkCurrentToken()) {
                                         yyless(0);
@@ -745,7 +742,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 50 "src/lex.l"
+#line 47 "src/lex.l"
 {   
                                         // create temp copy of startPos
                                         GoLF::position start = startPos;
@@ -758,7 +755,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 59 "src/lex.l"
+#line 56 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -771,7 +768,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 68 "src/lex.l"
+#line 65 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -784,7 +781,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 77 "src/lex.l"
+#line 74 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -797,7 +794,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 86 "src/lex.l"
+#line 83 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -810,7 +807,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 95 "src/lex.l"
+#line 92 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -823,7 +820,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 104 "src/lex.l"
+#line 101 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -836,12 +833,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 113 "src/lex.l"
+#line 110 "src/lex.l"
 { error(3, "Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 114 "src/lex.l"
+#line 111 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -854,7 +851,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 123 "src/lex.l"
+#line 120 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -867,7 +864,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 132 "src/lex.l"
+#line 129 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -880,7 +877,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 141 "src/lex.l"
+#line 138 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -893,12 +890,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 150 "src/lex.l"
+#line 147 "src/lex.l"
 { error(3, "Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 151 "src/lex.l"
+#line 148 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -911,7 +908,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 160 "src/lex.l"
+#line 157 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -924,7 +921,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 169 "src/lex.l"
+#line 166 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -937,7 +934,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 178 "src/lex.l"
+#line 175 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -950,7 +947,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 187 "src/lex.l"
+#line 184 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -963,7 +960,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 196 "src/lex.l"
+#line 193 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -976,7 +973,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 205 "src/lex.l"
+#line 202 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -989,7 +986,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 214 "src/lex.l"
+#line 211 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1002,7 +999,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 223 "src/lex.l"
+#line 220 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1015,7 +1012,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 232 "src/lex.l"
+#line 229 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1028,7 +1025,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 241 "src/lex.l"
+#line 238 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1041,7 +1038,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 250 "src/lex.l"
+#line 247 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1054,7 +1051,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 259 "src/lex.l"
+#line 256 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1067,7 +1064,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 268 "src/lex.l"
+#line 265 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1080,7 +1077,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 277 "src/lex.l"
+#line 274 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1093,7 +1090,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 286 "src/lex.l"
+#line 283 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1106,7 +1103,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 295 "src/lex.l"
+#line 292 "src/lex.l"
 {
                                     if(currentTokenKind != Parser::symbol_kind_type::S_YYEOF && 
                                         currentTokenKind != Parser::symbol_kind_type::S_SEMICOLON) {
@@ -1130,7 +1127,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 315 "src/lex.l"
+#line 312 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1143,7 +1140,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 324 "src/lex.l"
+#line 321 "src/lex.l"
 { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -1156,7 +1153,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 333 "src/lex.l"
+#line 330 "src/lex.l"
 {
                                     // double-quote is the start of a string
                                     yymore();
@@ -1165,7 +1162,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 338 "src/lex.l"
+#line 335 "src/lex.l"
 {  // double-quote is the end of a string
                                     BEGIN(INITIAL); 
                                     // create temp copy of startPos
@@ -1179,12 +1176,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 348 "src/lex.l"
+#line 345 "src/lex.l"
 {  /* valid escape character */ yymore(); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 349 "src/lex.l"
+#line 346 "src/lex.l"
 {
                                     // invalid escape character
                                     // check if newline or EOF is after; those take precedence but doesn't matter either way
@@ -1204,20 +1201,20 @@ YY_RULE_SETUP
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 364 "src/lex.l"
+#line 361 "src/lex.l"
 { error(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 365 "src/lex.l"
+#line 362 "src/lex.l"
 { yymore(); }
 	YY_BREAK
 case YY_STATE_EOF(STRING):
-#line 366 "src/lex.l"
+#line 363 "src/lex.l"
 { error(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 367 "src/lex.l"
+#line 364 "src/lex.l"
 {
                                     if(checkCurrentToken()) {
                                         eofReached = true;
@@ -1234,7 +1231,7 @@ case YY_STATE_EOF(INITIAL):
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 380 "src/lex.l"
+#line 377 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", startPos.line, startPos.column, "\\a");
                                     startPos.columns(YYLeng());
@@ -1242,7 +1239,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 384 "src/lex.l"
+#line 381 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\b");
                                     startPos.columns(YYLeng());
@@ -1250,7 +1247,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 388 "src/lex.l"
+#line 385 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\f");
                                     startPos.columns(YYLeng());
@@ -1258,7 +1255,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 392 "src/lex.l"
+#line 389 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\v");
                                     startPos.columns(YYLeng());
@@ -1266,7 +1263,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 396 "src/lex.l"
+#line 393 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\\\");
                                     startPos.columns(YYLeng());
@@ -1274,7 +1271,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 400 "src/lex.l"
+#line 397 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\'");
                                     startPos.columns(YYLeng());
@@ -1282,7 +1279,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 404 "src/lex.l"
+#line 401 "src/lex.l"
 { 
                                     warning(3, "Skipping NUL character", startPos.line, startPos.column+YYLeng());
                                     startPos.columns(YYLeng());
@@ -1290,7 +1287,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 408 "src/lex.l"
+#line 405 "src/lex.l"
 { 
                                     warning(3, "Skipping non-ascii character", startPos.line, startPos.column+YYLeng());
                                     startPos.columns(YYLeng());
@@ -1298,7 +1295,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 412 "src/lex.l"
+#line 409 "src/lex.l"
 {
                                     warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), yytext);
                                     startPos.columns(YYLeng());
@@ -1306,10 +1303,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 416 "src/lex.l"
+#line 413 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 1312 "src/lex.yy.cc"
+#line 1309 "src/lex.yy.cc"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2279,5 +2276,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 416 "src/lex.l"
+#line 413 "src/lex.l"
 

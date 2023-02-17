@@ -217,26 +217,10 @@ namespace  GoLF  {
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -249,6 +233,21 @@ namespace  GoLF  {
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.YY_MOVE_OR_COPY< AstNode* > (YY_MOVE (that.value));
         break;
 
@@ -306,26 +305,10 @@ namespace  GoLF  {
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -338,6 +321,21 @@ namespace  GoLF  {
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.move< AstNode* > (YY_MOVE (that.value));
         break;
 
@@ -395,26 +393,10 @@ namespace  GoLF  {
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -427,6 +409,21 @@ namespace  GoLF  {
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.copy< AstNode* > (that.value);
         break;
 
@@ -483,26 +480,10 @@ namespace  GoLF  {
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -515,6 +496,21 @@ namespace  GoLF  {
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.move< AstNode* > (that.value);
         break;
 
@@ -816,26 +812,10 @@ namespace  GoLF  {
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -848,6 +828,21 @@ namespace  GoLF  {
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         yylhs.value.emplace< AstNode* > ();
         break;
 
@@ -906,39 +901,39 @@ namespace  GoLF  {
           switch (yyn)
             {
   case 2: // SourceFile: %empty
-#line 115 "src/parse.y"
-                                           { root = new AstNode(AstNode::Kind::Program); }
-#line 912 "src/parse.tab.cc"
+#line 114 "src/parse.y"
+                                        { root = new AstNode(AstNode::Kind::Program); }
+#line 907 "src/parse.tab.cc"
     break;
 
   case 3: // SourceFile: SourceFile Program $end
-#line 116 "src/parse.y"
-                                           { /* Janky workaround; maybe fix one day */ }
-#line 918 "src/parse.tab.cc"
+#line 115 "src/parse.y"
+                                        { /* Janky workaround; maybe fix one day */   }
+#line 913 "src/parse.tab.cc"
     break;
 
   case 4: // Program: TopLevelDecl ";"
 #line 119 "src/parse.y"
                                         { root->addChild(yystack_[1].value.as < AstNode* > ()); }
-#line 924 "src/parse.tab.cc"
+#line 919 "src/parse.tab.cc"
     break;
 
   case 5: // Program: Program TopLevelDecl ";"
 #line 120 "src/parse.y"
                                         { root->addChild(yystack_[1].value.as < AstNode* > ()); }
-#line 930 "src/parse.tab.cc"
+#line 925 "src/parse.tab.cc"
     break;
 
   case 6: // TopLevelDecl: GlobVarDecl
 #line 124 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 936 "src/parse.tab.cc"
+#line 931 "src/parse.tab.cc"
     break;
 
   case 7: // TopLevelDecl: FuncDecl
 #line 125 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 942 "src/parse.tab.cc"
+#line 937 "src/parse.tab.cc"
     break;
 
   case 8: // GlobVarDecl: "var" ID Type
@@ -949,546 +944,562 @@ namespace  GoLF  {
                                     yylhs.value.as < AstNode* > ()->addChild(id); 
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                                 }
-#line 953 "src/parse.tab.cc"
+#line 948 "src/parse.tab.cc"
     break;
 
   case 9: // VarDecl: "var" ID Type
-#line 137 "src/parse.y"
+#line 138 "src/parse.y"
                         { 
                             yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::VarDecl);
                             AstNode *id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > ());
                             yylhs.value.as < AstNode* > ()->addChild(id); 
                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                         }
-#line 964 "src/parse.tab.cc"
+#line 959 "src/parse.tab.cc"
     break;
 
   case 10: // Type: ID
-#line 146 "src/parse.y"
+#line 147 "src/parse.y"
                 { 
-                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Ident, yystack_[0].value.as < std::string > ()); 
+                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Type, yystack_[0].value.as < std::string > ()); 
                 }
-#line 972 "src/parse.tab.cc"
+#line 967 "src/parse.tab.cc"
     break;
 
-  case 11: // FuncDecl: "func" FuncName Signature FuncBody
-#line 152 "src/parse.y"
-                                                 { std::cout << "funcdecl" << std::endl; }
-#line 978 "src/parse.tab.cc"
+  case 11: // FuncDecl: "func" ID FuncSign Block
+#line 153 "src/parse.y"
+                                        { 
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncDecl);
+                                            AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[2].value.as < std::string > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(id);
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        }
+#line 979 "src/parse.tab.cc"
     break;
 
-  case 12: // FuncName: ID
-#line 157 "src/parse.y"
-                    { 
-                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Ident, yystack_[0].value.as < std::string > ()); 
-                        }
-#line 986 "src/parse.tab.cc"
+  case 12: // FuncSign: Params
+#line 163 "src/parse.y"
+                            { 
+                                yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncSign);
+                                AstNode* type = new AstNode(AstNode::Kind::Type, "$void"); 
+                                yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                yylhs.value.as < AstNode* > ()->addChild(type);
+                            }
+#line 990 "src/parse.tab.cc"
     break;
 
-  case 13: // FuncBody: Block
-#line 164 "src/parse.y"
-                    {
-                            yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();
-                        }
-#line 994 "src/parse.tab.cc"
+  case 13: // FuncSign: Params Type
+#line 169 "src/parse.y"
+                            {
+                                yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncSign);
+                                yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
+                                yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                            }
+#line 1000 "src/parse.tab.cc"
     break;
 
-  case 14: // Signature: Parameters
-#line 170 "src/parse.y"
-                                    { 
-                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncSignStmt);
-                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                    }
-#line 1003 "src/parse.tab.cc"
+  case 14: // Params: "(" ")"
+#line 177 "src/parse.y"
+                                        { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Params); }
+#line 1006 "src/parse.tab.cc"
     break;
 
-  case 15: // Signature: Parameters ID
-#line 174 "src/parse.y"
-                                    { 
-                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncSignStmt);
-                                        AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[0].value.as < std::string > ());
-                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
-                                        yylhs.value.as < AstNode* > ()->addChild(id);
-                                    }
-#line 1014 "src/parse.tab.cc"
+  case 15: // Params: "(" ParamList ")"
+#line 178 "src/parse.y"
+                                        { 
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Params);
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
+                                        }
+#line 1015 "src/parse.tab.cc"
     break;
 
-  case 16: // Parameters: "(" ")"
-#line 183 "src/parse.y"
-                                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::EmptyStmt); }
-#line 1020 "src/parse.tab.cc"
+  case 16: // Params: "(" ParamList "," ")"
+#line 182 "src/parse.y"
+                                        { 
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Params);
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                        }
+#line 1024 "src/parse.tab.cc"
     break;
 
-  case 17: // Parameters: "(" ParameterList ")"
-#line 184 "src/parse.y"
-                                                { 
-                                                    yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
-                                                }
-#line 1028 "src/parse.tab.cc"
+  case 17: // ParamList: ParamDecl
+#line 189 "src/parse.y"
+                                        { 
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ParamList);
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        }
+#line 1033 "src/parse.tab.cc"
     break;
 
-  case 18: // Parameters: "(" ParameterList "," ")"
-#line 187 "src/parse.y"
-                                                { 
-                                                    yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
-                                                }
-#line 1036 "src/parse.tab.cc"
-    break;
-
-  case 19: // ParameterList: ParameterDecl
+  case 18: // ParamList: ParamList "," ParamDecl
 #line 193 "src/parse.y"
-                                                    { 
-                                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ParameterList);
-                                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                                    }
-#line 1045 "src/parse.tab.cc"
+                                        { 
+                                            yystack_[2].value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
+                                        }
+#line 1042 "src/parse.tab.cc"
     break;
 
-  case 20: // ParameterList: ParameterList "," ParameterDecl
-#line 197 "src/parse.y"
-                                                    { 
-                                                        yystack_[2].value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                                        yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
-                                                    }
-#line 1054 "src/parse.tab.cc"
+  case 19: // ParamDecl: ID Type
+#line 200 "src/parse.y"
+                        { 
+                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ParamDecl);
+                            AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > ());
+                            yylhs.value.as < AstNode* > ()->addChild(id);
+                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                        }
+#line 1053 "src/parse.tab.cc"
     break;
 
-  case 21: // ParameterDecl: ID Type
-#line 204 "src/parse.y"
+  case 20: // Block: "{" StmtList "}"
+#line 209 "src/parse.y"
                                 { 
-                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ParameterDecl);
-                                    AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > ());
-                                    yylhs.value.as < AstNode* > ()->addChild(id);
-                                    yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Block);
+                                    yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
                                 }
-#line 1065 "src/parse.tab.cc"
+#line 1062 "src/parse.tab.cc"
     break;
 
-  case 22: // Operand: INT_LIT
-#line 213 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IntLit, yystack_[0].value.as < std::string > ()); }
-#line 1071 "src/parse.tab.cc"
+  case 21: // StmtList: %empty
+#line 216 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::StmtList); }
+#line 1068 "src/parse.tab.cc"
     break;
 
-  case 23: // Operand: STR_LIT
-#line 214 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::StrLit, yystack_[0].value.as < std::string > ()); }
+  case 22: // StmtList: StmtList Stmt ";"
+#line 217 "src/parse.y"
+                                {
+                                    yystack_[2].value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
+                                    yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
+                                }
 #line 1077 "src/parse.tab.cc"
     break;
 
-  case 24: // Operand: ID
-#line 215 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Ident, yystack_[0].value.as < std::string > ()); }
+  case 23: // Stmt: VarDecl
+#line 224 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1083 "src/parse.tab.cc"
     break;
 
-  case 25: // Operand: "(" Expr ")"
-#line 216 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > (); }
+  case 24: // Stmt: SimpleStmt
+#line 225 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1089 "src/parse.tab.cc"
     break;
 
-  case 26: // PrimaryExpr: Operand
-#line 220 "src/parse.y"
-                                            { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+  case 25: // Stmt: ReturnStmt
+#line 226 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1095 "src/parse.tab.cc"
     break;
 
-  case 27: // PrimaryExpr: PrimaryExpr Arguments
-#line 221 "src/parse.y"
-                                            { std::cout << "prim" << std::endl; }
+  case 26: // Stmt: BreakStmt
+#line 227 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1101 "src/parse.tab.cc"
     break;
 
-  case 28: // Arguments: "(" ")"
-#line 225 "src/parse.y"
-                                            { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::EmptyStmt); }
+  case 27: // Stmt: Block
+#line 228 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1107 "src/parse.tab.cc"
     break;
 
-  case 29: // Arguments: "(" ExprList ")"
-#line 226 "src/parse.y"
-                                            { yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > (); }
+  case 28: // Stmt: IfStmt
+#line 229 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1113 "src/parse.tab.cc"
     break;
 
-  case 30: // Arguments: "(" ExprList "," ")"
-#line 227 "src/parse.y"
-                                            { yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > (); }
+  case 29: // Stmt: ForStmt
+#line 230 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1119 "src/parse.tab.cc"
     break;
 
-  case 31: // ExprList: Expr
-#line 231 "src/parse.y"
-                                    { 
-                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprList);
-                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                    }
-#line 1128 "src/parse.tab.cc"
+  case 30: // SimpleStmt: EmptyStmt
+#line 234 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1125 "src/parse.tab.cc"
     break;
 
-  case 32: // ExprList: ExprList "," Expr
+  case 31: // SimpleStmt: ExprStmt
 #line 235 "src/parse.y"
-                                    { 
-                                        yystack_[2].value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                        yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
-                                    }
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1131 "src/parse.tab.cc"
+    break;
+
+  case 32: // SimpleStmt: AssignStmt
+#line 236 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1137 "src/parse.tab.cc"
     break;
 
-  case 33: // Expr: Expr "||" AndExpr
-#line 242 "src/parse.y"
+  case 33: // ReturnStmt: "return"
+#line 240 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt); }
+#line 1143 "src/parse.tab.cc"
+    break;
+
+  case 34: // ReturnStmt: "return" Expr
+#line 241 "src/parse.y"
+                                { 
+                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt);
+                                    yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                }
+#line 1152 "src/parse.tab.cc"
+    break;
+
+  case 35: // BreakStmt: "break"
+#line 248 "src/parse.y"
+                      { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BreakStmt); }
+#line 1158 "src/parse.tab.cc"
+    break;
+
+  case 36: // IfStmt: "if" Expr Block
+#line 252 "src/parse.y"
                                         {
-                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > ());
-                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IfStmt);
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         }
-#line 1147 "src/parse.tab.cc"
+#line 1168 "src/parse.tab.cc"
     break;
 
-  case 34: // Expr: AndExpr
-#line 247 "src/parse.y"
-                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1153 "src/parse.tab.cc"
-    break;
-
-  case 35: // AndExpr: AndExpr "&&" RelExpr
-#line 251 "src/parse.y"
+  case 37: // IfStmt: "if" Expr Block ElseStmt
+#line 257 "src/parse.y"
                                         {
-                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > ());
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IfStmt);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
-                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                        }
-#line 1163 "src/parse.tab.cc"
-    break;
-
-  case 36: // AndExpr: RelExpr
-#line 256 "src/parse.y"
-                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1169 "src/parse.tab.cc"
-    break;
-
-  case 37: // RelExpr: RelExpr RelOp AddExpr
-#line 260 "src/parse.y"
-                                        {
-                                            yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
-                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         }
 #line 1179 "src/parse.tab.cc"
     break;
 
-  case 38: // RelExpr: AddExpr
-#line 265 "src/parse.y"
-                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1185 "src/parse.tab.cc"
-    break;
-
-  case 39: // AddExpr: AddExpr AddOp MultExpr
-#line 269 "src/parse.y"
+  case 38: // ElseStmt: "else" IfStmt
+#line 266 "src/parse.y"
                                         {
-                                            yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
-                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
-                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                            // just return the IfStmt
+                                            yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();
                                         }
-#line 1195 "src/parse.tab.cc"
+#line 1188 "src/parse.tab.cc"
     break;
 
-  case 40: // AddExpr: MultExpr
-#line 274 "src/parse.y"
-                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1201 "src/parse.tab.cc"
-    break;
-
-  case 41: // MultExpr: MultExpr MultOp UnaryExpr
-#line 278 "src/parse.y"
+  case 39: // ElseStmt: "else" Block
+#line 270 "src/parse.y"
                                         {
-                                            yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
-                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
-                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                            // just return the block
+                                            yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();
                                         }
-#line 1211 "src/parse.tab.cc"
+#line 1197 "src/parse.tab.cc"
     break;
 
-  case 42: // MultExpr: UnaryExpr
-#line 283 "src/parse.y"
-                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1217 "src/parse.tab.cc"
-    break;
-
-  case 43: // UnaryExpr: PrimaryExpr
-#line 287 "src/parse.y"
-                                    {
-                                        //skip creating a redundant UnaryExpr node
-                                        //and just point directly to the PrimaryExpr
-                                        yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();    
-                                    }
-#line 1227 "src/parse.tab.cc"
-    break;
-
-  case 44: // UnaryExpr: UnaryOp UnaryExpr
-#line 292 "src/parse.y"
-                                    {
-                                        yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
-                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                    }
-#line 1236 "src/parse.tab.cc"
-    break;
-
-  case 45: // UnaryOp: "-"
-#line 299 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1242 "src/parse.tab.cc"
-    break;
-
-  case 46: // UnaryOp: "!"
-#line 300 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1248 "src/parse.tab.cc"
-    break;
-
-  case 47: // RelOp: "=="
-#line 304 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1254 "src/parse.tab.cc"
-    break;
-
-  case 48: // RelOp: "!="
-#line 305 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1260 "src/parse.tab.cc"
-    break;
-
-  case 49: // RelOp: "<"
-#line 306 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1266 "src/parse.tab.cc"
-    break;
-
-  case 50: // RelOp: "<="
-#line 307 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1272 "src/parse.tab.cc"
-    break;
-
-  case 51: // RelOp: ">"
-#line 308 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1278 "src/parse.tab.cc"
-    break;
-
-  case 52: // RelOp: ">="
-#line 309 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1284 "src/parse.tab.cc"
-    break;
-
-  case 53: // AddOp: "+"
-#line 313 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1290 "src/parse.tab.cc"
-    break;
-
-  case 54: // AddOp: "-"
-#line 314 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1296 "src/parse.tab.cc"
-    break;
-
-  case 55: // MultOp: "*"
-#line 318 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1302 "src/parse.tab.cc"
-    break;
-
-  case 56: // MultOp: "/"
-#line 319 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1308 "src/parse.tab.cc"
-    break;
-
-  case 57: // MultOp: "%"
-#line 320 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1314 "src/parse.tab.cc"
-    break;
-
-  case 58: // Block: "{" StmtList "}"
-#line 324 "src/parse.y"
-                                { 
-                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Block);
-                                    yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
-                                }
-#line 1323 "src/parse.tab.cc"
-    break;
-
-  case 59: // StmtList: %empty
-#line 331 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::StmtList); }
-#line 1329 "src/parse.tab.cc"
-    break;
-
-  case 60: // StmtList: StmtList Stmt ";"
-#line 332 "src/parse.y"
-                                {
-                                    yystack_[2].value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
-                                    yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
-                                }
-#line 1338 "src/parse.tab.cc"
-    break;
-
-  case 61: // Stmt: VarDecl
-#line 339 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1344 "src/parse.tab.cc"
-    break;
-
-  case 62: // Stmt: SimpleStmt
-#line 340 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1350 "src/parse.tab.cc"
-    break;
-
-  case 63: // Stmt: ReturnStmt
-#line 341 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1356 "src/parse.tab.cc"
-    break;
-
-  case 64: // Stmt: BreakStmt
-#line 342 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1362 "src/parse.tab.cc"
-    break;
-
-  case 65: // Stmt: Block
-#line 343 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1368 "src/parse.tab.cc"
-    break;
-
-  case 66: // Stmt: IfStmt
-#line 344 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1374 "src/parse.tab.cc"
-    break;
-
-  case 67: // Stmt: ForStmt
-#line 345 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1380 "src/parse.tab.cc"
-    break;
-
-  case 68: // SimpleStmt: EmptyStmt
-#line 349 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1386 "src/parse.tab.cc"
-    break;
-
-  case 69: // SimpleStmt: ExprStmt
-#line 350 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1392 "src/parse.tab.cc"
-    break;
-
-  case 70: // SimpleStmt: AssignStmt
-#line 351 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1398 "src/parse.tab.cc"
-    break;
-
-  case 71: // ReturnStmt: "return"
-#line 355 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt); }
-#line 1404 "src/parse.tab.cc"
-    break;
-
-  case 72: // ReturnStmt: "return" Expr
-#line 356 "src/parse.y"
-                                { 
-                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt);
-                                    yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                }
-#line 1413 "src/parse.tab.cc"
-    break;
-
-  case 73: // BreakStmt: "break"
-#line 363 "src/parse.y"
-                      { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BreakStmt); }
-#line 1419 "src/parse.tab.cc"
-    break;
-
-  case 74: // IfStmt: "if" Expr Block
-#line 367 "src/parse.y"
-                                        { std::cout << "if" << std::endl; }
-#line 1425 "src/parse.tab.cc"
-    break;
-
-  case 75: // IfStmt: "if" Expr Block ElseStmt
-#line 368 "src/parse.y"
-                                        { std::cout << "if" << std::endl; }
-#line 1431 "src/parse.tab.cc"
-    break;
-
-  case 76: // ElseStmt: "else" IfStmt
-#line 372 "src/parse.y"
-                                        { std::cout << "else" << std::endl; }
-#line 1437 "src/parse.tab.cc"
-    break;
-
-  case 77: // ElseStmt: "else" Block
-#line 373 "src/parse.y"
-                                        { std::cout << "else" << std::endl; }
-#line 1443 "src/parse.tab.cc"
-    break;
-
-  case 78: // ForStmt: "for" Block
-#line 377 "src/parse.y"
+  case 40: // ForStmt: "for" Block
+#line 277 "src/parse.y"
                                 { 
                                     yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ForStmt); 
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                                 }
-#line 1452 "src/parse.tab.cc"
+#line 1206 "src/parse.tab.cc"
     break;
 
-  case 79: // ForStmt: "for" Expr Block
-#line 381 "src/parse.y"
+  case 41: // ForStmt: "for" Expr Block
+#line 281 "src/parse.y"
                                 { 
                                     yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ForStmt);
                                     //intentionally add Expr after Block
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ()); 
                                 }
-#line 1463 "src/parse.tab.cc"
+#line 1217 "src/parse.tab.cc"
     break;
 
-  case 80: // EmptyStmt: %empty
-#line 390 "src/parse.y"
+  case 42: // EmptyStmt: %empty
+#line 290 "src/parse.y"
                       { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::EmptyStmt); }
-#line 1469 "src/parse.tab.cc"
+#line 1223 "src/parse.tab.cc"
     break;
 
-  case 81: // ExprStmt: Expr
-#line 394 "src/parse.y"
+  case 43: // ExprStmt: Expr
+#line 294 "src/parse.y"
                     { 
                         yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprStmt);
                         yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                     }
-#line 1478 "src/parse.tab.cc"
+#line 1232 "src/parse.tab.cc"
     break;
 
-  case 82: // AssignStmt: Expr "=" Expr
-#line 401 "src/parse.y"
+  case 44: // AssignStmt: Expr "=" Expr
+#line 301 "src/parse.y"
                             {   
                                 yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::AssignStmt); 
                                 yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ()); 
                                 yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                             }
-#line 1488 "src/parse.tab.cc"
+#line 1242 "src/parse.tab.cc"
+    break;
+
+  case 45: // ExprList: Expr
+#line 309 "src/parse.y"
+                                    { 
+                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprList);
+                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                    }
+#line 1251 "src/parse.tab.cc"
+    break;
+
+  case 46: // ExprList: ExprList "," Expr
+#line 313 "src/parse.y"
+                                    { 
+                                        yystack_[2].value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
+                                    }
+#line 1260 "src/parse.tab.cc"
+    break;
+
+  case 47: // Expr: Expr "||" AndExpr
+#line 320 "src/parse.y"
+                                        {
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        }
+#line 1270 "src/parse.tab.cc"
+    break;
+
+  case 48: // Expr: AndExpr
+#line 325 "src/parse.y"
+                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1276 "src/parse.tab.cc"
+    break;
+
+  case 49: // AndExpr: AndExpr "&&" RelExpr
+#line 329 "src/parse.y"
+                                        {
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        }
+#line 1286 "src/parse.tab.cc"
+    break;
+
+  case 50: // AndExpr: RelExpr
+#line 334 "src/parse.y"
+                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1292 "src/parse.tab.cc"
+    break;
+
+  case 51: // RelExpr: RelExpr RelOp AddExpr
+#line 338 "src/parse.y"
+                                        {
+                                            yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        }
+#line 1302 "src/parse.tab.cc"
+    break;
+
+  case 52: // RelExpr: AddExpr
+#line 343 "src/parse.y"
+                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1308 "src/parse.tab.cc"
+    break;
+
+  case 53: // AddExpr: AddExpr AddOp MultExpr
+#line 347 "src/parse.y"
+                                        {
+                                            yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        }
+#line 1318 "src/parse.tab.cc"
+    break;
+
+  case 54: // AddExpr: MultExpr
+#line 352 "src/parse.y"
+                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1324 "src/parse.tab.cc"
+    break;
+
+  case 55: // MultExpr: MultExpr MultOp UnaryExpr
+#line 356 "src/parse.y"
+                                        {
+                                            yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
+                                            yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                        }
+#line 1334 "src/parse.tab.cc"
+    break;
+
+  case 56: // MultExpr: UnaryExpr
+#line 361 "src/parse.y"
+                                        { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1340 "src/parse.tab.cc"
+    break;
+
+  case 57: // UnaryExpr: PrimaryExpr
+#line 365 "src/parse.y"
+                                    {
+                                        yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();    
+                                    }
+#line 1348 "src/parse.tab.cc"
+    break;
+
+  case 58: // UnaryExpr: UnaryOp UnaryExpr
+#line 368 "src/parse.y"
+                                    {
+                                        yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
+                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                    }
+#line 1357 "src/parse.tab.cc"
+    break;
+
+  case 59: // PrimaryExpr: Operand
+#line 375 "src/parse.y"
+                                    { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1363 "src/parse.tab.cc"
+    break;
+
+  case 60: // PrimaryExpr: FuncCall
+#line 376 "src/parse.y"
+                                    { std::cout << "prim" << std::endl; }
+#line 1369 "src/parse.tab.cc"
+    break;
+
+  case 61: // FuncCall: Operand Arguments
+#line 380 "src/parse.y"
+                                    {
+                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncCall);
+                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
+                                        yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
+                                    }
+#line 1379 "src/parse.tab.cc"
+    break;
+
+  case 62: // Arguments: "(" ")"
+#line 387 "src/parse.y"
+                                            { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprList); }
+#line 1385 "src/parse.tab.cc"
+    break;
+
+  case 63: // Arguments: "(" ExprList ")"
+#line 388 "src/parse.y"
+                                            { yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > (); }
+#line 1391 "src/parse.tab.cc"
+    break;
+
+  case 64: // Arguments: "(" ExprList "," ")"
+#line 389 "src/parse.y"
+                                            { yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > (); }
+#line 1397 "src/parse.tab.cc"
+    break;
+
+  case 65: // Operand: INT_LIT
+#line 393 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IntLit, yystack_[0].value.as < std::string > ()); }
+#line 1403 "src/parse.tab.cc"
+    break;
+
+  case 66: // Operand: STR_LIT
+#line 394 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::StrLit, yystack_[0].value.as < std::string > ()); }
+#line 1409 "src/parse.tab.cc"
+    break;
+
+  case 67: // Operand: ID
+#line 395 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Ident, yystack_[0].value.as < std::string > ()); }
+#line 1415 "src/parse.tab.cc"
+    break;
+
+  case 68: // Operand: "(" Expr ")"
+#line 396 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > (); }
+#line 1421 "src/parse.tab.cc"
+    break;
+
+  case 69: // UnaryOp: "-"
+#line 400 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1427 "src/parse.tab.cc"
+    break;
+
+  case 70: // UnaryOp: "!"
+#line 401 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1433 "src/parse.tab.cc"
+    break;
+
+  case 71: // RelOp: "=="
+#line 405 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1439 "src/parse.tab.cc"
+    break;
+
+  case 72: // RelOp: "!="
+#line 406 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1445 "src/parse.tab.cc"
+    break;
+
+  case 73: // RelOp: "<"
+#line 407 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1451 "src/parse.tab.cc"
+    break;
+
+  case 74: // RelOp: "<="
+#line 408 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1457 "src/parse.tab.cc"
+    break;
+
+  case 75: // RelOp: ">"
+#line 409 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1463 "src/parse.tab.cc"
+    break;
+
+  case 76: // RelOp: ">="
+#line 410 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1469 "src/parse.tab.cc"
+    break;
+
+  case 77: // AddOp: "+"
+#line 414 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1475 "src/parse.tab.cc"
+    break;
+
+  case 78: // AddOp: "-"
+#line 415 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1481 "src/parse.tab.cc"
+    break;
+
+  case 79: // MultOp: "*"
+#line 419 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1487 "src/parse.tab.cc"
+    break;
+
+  case 80: // MultOp: "/"
+#line 420 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1493 "src/parse.tab.cc"
+    break;
+
+  case 81: // MultOp: "%"
+#line 421 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
+#line 1499 "src/parse.tab.cc"
     break;
 
 
-#line 1492 "src/parse.tab.cc"
+#line 1503 "src/parse.tab.cc"
 
             default:
               break;
@@ -1840,139 +1851,137 @@ namespace  GoLF  {
   }
 
 
-  const signed char  Parser ::yypact_ninf_ = -55;
+  const signed char  Parser ::yypact_ninf_ = -62;
 
   const signed char  Parser ::yytable_ninf_ = -1;
 
   const signed char
    Parser ::yypact_[] =
   {
-     -55,     4,   -55,   -23,    -9,    14,    44,   -55,   -55,   -55,
-      45,    19,   -55,    51,   -55,     3,    50,    25,   -55,   -55,
-     -55,   -55,    19,     8,   -55,   -55,   -55,   -55,   -55,   -55,
-     -55,    15,    39,   -55,   -55,    75,   -55,   -55,   -55,   -55,
-      75,    49,    75,    26,   -55,   -55,   -55,   -55,   -55,    57,
-      -3,    54,    12,     0,    68,   -55,    75,   -55,    62,   -55,
-     -55,   -55,   -55,   -55,   -55,   -55,   -55,    11,    23,    23,
-     -55,    61,    19,    72,   -55,    75,    75,    75,   -55,   -55,
-     -55,   -55,   -55,   -55,    75,   -55,   -55,    75,   -55,   -55,
-     -55,    75,   -55,   -55,   -55,    48,   -55,   -55,   -55,    10,
-      61,    54,    61,    12,     0,    68,   -55,     5,   -55,   -55,
-      80,   -55,   -55,   -55,    61
+     -62,     2,   -62,   -19,   -14,     9,    20,   -62,   -62,    22,
+      -6,   -62,    31,   -62,    11,    47,    -6,   -62,   -62,   -62,
+     -62,    -6,    10,   -62,   -62,   -62,   -62,   -62,   -62,    13,
+      18,   -62,   -62,    60,   -62,   -62,   -62,   -62,    60,    48,
+      60,    30,   -62,   -62,   -62,   -62,   -62,    62,   -62,   -62,
+     -62,   -62,   -62,   -62,   -62,   -62,    -1,    67,    85,    55,
+      83,   -62,   -62,   -62,    64,    60,     8,    84,   -62,    84,
+      58,    -6,   -62,    60,    60,    60,   -62,   -62,   -62,   -62,
+     -62,   -62,    60,   -62,   -62,    60,   -62,   -62,   -62,    60,
+      51,   -62,   -62,   -62,    59,   -62,   -62,    67,    58,    85,
+      55,    83,   -62,   -62,    12,    58,     6,   -62,   -62,    56,
+     -62,   -62,   -62,    58
   };
 
   const signed char
    Parser ::yydefact_[] =
   {
-       2,     0,     1,     0,     0,     0,     0,     6,     7,    12,
-       0,     0,     3,     0,     4,     0,     0,    14,    10,     8,
-       5,    16,     0,     0,    19,    59,    11,    13,    15,    21,
-      17,     0,    80,    18,    20,     0,    58,    46,    45,    73,
-       0,     0,    71,     0,    22,    23,    24,    61,    26,    43,
-      81,    34,    36,    38,    40,    42,     0,    65,     0,    62,
-      63,    64,    66,    67,    68,    69,    70,     0,     0,     0,
-      78,    72,     0,     0,    27,     0,     0,     0,    47,    48,
-      49,    50,    51,    52,     0,    53,    54,     0,    55,    56,
-      57,     0,    44,    60,    25,    74,    79,     9,    28,     0,
-      31,    33,    82,    35,    37,    39,    41,     0,    75,    29,
-       0,    77,    76,    30,    32
+       2,     0,     1,     0,     0,     0,     0,     6,     7,     0,
+       0,     3,     0,     4,     0,     0,    12,    10,     8,     5,
+      14,     0,     0,    17,    21,    11,    13,    19,    15,     0,
+      42,    16,    18,     0,    20,    70,    69,    35,     0,     0,
+      33,     0,    65,    66,    67,    23,    27,     0,    24,    25,
+      26,    28,    29,    30,    31,    32,    43,    48,    50,    52,
+      54,    56,    57,    60,    59,     0,     0,     0,    40,     0,
+      34,     0,    22,     0,     0,     0,    71,    72,    73,    74,
+      75,    76,     0,    77,    78,     0,    79,    80,    81,     0,
+       0,    61,    58,    68,    36,    41,     9,    47,    44,    49,
+      51,    53,    55,    62,     0,    45,     0,    37,    63,     0,
+      39,    38,    64,    46
   };
 
   const signed char
    Parser ::yypgoto_[] =
   {
-     -55,   -55,   -55,    87,   -55,   -55,   -21,   -55,   -55,   -55,
-     -55,   -55,   -55,    63,   -55,   -55,   -55,   -55,   -35,    20,
-      22,    13,     9,   -54,   -55,   -55,   -55,   -55,   -29,   -55,
-     -55,   -55,   -55,   -55,    -7,   -55,   -55,   -55,   -55,   -55
+     -62,   -62,   -62,    81,   -62,   -62,   -13,   -62,   -62,   -62,
+     -62,    68,   -29,   -62,   -62,   -62,   -62,   -62,     0,   -62,
+     -62,   -62,   -62,   -62,   -62,   -33,    32,    33,    25,    24,
+     -61,   -62,   -62,   -62,   -62,   -62,   -62,   -62,   -62
   };
 
   const signed char
    Parser ::yydefgoto_[] =
   {
-       0,     1,     5,     6,     7,    47,    19,     8,    10,    26,
-      16,    17,    23,    24,    48,    49,    74,    99,    50,    51,
-      52,    53,    54,    55,    56,    84,    87,    91,    27,    32,
-      58,    59,    60,    61,    62,   108,    63,    64,    65,    66
+       0,     1,     5,     6,     7,    45,    18,     8,    15,    16,
+      22,    23,    25,    30,    47,    48,    49,    50,    51,   107,
+      52,    53,    54,    55,   104,    56,    57,    58,    59,    60,
+      61,    62,    63,    91,    64,    65,    82,    85,    89
   };
 
   const signed char
    Parser ::yytable_[] =
   {
-      67,    29,    92,    57,     2,    68,    69,    71,    21,    75,
-       9,    25,    70,    30,    12,   109,    94,    85,    86,    76,
-      33,    78,    79,    75,    11,    80,    81,    82,    83,    25,
-      40,    31,     3,   110,     4,    75,    22,   106,   100,    95,
-      96,   102,     3,    35,     4,    25,    36,    14,    22,    15,
-      37,    97,    18,    35,    20,    25,    25,    38,    28,    72,
-      37,    73,    77,    39,    40,    93,    41,    38,    42,    43,
-      44,    45,    46,    75,   107,   114,    35,    98,   111,    35,
-      44,    45,    46,    37,    35,   113,    37,    88,    89,    90,
-      38,    37,    13,    38,    34,   101,   105,   104,    38,   103,
-     112,     0,     0,    44,    45,    46,    44,    45,    46,     0,
-       0,    44,    45,    46
+      66,    46,     2,    26,    92,    67,    69,    70,    27,    11,
+      68,    73,    24,    93,     9,    28,    20,   108,    31,    10,
+      73,    74,    33,    13,    24,    34,    14,    17,   102,    35,
+       3,    38,     4,    29,    19,   109,    36,     3,    94,     4,
+      95,    98,    37,    38,    21,    39,    21,    40,    41,    42,
+      43,    44,    33,    24,    24,    33,   103,   105,    96,    35,
+      33,   112,    35,    71,    33,    72,    36,    35,    90,    36,
+      73,    35,    83,    84,    36,    75,   113,   110,    36,    42,
+      43,    44,    42,    43,    44,   106,    12,    42,    43,    44,
+      24,    42,    43,    44,    76,    77,    73,    32,    78,    79,
+      80,    81,    86,    87,    88,    97,   111,   100,    99,   101
   };
 
   const signed char
    Parser ::yycheck_[] =
   {
-      35,    22,    56,    32,     0,    40,    41,    42,     5,    12,
-      33,     6,    41,     5,     0,     5,     5,    17,    18,    22,
-       5,     9,    10,    12,    33,    13,    14,    15,    16,     6,
-      25,    23,    28,    23,    30,    12,    33,    91,    73,    68,
-      69,    76,    28,     4,    30,     6,     7,     3,    33,     4,
-      11,    72,    33,     4,     3,     6,     6,    18,    33,    33,
-      11,     4,     8,    24,    25,     3,    27,    18,    29,    30,
-      31,    32,    33,    12,    26,   110,     4,     5,   107,     4,
-      31,    32,    33,    11,     4,     5,    11,    19,    20,    21,
-      18,    11,     5,    18,    31,    75,    87,    84,    18,    77,
-     107,    -1,    -1,    31,    32,    33,    31,    32,    33,    -1,
-      -1,    31,    32,    33
+      33,    30,     0,    16,    65,    38,    39,    40,    21,     0,
+      39,    12,     6,     5,    33,     5,     5,     5,     5,    33,
+      12,    22,     4,     3,     6,     7,     4,    33,    89,    11,
+      28,    25,    30,    23,     3,    23,    18,    28,    67,    30,
+      69,    74,    24,    25,    33,    27,    33,    29,    30,    31,
+      32,    33,     4,     6,     6,     4,     5,    90,    71,    11,
+       4,     5,    11,    33,     4,     3,    18,    11,     4,    18,
+      12,    11,    17,    18,    18,     8,   109,   106,    18,    31,
+      32,    33,    31,    32,    33,    26,     5,    31,    32,    33,
+       6,    31,    32,    33,     9,    10,    12,    29,    13,    14,
+      15,    16,    19,    20,    21,    73,   106,    82,    75,    85
   };
 
   const signed char
    Parser ::yystos_[] =
   {
        0,    35,     0,    28,    30,    36,    37,    38,    41,    33,
-      42,    33,     0,    37,     3,     4,    44,    45,    33,    40,
-       3,     5,    33,    46,    47,     6,    43,    62,    33,    40,
-       5,    23,    63,     5,    47,     4,     7,    11,    18,    24,
-      25,    27,    29,    30,    31,    32,    33,    39,    48,    49,
-      52,    53,    54,    55,    56,    57,    58,    62,    64,    65,
-      66,    67,    68,    70,    71,    72,    73,    52,    52,    52,
-      62,    52,    33,     4,    50,    12,    22,     8,     9,    10,
-      13,    14,    15,    16,    59,    17,    18,    60,    19,    20,
-      21,    61,    57,     3,     5,    62,    62,    40,     5,    51,
-      52,    53,    52,    54,    55,    56,    57,    26,    69,     5,
-      23,    62,    68,     5,    52
+      33,     0,    37,     3,     4,    42,    43,    33,    40,     3,
+       5,    33,    44,    45,     6,    46,    40,    40,     5,    23,
+      47,     5,    45,     4,     7,    11,    18,    24,    25,    27,
+      29,    30,    31,    32,    33,    39,    46,    48,    49,    50,
+      51,    52,    54,    55,    56,    57,    59,    60,    61,    62,
+      63,    64,    65,    66,    68,    69,    59,    59,    46,    59,
+      59,    33,     3,    12,    22,     8,     9,    10,    13,    14,
+      15,    16,    70,    17,    18,    71,    19,    20,    21,    72,
+       4,    67,    64,     5,    46,    46,    40,    60,    59,    61,
+      62,    63,    64,     5,    58,    59,    26,    53,     5,    23,
+      46,    52,     5,    59
   };
 
   const signed char
    Parser ::yyr1_[] =
   {
        0,    34,    35,    35,    36,    36,    37,    37,    38,    39,
-      40,    41,    42,    43,    44,    44,    45,    45,    45,    46,
-      46,    47,    48,    48,    48,    48,    49,    49,    50,    50,
-      50,    51,    51,    52,    52,    53,    53,    54,    54,    55,
-      55,    56,    56,    57,    57,    58,    58,    59,    59,    59,
-      59,    59,    59,    60,    60,    61,    61,    61,    62,    63,
-      63,    64,    64,    64,    64,    64,    64,    64,    65,    65,
-      65,    66,    66,    67,    68,    68,    69,    69,    70,    70,
-      71,    72,    73
+      40,    41,    42,    42,    43,    43,    43,    44,    44,    45,
+      46,    47,    47,    48,    48,    48,    48,    48,    48,    48,
+      49,    49,    49,    50,    50,    51,    52,    52,    53,    53,
+      54,    54,    55,    56,    57,    58,    58,    59,    59,    60,
+      60,    61,    61,    62,    62,    63,    63,    64,    64,    65,
+      65,    66,    67,    67,    67,    68,    68,    68,    68,    69,
+      69,    70,    70,    70,    70,    70,    70,    71,    71,    72,
+      72,    72
   };
 
   const signed char
    Parser ::yyr2_[] =
   {
        0,     2,     0,     3,     2,     3,     1,     1,     3,     3,
-       1,     4,     1,     1,     1,     2,     2,     3,     4,     1,
-       3,     2,     1,     1,     1,     3,     1,     2,     2,     3,
-       4,     1,     3,     3,     1,     3,     1,     3,     1,     3,
-       1,     3,     1,     1,     2,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     3,     0,
-       3,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     2,     1,     3,     4,     2,     2,     2,     3,
-       0,     1,     3
+       1,     4,     1,     2,     2,     3,     4,     1,     3,     2,
+       3,     0,     3,     1,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     2,     1,     3,     4,     2,     2,
+       2,     3,     0,     1,     3,     1,     3,     3,     1,     3,
+       1,     3,     1,     3,     1,     3,     1,     1,     2,     1,
+       1,     2,     2,     3,     4,     1,     1,     1,     3,     1,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       1,     1
   };
 
 
@@ -1988,13 +1997,12 @@ namespace  GoLF  {
   "\"*\"", "\"/\"", "\"%\"", "\"=\"", "\",\"", "\"break\"", "\"if\"",
   "\"else\"", "\"for\"", "\"func\"", "\"return\"", "\"var\"", "INT_LIT",
   "STR_LIT", "ID", "$accept", "SourceFile", "Program", "TopLevelDecl",
-  "GlobVarDecl", "VarDecl", "Type", "FuncDecl", "FuncName", "FuncBody",
-  "Signature", "Parameters", "ParameterList", "ParameterDecl", "Operand",
-  "PrimaryExpr", "Arguments", "ExprList", "Expr", "AndExpr", "RelExpr",
-  "AddExpr", "MultExpr", "UnaryExpr", "UnaryOp", "RelOp", "AddOp",
-  "MultOp", "Block", "StmtList", "Stmt", "SimpleStmt", "ReturnStmt",
-  "BreakStmt", "IfStmt", "ElseStmt", "ForStmt", "EmptyStmt", "ExprStmt",
-  "AssignStmt", YY_NULLPTR
+  "GlobVarDecl", "VarDecl", "Type", "FuncDecl", "FuncSign", "Params",
+  "ParamList", "ParamDecl", "Block", "StmtList", "Stmt", "SimpleStmt",
+  "ReturnStmt", "BreakStmt", "IfStmt", "ElseStmt", "ForStmt", "EmptyStmt",
+  "ExprStmt", "AssignStmt", "ExprList", "Expr", "AndExpr", "RelExpr",
+  "AddExpr", "MultExpr", "UnaryExpr", "PrimaryExpr", "FuncCall",
+  "Arguments", "Operand", "UnaryOp", "RelOp", "AddOp", "MultOp", YY_NULLPTR
   };
 #endif
 
@@ -2003,15 +2011,15 @@ namespace  GoLF  {
   const short
    Parser ::yyrline_[] =
   {
-       0,   115,   115,   116,   119,   120,   124,   125,   129,   137,
-     146,   152,   157,   164,   170,   174,   183,   184,   187,   193,
-     197,   204,   213,   214,   215,   216,   220,   221,   225,   226,
-     227,   231,   235,   242,   247,   251,   256,   260,   265,   269,
-     274,   278,   283,   287,   292,   299,   300,   304,   305,   306,
-     307,   308,   309,   313,   314,   318,   319,   320,   324,   331,
-     332,   339,   340,   341,   342,   343,   344,   345,   349,   350,
-     351,   355,   356,   363,   367,   368,   372,   373,   377,   381,
-     390,   394,   401
+       0,   114,   114,   115,   119,   120,   124,   125,   129,   138,
+     147,   153,   163,   169,   177,   178,   182,   189,   193,   200,
+     209,   216,   217,   224,   225,   226,   227,   228,   229,   230,
+     234,   235,   236,   240,   241,   248,   252,   257,   266,   270,
+     277,   281,   290,   294,   301,   309,   313,   320,   325,   329,
+     334,   338,   343,   347,   352,   356,   361,   365,   368,   375,
+     376,   380,   387,   388,   389,   393,   394,   395,   396,   400,
+     401,   405,   406,   407,   408,   409,   410,   414,   415,   419,
+     420,   421
   };
 
   void
@@ -2044,9 +2052,9 @@ namespace  GoLF  {
 
 #line 30 "src/parse.y"
 } //  GoLF 
-#line 2048 "src/parse.tab.cc"
+#line 2056 "src/parse.tab.cc"
 
-#line 407 "src/parse.y"
+#line 423 "src/parse.y"
 
 
 //TODO: call error routine

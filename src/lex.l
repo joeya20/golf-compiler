@@ -9,9 +9,6 @@
 #include "lexer.hpp"
 #include <iostream>
 
-// vars to store line and char no
-// int colno = 1;
-
 // filename from main to use for location
 extern std::string inputFileName;
 %}

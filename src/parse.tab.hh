@@ -397,26 +397,10 @@ namespace  GoLF  {
       // VarDecl
       // Type
       // FuncDecl
-      // FuncName
-      // FuncBody
-      // Signature
-      // Parameters
-      // ParameterList
-      // ParameterDecl
-      // Operand
-      // PrimaryExpr
-      // Arguments
-      // ExprList
-      // Expr
-      // AndExpr
-      // RelExpr
-      // AddExpr
-      // MultExpr
-      // UnaryExpr
-      // UnaryOp
-      // RelOp
-      // AddOp
-      // MultOp
+      // FuncSign
+      // Params
+      // ParamList
+      // ParamDecl
       // Block
       // StmtList
       // Stmt
@@ -429,6 +413,21 @@ namespace  GoLF  {
       // EmptyStmt
       // ExprStmt
       // AssignStmt
+      // ExprList
+      // Expr
+      // AndExpr
+      // RelExpr
+      // AddExpr
+      // MultExpr
+      // UnaryExpr
+      // PrimaryExpr
+      // FuncCall
+      // Arguments
+      // Operand
+      // UnaryOp
+      // RelOp
+      // AddOp
+      // MultOp
       char dummy1[sizeof (AstNode*)];
 
       // ";"
@@ -603,38 +602,37 @@ namespace  GoLF  {
         S_VarDecl = 39,                          // VarDecl
         S_Type = 40,                             // Type
         S_FuncDecl = 41,                         // FuncDecl
-        S_FuncName = 42,                         // FuncName
-        S_FuncBody = 43,                         // FuncBody
-        S_Signature = 44,                        // Signature
-        S_Parameters = 45,                       // Parameters
-        S_ParameterList = 46,                    // ParameterList
-        S_ParameterDecl = 47,                    // ParameterDecl
-        S_Operand = 48,                          // Operand
-        S_PrimaryExpr = 49,                      // PrimaryExpr
-        S_Arguments = 50,                        // Arguments
-        S_ExprList = 51,                         // ExprList
-        S_Expr = 52,                             // Expr
-        S_AndExpr = 53,                          // AndExpr
-        S_RelExpr = 54,                          // RelExpr
-        S_AddExpr = 55,                          // AddExpr
-        S_MultExpr = 56,                         // MultExpr
-        S_UnaryExpr = 57,                        // UnaryExpr
-        S_UnaryOp = 58,                          // UnaryOp
-        S_RelOp = 59,                            // RelOp
-        S_AddOp = 60,                            // AddOp
-        S_MultOp = 61,                           // MultOp
-        S_Block = 62,                            // Block
-        S_StmtList = 63,                         // StmtList
-        S_Stmt = 64,                             // Stmt
-        S_SimpleStmt = 65,                       // SimpleStmt
-        S_ReturnStmt = 66,                       // ReturnStmt
-        S_BreakStmt = 67,                        // BreakStmt
-        S_IfStmt = 68,                           // IfStmt
-        S_ElseStmt = 69,                         // ElseStmt
-        S_ForStmt = 70,                          // ForStmt
-        S_EmptyStmt = 71,                        // EmptyStmt
-        S_ExprStmt = 72,                         // ExprStmt
-        S_AssignStmt = 73                        // AssignStmt
+        S_FuncSign = 42,                         // FuncSign
+        S_Params = 43,                           // Params
+        S_ParamList = 44,                        // ParamList
+        S_ParamDecl = 45,                        // ParamDecl
+        S_Block = 46,                            // Block
+        S_StmtList = 47,                         // StmtList
+        S_Stmt = 48,                             // Stmt
+        S_SimpleStmt = 49,                       // SimpleStmt
+        S_ReturnStmt = 50,                       // ReturnStmt
+        S_BreakStmt = 51,                        // BreakStmt
+        S_IfStmt = 52,                           // IfStmt
+        S_ElseStmt = 53,                         // ElseStmt
+        S_ForStmt = 54,                          // ForStmt
+        S_EmptyStmt = 55,                        // EmptyStmt
+        S_ExprStmt = 56,                         // ExprStmt
+        S_AssignStmt = 57,                       // AssignStmt
+        S_ExprList = 58,                         // ExprList
+        S_Expr = 59,                             // Expr
+        S_AndExpr = 60,                          // AndExpr
+        S_RelExpr = 61,                          // RelExpr
+        S_AddExpr = 62,                          // AddExpr
+        S_MultExpr = 63,                         // MultExpr
+        S_UnaryExpr = 64,                        // UnaryExpr
+        S_PrimaryExpr = 65,                      // PrimaryExpr
+        S_FuncCall = 66,                         // FuncCall
+        S_Arguments = 67,                        // Arguments
+        S_Operand = 68,                          // Operand
+        S_UnaryOp = 69,                          // UnaryOp
+        S_RelOp = 70,                            // RelOp
+        S_AddOp = 71,                            // AddOp
+        S_MultOp = 72                            // MultOp
       };
     };
 
@@ -676,26 +674,10 @@ namespace  GoLF  {
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -708,6 +690,21 @@ namespace  GoLF  {
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.move< AstNode* > (std::move (that.value));
         break;
 
@@ -825,26 +822,10 @@ switch (yykind)
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -857,6 +838,21 @@ switch (yykind)
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.template destroy< AstNode* > ();
         break;
 
@@ -1886,8 +1882,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 113,     ///< Last index in yytable_.
-      yynnts_ = 40,  ///< Number of nonterminal symbols.
+      yylast_ = 109,     ///< Last index in yytable_.
+      yynnts_ = 39,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
 
@@ -1963,26 +1959,10 @@ switch (yykind)
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -1995,6 +1975,21 @@ switch (yykind)
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.copy< AstNode* > (YY_MOVE (that.value));
         break;
 
@@ -2068,26 +2063,10 @@ switch (yykind)
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_Type: // Type
       case symbol_kind::S_FuncDecl: // FuncDecl
-      case symbol_kind::S_FuncName: // FuncName
-      case symbol_kind::S_FuncBody: // FuncBody
-      case symbol_kind::S_Signature: // Signature
-      case symbol_kind::S_Parameters: // Parameters
-      case symbol_kind::S_ParameterList: // ParameterList
-      case symbol_kind::S_ParameterDecl: // ParameterDecl
-      case symbol_kind::S_Operand: // Operand
-      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
-      case symbol_kind::S_Arguments: // Arguments
-      case symbol_kind::S_ExprList: // ExprList
-      case symbol_kind::S_Expr: // Expr
-      case symbol_kind::S_AndExpr: // AndExpr
-      case symbol_kind::S_RelExpr: // RelExpr
-      case symbol_kind::S_AddExpr: // AddExpr
-      case symbol_kind::S_MultExpr: // MultExpr
-      case symbol_kind::S_UnaryExpr: // UnaryExpr
-      case symbol_kind::S_UnaryOp: // UnaryOp
-      case symbol_kind::S_RelOp: // RelOp
-      case symbol_kind::S_AddOp: // AddOp
-      case symbol_kind::S_MultOp: // MultOp
+      case symbol_kind::S_FuncSign: // FuncSign
+      case symbol_kind::S_Params: // Params
+      case symbol_kind::S_ParamList: // ParamList
+      case symbol_kind::S_ParamDecl: // ParamDecl
       case symbol_kind::S_Block: // Block
       case symbol_kind::S_StmtList: // StmtList
       case symbol_kind::S_Stmt: // Stmt
@@ -2100,6 +2079,21 @@ switch (yykind)
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
+      case symbol_kind::S_ExprList: // ExprList
+      case symbol_kind::S_Expr: // Expr
+      case symbol_kind::S_AndExpr: // AndExpr
+      case symbol_kind::S_RelExpr: // RelExpr
+      case symbol_kind::S_AddExpr: // AddExpr
+      case symbol_kind::S_MultExpr: // MultExpr
+      case symbol_kind::S_UnaryExpr: // UnaryExpr
+      case symbol_kind::S_PrimaryExpr: // PrimaryExpr
+      case symbol_kind::S_FuncCall: // FuncCall
+      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_Operand: // Operand
+      case symbol_kind::S_UnaryOp: // UnaryOp
+      case symbol_kind::S_RelOp: // RelOp
+      case symbol_kind::S_AddOp: // AddOp
+      case symbol_kind::S_MultOp: // MultOp
         value.move< AstNode* > (YY_MOVE (s.value));
         break;
 
@@ -2204,7 +2198,7 @@ switch (yykind)
 
 #line 30 "src/parse.y"
 } //  GoLF 
-#line 2208 "src/parse.tab.hh"
+#line 2202 "src/parse.tab.hh"
 
 
 

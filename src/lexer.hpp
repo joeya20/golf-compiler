@@ -17,8 +17,6 @@
 #undef YY_DECL
 #define YY_DECL GoLF::Parser::symbol_type GoLF::Lexer::lex()
 
-// colno defined in Flex-generated file
-extern int colno;
 extern std::string inputFileName;
 
 namespace GoLF {

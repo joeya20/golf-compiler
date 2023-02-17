@@ -9,6 +9,3 @@
 #include "util.hpp"
 #include "parse.tab.hh"
 #include "location.hh"
-
-// colno defined in Flex-generated file
-extern int colno;

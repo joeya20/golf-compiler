@@ -2,17 +2,18 @@
 
 #include <string>
 #include <vector>
+#include <array>
 #include <stdlib.h>
 #include <stdexcept>
 #include <iostream>
 
-#define ARR_SIZE 100
+#define ARR_SIZE 50
 
-/* AST Structure based off of the Go language AST available here: https://pkg.go.dev/go/ast */
+/* AST Structure is loosely based off of the Go language AST available here: https://pkg.go.dev/go/ast */
 namespace GoLF {
 
     struct AstNode {        
-        const std::string nodeKindToString[ARR_SIZE] = {
+        std::array<const std::string, ARR_SIZE> nodeKindToString {
             "Program"
             "AssignStmt"
             "ExprStmt"
@@ -22,10 +23,11 @@ namespace GoLF {
             "ForStmt"
             "BreakStmt"
             "ReturnStmt"
-            "FuncSignStmt"
+            "FuncSign"
+            "FuncCall"
             "StmtList"
-            "ParameterList"
-            "ParameterDecl"
+            "ParamList"
+            "ParamDecl"
             "Block"
             "GlobVarDecl"
             "VarDecl"
@@ -51,13 +53,16 @@ namespace GoLF {
             ForStmt,
             BreakStmt,
             ReturnStmt,
-            FuncSignStmt,
+            FuncSign,
+            FuncCall,
             StmtList,
-            ParameterList,
-            ParameterDecl,
+            Params,
+            ParamList,
+            ParamDecl,
             Block,
             GlobVarDecl,
             VarDecl,
+            FuncDecl,
 
             //exprs
             ExprList,
@@ -67,6 +72,7 @@ namespace GoLF {
             
             // terminals aka symbols
             Ident,
+            Type,
             IntLit,
             StrLit
         } Kind;

@@ -3,4 +3,13 @@ var i int;
 func main() {
     var j int
     var k str
+    i = --j
+}
+
+func test(n int) {
+    if n==0 {
+
+    } else {
+        
+    }
 }
