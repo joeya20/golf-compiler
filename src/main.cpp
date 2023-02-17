@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     GoLF::Parser parser {lexer, root};
 
     parser();
-    std::cout << "done!!" << std::endl;
+    std::cout << root << std::endl;
     
     // tear down ast
     //root will never be null :)

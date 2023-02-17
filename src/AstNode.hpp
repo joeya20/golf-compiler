@@ -8,42 +8,44 @@
 #include <iostream>
 
 #define ARR_SIZE 50
-
+#define TAB_SIZE 4
 /* AST Structure is loosely based off of the Go language AST available here: https://pkg.go.dev/go/ast */
 namespace GoLF {
 
-    struct AstNode {        
-        std::array<const std::string, ARR_SIZE> nodeKindToString {
-            "Program"
-            "AssignStmt"
-            "ExprStmt"
-            "EmptyStmt"
-            "CondStmt"
-            "IfStmt"
-            "ForStmt"
-            "BreakStmt"
-            "ReturnStmt"
-            "FuncSign"
-            "FuncCall"
-            "StmtList"
-            "ParamList"
-            "ParamDecl"
-            "Block"
-            "GlobVarDecl"
-            "VarDecl"
-            "ExprList"
-            "BinaryExpr"
-            "UnaryExpr"
-            "PrimaryExpr"
-            "Ident"
-            "IntLit"
+    struct AstNode {
+        const std::array<const std::string, ARR_SIZE> nodeKindToString = {
+            "Program",
+            "AssignStmt",
+            "ExprStmt",
+            "EmptyStmt",
+            "CondStmt",
+            "IfStmt",
+            "ForStmt",
+            "BreakStmt",
+            "ReturnStmt",
+            "FuncSign",
+            "FuncCall",
+            "StmtList",
+            "Params",
+            "ParamList",
+            "ParamDecl",
+            "Block",
+            "GlobVarDecl",
+            "VarDecl",
+            "FuncDecl",
+            "ExprList",
+            "BinaryExpr",
+            "UnaryExpr",
+            "PrimaryExpr",
+            "Ident",
+            "Type",
+            "IntLit",
             "StrLit"
         };
 
         typedef enum Kind {
             //top level
             Program,
-
             // stmts
             AssignStmt,
             ExprStmt,
@@ -63,16 +65,14 @@ namespace GoLF {
             GlobVarDecl,
             VarDecl,
             FuncDecl,
-
             //exprs
             ExprList,
             BinaryExpr,
             UnaryExpr,
-            PrimaryExpr,
-            
+            PrimaryExpr,            
             // terminals aka symbols
             Ident,
-            Type,
+            Type,   //special kind of identifier
             IntLit,
             StrLit
         } Kind;
@@ -90,8 +90,12 @@ namespace GoLF {
         AstNode(Kind kind, std::string attr, int lineno, int startCol, int endCol);
         ~AstNode();
         
+        std::string toString(int tabSize = 0);
+
         void addChild(AstNode* child);
     };
+
+    std::ostream& operator<<(std::ostream& os, AstNode *node);
 
     // /********** Expressions ************/
     // struct Expr : public AstNode {
