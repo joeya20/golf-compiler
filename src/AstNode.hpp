@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdexcept>
 #include <iostream>
+#include "location.hh"
 
 #define ARR_SIZE 50
 #define TAB_SIZE 4
@@ -77,17 +78,15 @@ namespace GoLF {
             StrLit
         } Kind;
 
-        int lineno;
-        int startCol;
-        int endCol;
+        location loc;
         Kind kind;
         std::string attr;
         std::vector<AstNode*> children;
 
         AstNode(Kind kind);
         AstNode(Kind kind, std::string attr);
-        AstNode(Kind kind, int lineno, int startCol, int endCol);
-        AstNode(Kind kind, std::string attr, int lineno, int startCol, int endCol);
+        AstNode(Kind kind, location loc);
+        AstNode(Kind kind, std::string attr, location loc);
         ~AstNode();
         
         std::string toString(int tabSize = 0);

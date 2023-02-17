@@ -51,6 +51,7 @@
     #include<stdlib.h>
     #include "location.hh"
     #include "AstNode.hpp"
+    #include "util.hpp"
     #include <string>
     #include <iostream>
     #include <memory>
@@ -60,7 +61,7 @@
         class Lexer;
     }
 
-#line 64 "src/parse.tab.hh"
+#line 65 "src/parse.tab.hh"
 
 
 # include <cstdlib> // std::abort
@@ -194,9 +195,9 @@
 # define YYDEBUG 0
 #endif
 
-#line 30 "src/parse.y"
+#line 31 "src/parse.y"
 namespace  GoLF  {
-#line 200 "src/parse.tab.hh"
+#line 201 "src/parse.tab.hh"
 
 
 
@@ -2196,9 +2197,9 @@ switch (yykind)
   }
 
 
-#line 30 "src/parse.y"
+#line 31 "src/parse.y"
 } //  GoLF 
-#line 2202 "src/parse.tab.hh"
+#line 2203 "src/parse.tab.hh"
 
 
 

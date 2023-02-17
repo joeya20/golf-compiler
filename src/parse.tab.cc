@@ -35,7 +35,7 @@
 // private implementation details that can be changed or removed.
 
 // "%code top" blocks.
-#line 20 "src/parse.y"
+#line 21 "src/parse.y"
 
     #include <FlexLexer.h>
     #include "lexer.hpp"
@@ -141,7 +141,7 @@
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 30 "src/parse.y"
+#line 31 "src/parse.y"
 namespace  GoLF  {
 #line 147 "src/parse.tab.cc"
 
@@ -901,57 +901,57 @@ namespace  GoLF  {
           switch (yyn)
             {
   case 2: // SourceFile: %empty
-#line 114 "src/parse.y"
+#line 115 "src/parse.y"
                                         { root = new AstNode(AstNode::Kind::Program); }
 #line 907 "src/parse.tab.cc"
     break;
 
   case 3: // SourceFile: SourceFile Program $end
-#line 115 "src/parse.y"
+#line 116 "src/parse.y"
                                         { /* Janky workaround; maybe fix one day */   }
 #line 913 "src/parse.tab.cc"
     break;
 
   case 4: // Program: TopLevelDecl ";"
-#line 119 "src/parse.y"
+#line 120 "src/parse.y"
                                         { root->addChild(yystack_[1].value.as < AstNode* > ()); }
 #line 919 "src/parse.tab.cc"
     break;
 
   case 5: // Program: Program TopLevelDecl ";"
-#line 120 "src/parse.y"
+#line 121 "src/parse.y"
                                         { root->addChild(yystack_[1].value.as < AstNode* > ()); }
 #line 925 "src/parse.tab.cc"
     break;
 
   case 6: // TopLevelDecl: GlobVarDecl
-#line 124 "src/parse.y"
+#line 125 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 931 "src/parse.tab.cc"
     break;
 
   case 7: // TopLevelDecl: FuncDecl
-#line 125 "src/parse.y"
+#line 126 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 937 "src/parse.tab.cc"
     break;
 
   case 8: // GlobVarDecl: "var" ID Type
-#line 129 "src/parse.y"
+#line 130 "src/parse.y"
                                 { 
-                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::GlobVarDecl);
-                                    AstNode *id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > ());
-                                    yylhs.value.as < AstNode* > ()->addChild(id); 
+                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::GlobVarDecl, yylhs.location);
+                                    AstNode *id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > (), yystack_[1].location);
+                                    yylhs.value.as < AstNode* > ()->addChild(id);
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                                 }
 #line 948 "src/parse.tab.cc"
     break;
 
   case 9: // VarDecl: "var" ID Type
-#line 138 "src/parse.y"
+#line 139 "src/parse.y"
                         { 
-                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::VarDecl);
-                            AstNode *id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > ());
+                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::VarDecl, yylhs.location);
+                            AstNode *id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > (), yystack_[1].location);
                             yylhs.value.as < AstNode* > ()->addChild(id); 
                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                         }
@@ -959,18 +959,18 @@ namespace  GoLF  {
     break;
 
   case 10: // Type: ID
-#line 147 "src/parse.y"
+#line 148 "src/parse.y"
                 { 
-                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Type, yystack_[0].value.as < std::string > ()); 
+                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Type, yystack_[0].value.as < std::string > (), yylhs.location); 
                 }
 #line 967 "src/parse.tab.cc"
     break;
 
   case 11: // FuncDecl: "func" ID FuncSign Block
-#line 153 "src/parse.y"
+#line 154 "src/parse.y"
                                         { 
-                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncDecl);
-                                            AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[2].value.as < std::string > ());
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncDecl, yylhs.location);
+                                            AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[2].value.as < std::string > (), yylhs.location);
                                             yylhs.value.as < AstNode* > ()->addChild(id);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
@@ -979,10 +979,10 @@ namespace  GoLF  {
     break;
 
   case 12: // FuncSign: Params
-#line 163 "src/parse.y"
+#line 164 "src/parse.y"
                             { 
                                 yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncSign);
-                                AstNode* type = new AstNode(AstNode::Kind::Type, "$void"); 
+                                AstNode* type = new AstNode(AstNode::Kind::Type, "$void", yylhs.location); 
                                 yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                 yylhs.value.as < AstNode* > ()->addChild(type);
                             }
@@ -990,7 +990,7 @@ namespace  GoLF  {
     break;
 
   case 13: // FuncSign: Params Type
-#line 169 "src/parse.y"
+#line 170 "src/parse.y"
                             {
                                 yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncSign);
                                 yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
@@ -1000,13 +1000,13 @@ namespace  GoLF  {
     break;
 
   case 14: // Params: "(" ")"
-#line 177 "src/parse.y"
+#line 178 "src/parse.y"
                                         { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Params); }
 #line 1006 "src/parse.tab.cc"
     break;
 
   case 15: // Params: "(" ParamList ")"
-#line 178 "src/parse.y"
+#line 179 "src/parse.y"
                                         { 
                                             yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Params);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
@@ -1015,7 +1015,7 @@ namespace  GoLF  {
     break;
 
   case 16: // Params: "(" ParamList "," ")"
-#line 182 "src/parse.y"
+#line 183 "src/parse.y"
                                         { 
                                             yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Params);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
@@ -1024,7 +1024,7 @@ namespace  GoLF  {
     break;
 
   case 17: // ParamList: ParamDecl
-#line 189 "src/parse.y"
+#line 190 "src/parse.y"
                                         { 
                                             yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ParamList);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
@@ -1033,7 +1033,7 @@ namespace  GoLF  {
     break;
 
   case 18: // ParamList: ParamList "," ParamDecl
-#line 193 "src/parse.y"
+#line 194 "src/parse.y"
                                         { 
                                             yystack_[2].value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
@@ -1042,10 +1042,10 @@ namespace  GoLF  {
     break;
 
   case 19: // ParamDecl: ID Type
-#line 200 "src/parse.y"
+#line 201 "src/parse.y"
                         { 
-                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ParamDecl);
-                            AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > ());
+                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ParamDecl, yylhs.location);
+                            AstNode* id = new AstNode(AstNode::Kind::Ident, yystack_[1].value.as < std::string > (), yystack_[1].location);
                             yylhs.value.as < AstNode* > ()->addChild(id);
                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                         }
@@ -1053,7 +1053,7 @@ namespace  GoLF  {
     break;
 
   case 20: // Block: "{" StmtList "}"
-#line 209 "src/parse.y"
+#line 210 "src/parse.y"
                                 { 
                                     yylhs.value.as < AstNode* > () = new AstNode(AstNode::Block);
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
@@ -1062,13 +1062,13 @@ namespace  GoLF  {
     break;
 
   case 21: // StmtList: %empty
-#line 216 "src/parse.y"
+#line 217 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::StmtList); }
 #line 1068 "src/parse.tab.cc"
     break;
 
   case 22: // StmtList: StmtList Stmt ";"
-#line 217 "src/parse.y"
+#line 218 "src/parse.y"
                                 {
                                     yystack_[2].value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
                                     yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
@@ -1077,88 +1077,88 @@ namespace  GoLF  {
     break;
 
   case 23: // Stmt: VarDecl
-#line 224 "src/parse.y"
+#line 225 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1083 "src/parse.tab.cc"
     break;
 
   case 24: // Stmt: SimpleStmt
-#line 225 "src/parse.y"
+#line 226 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1089 "src/parse.tab.cc"
     break;
 
   case 25: // Stmt: ReturnStmt
-#line 226 "src/parse.y"
+#line 227 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1095 "src/parse.tab.cc"
     break;
 
   case 26: // Stmt: BreakStmt
-#line 227 "src/parse.y"
+#line 228 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1101 "src/parse.tab.cc"
     break;
 
   case 27: // Stmt: Block
-#line 228 "src/parse.y"
+#line 229 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1107 "src/parse.tab.cc"
     break;
 
   case 28: // Stmt: IfStmt
-#line 229 "src/parse.y"
+#line 230 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1113 "src/parse.tab.cc"
     break;
 
   case 29: // Stmt: ForStmt
-#line 230 "src/parse.y"
+#line 231 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1119 "src/parse.tab.cc"
     break;
 
   case 30: // SimpleStmt: EmptyStmt
-#line 234 "src/parse.y"
+#line 235 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1125 "src/parse.tab.cc"
     break;
 
   case 31: // SimpleStmt: ExprStmt
-#line 235 "src/parse.y"
+#line 236 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1131 "src/parse.tab.cc"
     break;
 
   case 32: // SimpleStmt: AssignStmt
-#line 236 "src/parse.y"
+#line 237 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
 #line 1137 "src/parse.tab.cc"
     break;
 
   case 33: // ReturnStmt: "return"
-#line 240 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt); }
+#line 241 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt, yylhs.location); }
 #line 1143 "src/parse.tab.cc"
     break;
 
   case 34: // ReturnStmt: "return" Expr
-#line 241 "src/parse.y"
+#line 242 "src/parse.y"
                                 { 
-                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt);
+                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ReturnStmt, yylhs.location);
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                 }
 #line 1152 "src/parse.tab.cc"
     break;
 
   case 35: // BreakStmt: "break"
-#line 248 "src/parse.y"
-                      { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BreakStmt); }
+#line 249 "src/parse.y"
+                      { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BreakStmt, yylhs.location); }
 #line 1158 "src/parse.tab.cc"
     break;
 
   case 36: // IfStmt: "if" Expr Block
-#line 252 "src/parse.y"
+#line 253 "src/parse.y"
                                         {
                                             yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IfStmt);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
@@ -1168,7 +1168,7 @@ namespace  GoLF  {
     break;
 
   case 37: // IfStmt: "if" Expr Block ElseStmt
-#line 257 "src/parse.y"
+#line 258 "src/parse.y"
                                         {
                                             yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IfStmt);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
@@ -1179,7 +1179,7 @@ namespace  GoLF  {
     break;
 
   case 38: // ElseStmt: "else" IfStmt
-#line 266 "src/parse.y"
+#line 267 "src/parse.y"
                                         {
                                             // just return the IfStmt
                                             yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();
@@ -1188,7 +1188,7 @@ namespace  GoLF  {
     break;
 
   case 39: // ElseStmt: "else" Block
-#line 270 "src/parse.y"
+#line 271 "src/parse.y"
                                         {
                                             // just return the block
                                             yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();
@@ -1197,309 +1197,311 @@ namespace  GoLF  {
     break;
 
   case 40: // ForStmt: "for" Block
-#line 277 "src/parse.y"
+#line 278 "src/parse.y"
                                 { 
-                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ForStmt); 
+                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ForStmt, yylhs.location);
+                                    AstNode *e = new AstNode(AstNode::Kind::Ident, "$true", yylhs.location);
+                                    yylhs.value.as < AstNode* > ()->addChild(e);
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                                 }
-#line 1206 "src/parse.tab.cc"
+#line 1208 "src/parse.tab.cc"
     break;
 
   case 41: // ForStmt: "for" Expr Block
-#line 281 "src/parse.y"
-                                { 
-                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ForStmt);
+#line 284 "src/parse.y"
+                                {
+                                    yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ForStmt, yylhs.location);
                                     //intentionally add Expr after Block
                                     yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
-                                    yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ()); 
+                                    yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
                                 }
-#line 1217 "src/parse.tab.cc"
+#line 1219 "src/parse.tab.cc"
     break;
 
   case 42: // EmptyStmt: %empty
-#line 290 "src/parse.y"
-                      { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::EmptyStmt); }
-#line 1223 "src/parse.tab.cc"
+#line 293 "src/parse.y"
+                      { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::EmptyStmt, yylhs.location); }
+#line 1225 "src/parse.tab.cc"
     break;
 
   case 43: // ExprStmt: Expr
-#line 294 "src/parse.y"
+#line 297 "src/parse.y"
                     { 
-                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprStmt);
+                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprStmt, yylhs.location);
                         yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ()); 
                     }
-#line 1232 "src/parse.tab.cc"
+#line 1234 "src/parse.tab.cc"
     break;
 
   case 44: // AssignStmt: Expr "=" Expr
-#line 301 "src/parse.y"
+#line 304 "src/parse.y"
                             {   
-                                yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::AssignStmt); 
+                                yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::AssignStmt, yylhs.location); 
                                 yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ()); 
                                 yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                             }
-#line 1242 "src/parse.tab.cc"
+#line 1244 "src/parse.tab.cc"
     break;
 
   case 45: // ExprList: Expr
-#line 309 "src/parse.y"
+#line 312 "src/parse.y"
                                     { 
                                         yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprList);
                                         yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                     }
-#line 1251 "src/parse.tab.cc"
+#line 1253 "src/parse.tab.cc"
     break;
 
   case 46: // ExprList: ExprList "," Expr
-#line 313 "src/parse.y"
+#line 316 "src/parse.y"
                                     { 
                                         yystack_[2].value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > ();
                                     }
-#line 1260 "src/parse.tab.cc"
+#line 1262 "src/parse.tab.cc"
     break;
 
   case 47: // Expr: Expr "||" AndExpr
-#line 320 "src/parse.y"
+#line 323 "src/parse.y"
                                         {
-                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > ());
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > (), yylhs.location);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         }
-#line 1270 "src/parse.tab.cc"
+#line 1272 "src/parse.tab.cc"
     break;
 
   case 48: // Expr: AndExpr
-#line 325 "src/parse.y"
+#line 328 "src/parse.y"
                                         { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1276 "src/parse.tab.cc"
+#line 1278 "src/parse.tab.cc"
     break;
 
   case 49: // AndExpr: AndExpr "&&" RelExpr
-#line 329 "src/parse.y"
+#line 332 "src/parse.y"
                                         {
-                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > ());
+                                            yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > (), yylhs.location);
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         }
-#line 1286 "src/parse.tab.cc"
+#line 1288 "src/parse.tab.cc"
     break;
 
   case 50: // AndExpr: RelExpr
-#line 334 "src/parse.y"
+#line 337 "src/parse.y"
                                         { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1292 "src/parse.tab.cc"
+#line 1294 "src/parse.tab.cc"
     break;
 
   case 51: // RelExpr: RelExpr RelOp AddExpr
-#line 338 "src/parse.y"
+#line 341 "src/parse.y"
                                         {
                                             yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         }
-#line 1302 "src/parse.tab.cc"
+#line 1304 "src/parse.tab.cc"
     break;
 
   case 52: // RelExpr: AddExpr
-#line 343 "src/parse.y"
+#line 346 "src/parse.y"
                                         { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1308 "src/parse.tab.cc"
+#line 1310 "src/parse.tab.cc"
     break;
 
   case 53: // AddExpr: AddExpr AddOp MultExpr
-#line 347 "src/parse.y"
+#line 350 "src/parse.y"
                                         {
                                             yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         }
-#line 1318 "src/parse.tab.cc"
+#line 1320 "src/parse.tab.cc"
     break;
 
   case 54: // AddExpr: MultExpr
-#line 352 "src/parse.y"
+#line 355 "src/parse.y"
                                         { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1324 "src/parse.tab.cc"
+#line 1326 "src/parse.tab.cc"
     break;
 
   case 55: // MultExpr: MultExpr MultOp UnaryExpr
-#line 356 "src/parse.y"
+#line 359 "src/parse.y"
                                         {
                                             yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[2].value.as < AstNode* > ());
                                             yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                         }
-#line 1334 "src/parse.tab.cc"
+#line 1336 "src/parse.tab.cc"
     break;
 
   case 56: // MultExpr: UnaryExpr
-#line 361 "src/parse.y"
+#line 364 "src/parse.y"
                                         { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1340 "src/parse.tab.cc"
+#line 1342 "src/parse.tab.cc"
     break;
 
   case 57: // UnaryExpr: PrimaryExpr
-#line 365 "src/parse.y"
+#line 368 "src/parse.y"
                                     {
                                         yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > ();    
                                     }
-#line 1348 "src/parse.tab.cc"
+#line 1350 "src/parse.tab.cc"
     break;
 
   case 58: // UnaryExpr: UnaryOp UnaryExpr
-#line 368 "src/parse.y"
+#line 371 "src/parse.y"
                                     {
                                         yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > ();
                                         yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                     }
-#line 1357 "src/parse.tab.cc"
+#line 1359 "src/parse.tab.cc"
     break;
 
   case 59: // PrimaryExpr: Operand
-#line 375 "src/parse.y"
+#line 378 "src/parse.y"
                                     { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
-#line 1363 "src/parse.tab.cc"
+#line 1365 "src/parse.tab.cc"
     break;
 
   case 60: // PrimaryExpr: FuncCall
-#line 376 "src/parse.y"
-                                    { std::cout << "prim" << std::endl; }
-#line 1369 "src/parse.tab.cc"
+#line 379 "src/parse.y"
+                                    { yylhs.value.as < AstNode* > () = yystack_[0].value.as < AstNode* > (); }
+#line 1371 "src/parse.tab.cc"
     break;
 
   case 61: // FuncCall: Operand Arguments
-#line 380 "src/parse.y"
+#line 383 "src/parse.y"
                                     {
-                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncCall);
+                                        yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::FuncCall, yylhs.location);
                                         yylhs.value.as < AstNode* > ()->addChild(yystack_[1].value.as < AstNode* > ());
                                         yylhs.value.as < AstNode* > ()->addChild(yystack_[0].value.as < AstNode* > ());
                                     }
-#line 1379 "src/parse.tab.cc"
+#line 1381 "src/parse.tab.cc"
     break;
 
   case 62: // Arguments: "(" ")"
-#line 387 "src/parse.y"
+#line 390 "src/parse.y"
                                             { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::ExprList); }
-#line 1385 "src/parse.tab.cc"
+#line 1387 "src/parse.tab.cc"
     break;
 
   case 63: // Arguments: "(" ExprList ")"
-#line 388 "src/parse.y"
+#line 391 "src/parse.y"
                                             { yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > (); }
-#line 1391 "src/parse.tab.cc"
+#line 1393 "src/parse.tab.cc"
     break;
 
   case 64: // Arguments: "(" ExprList "," ")"
-#line 389 "src/parse.y"
+#line 392 "src/parse.y"
                                             { yylhs.value.as < AstNode* > () = yystack_[2].value.as < AstNode* > (); }
-#line 1397 "src/parse.tab.cc"
+#line 1399 "src/parse.tab.cc"
     break;
 
   case 65: // Operand: INT_LIT
-#line 393 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IntLit, yystack_[0].value.as < std::string > ()); }
-#line 1403 "src/parse.tab.cc"
+#line 396 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::IntLit, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1405 "src/parse.tab.cc"
     break;
 
   case 66: // Operand: STR_LIT
-#line 394 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::StrLit, yystack_[0].value.as < std::string > ()); }
-#line 1409 "src/parse.tab.cc"
+#line 397 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::StrLit, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1411 "src/parse.tab.cc"
     break;
 
   case 67: // Operand: ID
-#line 395 "src/parse.y"
-                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Ident, yystack_[0].value.as < std::string > ()); }
-#line 1415 "src/parse.tab.cc"
+#line 398 "src/parse.y"
+                                { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::Ident, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1417 "src/parse.tab.cc"
     break;
 
   case 68: // Operand: "(" Expr ")"
-#line 396 "src/parse.y"
+#line 399 "src/parse.y"
                                 { yylhs.value.as < AstNode* > () = yystack_[1].value.as < AstNode* > (); }
-#line 1421 "src/parse.tab.cc"
+#line 1423 "src/parse.tab.cc"
     break;
 
   case 69: // UnaryOp: "-"
-#line 400 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1427 "src/parse.tab.cc"
+#line 403 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1429 "src/parse.tab.cc"
     break;
 
   case 70: // UnaryOp: "!"
-#line 401 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1433 "src/parse.tab.cc"
+#line 404 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1435 "src/parse.tab.cc"
     break;
 
   case 71: // RelOp: "=="
-#line 405 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1439 "src/parse.tab.cc"
+#line 408 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1441 "src/parse.tab.cc"
     break;
 
   case 72: // RelOp: "!="
-#line 406 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1445 "src/parse.tab.cc"
+#line 409 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1447 "src/parse.tab.cc"
     break;
 
   case 73: // RelOp: "<"
-#line 407 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1451 "src/parse.tab.cc"
+#line 410 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1453 "src/parse.tab.cc"
     break;
 
   case 74: // RelOp: "<="
-#line 408 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1457 "src/parse.tab.cc"
+#line 411 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1459 "src/parse.tab.cc"
     break;
 
   case 75: // RelOp: ">"
-#line 409 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1463 "src/parse.tab.cc"
+#line 412 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1465 "src/parse.tab.cc"
     break;
 
   case 76: // RelOp: ">="
-#line 410 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1469 "src/parse.tab.cc"
+#line 413 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1471 "src/parse.tab.cc"
     break;
 
   case 77: // AddOp: "+"
-#line 414 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1475 "src/parse.tab.cc"
+#line 417 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1477 "src/parse.tab.cc"
     break;
 
   case 78: // AddOp: "-"
-#line 415 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1481 "src/parse.tab.cc"
+#line 418 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1483 "src/parse.tab.cc"
     break;
 
   case 79: // MultOp: "*"
-#line 419 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1487 "src/parse.tab.cc"
+#line 422 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1489 "src/parse.tab.cc"
     break;
 
   case 80: // MultOp: "/"
-#line 420 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1493 "src/parse.tab.cc"
+#line 423 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1495 "src/parse.tab.cc"
     break;
 
   case 81: // MultOp: "%"
-#line 421 "src/parse.y"
-                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > ()); }
-#line 1499 "src/parse.tab.cc"
+#line 424 "src/parse.y"
+                    { yylhs.value.as < AstNode* > () = new AstNode(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+#line 1501 "src/parse.tab.cc"
     break;
 
 
-#line 1503 "src/parse.tab.cc"
+#line 1505 "src/parse.tab.cc"
 
             default:
               break;
@@ -2011,15 +2013,15 @@ namespace  GoLF  {
   const short
    Parser ::yyrline_[] =
   {
-       0,   114,   114,   115,   119,   120,   124,   125,   129,   138,
-     147,   153,   163,   169,   177,   178,   182,   189,   193,   200,
-     209,   216,   217,   224,   225,   226,   227,   228,   229,   230,
-     234,   235,   236,   240,   241,   248,   252,   257,   266,   270,
-     277,   281,   290,   294,   301,   309,   313,   320,   325,   329,
-     334,   338,   343,   347,   352,   356,   361,   365,   368,   375,
-     376,   380,   387,   388,   389,   393,   394,   395,   396,   400,
-     401,   405,   406,   407,   408,   409,   410,   414,   415,   419,
-     420,   421
+       0,   115,   115,   116,   120,   121,   125,   126,   130,   139,
+     148,   154,   164,   170,   178,   179,   183,   190,   194,   201,
+     210,   217,   218,   225,   226,   227,   228,   229,   230,   231,
+     235,   236,   237,   241,   242,   249,   253,   258,   267,   271,
+     278,   284,   293,   297,   304,   312,   316,   323,   328,   332,
+     337,   341,   346,   350,   355,   359,   364,   368,   371,   378,
+     379,   383,   390,   391,   392,   396,   397,   398,   399,   403,
+     404,   408,   409,   410,   411,   412,   413,   417,   418,   422,
+     423,   424
   };
 
   void
@@ -2050,14 +2052,14 @@ namespace  GoLF  {
 #endif // YYDEBUG
 
 
-#line 30 "src/parse.y"
+#line 31 "src/parse.y"
 } //  GoLF 
-#line 2056 "src/parse.tab.cc"
+#line 2058 "src/parse.tab.cc"
 
-#line 423 "src/parse.y"
+#line 426 "src/parse.y"
 
 
 //TODO: call error routine
 void GoLF::Parser::error (const location_type& loc, const std::string& msg) {
-    std::cerr << msg << '\n';
+    std::cerr << msg << " @ line " << loc.begin.line << '\n';
 }

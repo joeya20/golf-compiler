@@ -2,26 +2,24 @@
 
 GoLF::AstNode::AstNode(Kind kind) {
     this->kind = kind;
+    this->loc.initialize();
 }
 
 GoLF::AstNode::AstNode(Kind kind, std::string attr) {
     this->kind = kind;
     this->attr = attr;
+    this->loc.initialize();
 }
 
-GoLF::AstNode::AstNode(Kind kind, int lineno, int startCol, int endCol) {
+GoLF::AstNode::AstNode(Kind kind, location loc) {
     this->kind = kind;
-    this->lineno = lineno;
-    this->startCol = startCol;
-    this->endCol = endCol;
+    this->loc = loc;
 }
 
-GoLF::AstNode::AstNode(Kind kind, std::string attr, int lineno, int startCol, int endCol) {
+GoLF::AstNode::AstNode(Kind kind, std::string attr, location loc) {
     this->kind = kind;
-    this->lineno = lineno;
-    this->startCol = startCol;
-    this->endCol = endCol;
     this->attr = attr;
+    this->loc = loc;
 }
 
 GoLF::AstNode::~AstNode() {
@@ -60,10 +58,10 @@ std::string GoLF::AstNode::toString(int tabSize) {
             res += this->attr;
             res += ']';
         }
-        if(this->lineno != -1) {
+        if(this->loc.begin.filename != nullptr) {
             res += ' ';
             res += "@ line ";
-            res += std::to_string(this->lineno);
+            res += std::to_string(this->loc.begin.line);
         }
         res += '\n';
         for(size_t i = 0; i < this->children.size(); i++) {

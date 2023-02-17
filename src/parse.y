@@ -7,6 +7,7 @@
     #include<stdlib.h>
     #include "location.hh"
     #include "AstNode.hpp"
+    #include "util.hpp"
     #include <string>
     #include <iostream>
     #include <memory>
@@ -127,17 +128,17 @@ TopLevelDecl    : GlobVarDecl   { $$ = $1; }
 
 //DONE
 GlobVarDecl     : "var" ID Type { 
-                                    $$ = new AstNode(AstNode::Kind::GlobVarDecl);
-                                    AstNode *id = new AstNode(AstNode::Kind::Ident, $2);
-                                    $$->addChild(id); 
+                                    $$ = new AstNode(AstNode::Kind::GlobVarDecl, @$);
+                                    AstNode *id = new AstNode(AstNode::Kind::Ident, $2, @2);
+                                    $$->addChild(id);
                                     $$->addChild($3); 
                                 }
         ;
 
 //DONE
 VarDecl : "var" ID Type { 
-                            $$ = new AstNode(AstNode::Kind::VarDecl);
-                            AstNode *id = new AstNode(AstNode::Kind::Ident, $2);
+                            $$ = new AstNode(AstNode::Kind::VarDecl, @$);
+                            AstNode *id = new AstNode(AstNode::Kind::Ident, $2, @2);
                             $$->addChild(id); 
                             $$->addChild($3); 
                         }
@@ -145,14 +146,14 @@ VarDecl : "var" ID Type {
 
 //DONE
 Type    : ID    { 
-                    $$ = new AstNode(AstNode::Kind::Type, $1); 
+                    $$ = new AstNode(AstNode::Kind::Type, $1, @$); 
                 }
         ;
 
 //DONE
 FuncDecl    : "func" ID FuncSign Block  { 
-                                            $$ = new AstNode(AstNode::Kind::FuncDecl);
-                                            AstNode* id = new AstNode(AstNode::Kind::Ident, $2);
+                                            $$ = new AstNode(AstNode::Kind::FuncDecl, @$);
+                                            AstNode* id = new AstNode(AstNode::Kind::Ident, $2, @$);
                                             $$->addChild(id);
                                             $$->addChild($3);
                                             $$->addChild($4);
@@ -162,7 +163,7 @@ FuncDecl    : "func" ID FuncSign Block  {
 //DONE
 FuncSign    : Params        { 
                                 $$ = new AstNode(AstNode::Kind::FuncSign);
-                                AstNode* type = new AstNode(AstNode::Kind::Type, "$void"); 
+                                AstNode* type = new AstNode(AstNode::Kind::Type, "$void", @$); 
                                 $$->addChild($1);
                                 $$->addChild(type);
                             }
@@ -198,8 +199,8 @@ ParamList   : ParamDecl                 {
 
 //DONE
 ParamDecl   : ID Type   { 
-                            $$ = new AstNode(AstNode::Kind::ParamDecl);
-                            AstNode* id = new AstNode(AstNode::Kind::Ident, $1);
+                            $$ = new AstNode(AstNode::Kind::ParamDecl, @$);
+                            AstNode* id = new AstNode(AstNode::Kind::Ident, $1, @1);
                             $$->addChild(id);
                             $$->addChild($2);
                         }
@@ -237,15 +238,15 @@ SimpleStmt  : EmptyStmt         { $$ = $1; }
             ;
 
 //DONE
-ReturnStmt  : "return"          { $$ = new AstNode(AstNode::Kind::ReturnStmt); }
+ReturnStmt  : "return"          { $$ = new AstNode(AstNode::Kind::ReturnStmt, @$); }
             | "return" Expr     { 
-                                    $$ = new AstNode(AstNode::Kind::ReturnStmt);
+                                    $$ = new AstNode(AstNode::Kind::ReturnStmt, @$);
                                     $$->addChild($2);
                                 }
             ;
 
 //DONE
-BreakStmt   : "break" { $$ = new AstNode(AstNode::Kind::BreakStmt); }
+BreakStmt   : "break" { $$ = new AstNode(AstNode::Kind::BreakStmt, @$); }
             ;
 
 //DONE
@@ -275,31 +276,33 @@ ElseStmt    : "else" IfStmt             {
 
 //DONE
 ForStmt     : "for" Block       { 
-                                    $$ = new AstNode(AstNode::Kind::ForStmt); 
+                                    $$ = new AstNode(AstNode::Kind::ForStmt, @$);
+                                    AstNode *e = new AstNode(AstNode::Kind::Ident, "$true", @$);
+                                    $$->addChild(e);
                                     $$->addChild($2); 
                                 }
-            | "for" Expr Block  { 
-                                    $$ = new AstNode(AstNode::Kind::ForStmt);
+            | "for" Expr Block  {
+                                    $$ = new AstNode(AstNode::Kind::ForStmt, @$);
                                     //intentionally add Expr after Block
                                     $$->addChild($3);
-                                    $$->addChild($2); 
+                                    $$->addChild($2);
                                 }
             ;
 
 //DONE
-EmptyStmt   : %empty  { $$ = new AstNode(AstNode::Kind::EmptyStmt); }
+EmptyStmt   : %empty  { $$ = new AstNode(AstNode::Kind::EmptyStmt, @$); }
             ;
 
 //DONE
 ExprStmt    : Expr  { 
-                        $$ = new AstNode(AstNode::Kind::ExprStmt);
+                        $$ = new AstNode(AstNode::Kind::ExprStmt, @$);
                         $$->addChild($1); 
                     }
             ;
 
 //DONE
 AssignStmt  : Expr "=" Expr {   
-                                $$ = new AstNode(AstNode::Kind::AssignStmt); 
+                                $$ = new AstNode(AstNode::Kind::AssignStmt, @$); 
                                 $$->addChild($1); 
                                 $$->addChild($3);
                             }
@@ -318,7 +321,7 @@ ExprList    : Expr                  {
 
 //DONE
 Expr        : Expr "||" AndExpr         {
-                                            $$ = new AstNode(AstNode::Kind::BinaryExpr, $2);
+                                            $$ = new AstNode(AstNode::Kind::BinaryExpr, $2, @$);
                                             $$->addChild($1);
                                             $$->addChild($3);
                                         }
@@ -327,7 +330,7 @@ Expr        : Expr "||" AndExpr         {
 
 //DONE
 AndExpr     : AndExpr "&&" RelExpr      {
-                                            $$ = new AstNode(AstNode::Kind::BinaryExpr, $2);
+                                            $$ = new AstNode(AstNode::Kind::BinaryExpr, $2, @$);
                                             $$->addChild($1);
                                             $$->addChild($3);
                                         }
@@ -373,12 +376,12 @@ UnaryExpr   : PrimaryExpr           {
 
 //DONE
 PrimaryExpr     : Operand           { $$ = $1; }
-                | FuncCall          { std::cout << "prim" << std::endl; }
+                | FuncCall          { $$ = $1; }
                 ;
 
 //DONE
 FuncCall        : Operand Arguments {
-                                        $$ = new AstNode(AstNode::Kind::FuncCall);
+                                        $$ = new AstNode(AstNode::Kind::FuncCall, @$);
                                         $$->addChild($1);
                                         $$->addChild($2);
                                     }
@@ -390,39 +393,39 @@ Arguments       : "(" ")"                   { $$ = new AstNode(AstNode::Kind::Ex
                 ;
                 
 //DONE
-Operand         : INT_LIT       { $$ = new AstNode(AstNode::Kind::IntLit, $1); }
-                | STR_LIT       { $$ = new AstNode(AstNode::Kind::StrLit, $1); }
-                | ID            { $$ = new AstNode(AstNode::Kind::Ident, $1); }
+Operand         : INT_LIT       { $$ = new AstNode(AstNode::Kind::IntLit, $1, @$); }
+                | STR_LIT       { $$ = new AstNode(AstNode::Kind::StrLit, $1, @$); }
+                | ID            { $$ = new AstNode(AstNode::Kind::Ident, $1, @$); }
                 | "(" Expr ")"  { $$ = $2; }
                 ;
 
 //DONE
-UnaryOp     : "-"   { $$ = new AstNode(AstNode::Kind::UnaryExpr, $1); }
-            | "!"   { $$ = new AstNode(AstNode::Kind::UnaryExpr, $1); }
+UnaryOp     : "-"   { $$ = new AstNode(AstNode::Kind::UnaryExpr, $1, @$); }
+            | "!"   { $$ = new AstNode(AstNode::Kind::UnaryExpr, $1, @$); }
             ;
 
 //DONE
-RelOp       : "=="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | "!="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | "<"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | "<="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | ">"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | ">="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
+RelOp       : "=="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | "!="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | "<"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | "<="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | ">"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | ">="  { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
             ;
 
 //DONE
-AddOp       : "+"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | "-"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
+AddOp       : "+"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | "-"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
             ;
 
 //DONE
-MultOp      : "*"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | "/"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
-            | "%"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1); }
+MultOp      : "*"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | "/"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
+            | "%"   { $$ = new AstNode(AstNode::Kind::BinaryExpr, $1, @$); }
             ;
 %%
 
 //TODO: call error routine
 void GoLF::Parser::error (const location_type& loc, const std::string& msg) {
-    std::cerr << msg << '\n';
+    std::cerr << msg << " @ line " << loc.begin.line << '\n';
 }
