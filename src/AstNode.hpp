@@ -11,10 +11,13 @@
 
 #define ARR_SIZE 50
 #define TAB_SIZE 4
+
 /* AST Structure is loosely based off of the Go language AST available here: https://pkg.go.dev/go/ast */
 namespace GoLF {
 
     struct AstNode {
+        // it is crucial that the ordering of the array is the same as the enum
+        // as it is __just__ an array that we index into
         const std::array<const std::string, ARR_SIZE> nodeKindToString = {
             "Program",
             "AssignStmt",
@@ -46,34 +49,57 @@ namespace GoLF {
             "StrLit"
         };
 
+
         typedef enum Kind {
-            //top level
+            //children 0 to n: top level decls like funcs and globvars
             Program,
-            // stmts
+            /* stmts */
+            // children[0] = lhs
+            // children[1] = rhs
             AssignStmt,
+            // children[0] = expr
             ExprStmt,
+            // no children
             EmptyStmt,
+            //
             CondStmt,
+            //
             IfStmt,
+            //
             ForStmt,
+            //
             BreakStmt,
+            //
             ReturnStmt,
+            //
             FuncSign,
+            //
             FuncCall,
+            //
             FuncArgs,
+            //
             StmtList,
             Params,
+            //
             ParamList,
+            //
             ParamDecl,
+            //
             Block,
+            //
             GlobVarDecl,
+            //
             VarDecl,
+            //
             FuncDecl,
             //exprs
             ExprList,
+            //
             BinaryExpr,
+            //
             UnaryExpr,
-            PrimaryExpr,            
+            //
+            PrimaryExpr,
             // terminals aka symbols
             Ident,
             Type,   //special kind of identifier

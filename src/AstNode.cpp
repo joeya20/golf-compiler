@@ -43,36 +43,36 @@ std::string GoLF::AstNode::toString(int tabSize) {
     std::string res;
     // handle lists; just ignore them and go to the next level
     // this is done for output consistency with reference compiler
-    if (this->kind == AstNode::Kind::ExprList ||
-    this->kind == AstNode::Kind::ParamList ||
-    this->kind == AstNode::Kind::StmtList) {
-        for(size_t i = 0; i < this->children.size(); i++) {
-            // std::cout << "tab size: " << tabSize << std::endl;
-            res += this->children[i]->toString(tabSize);
-        }
-    }
-    else {
+    // if (this->kind == AstNode::Kind::ExprList ||
+    // this->kind == AstNode::Kind::ParamList ||
+    // this->kind == AstNode::Kind::StmtList) {
+    //     for(size_t i = 0; i < this->children.size(); i++) {
+    //         // std::cout << "tab size: " << tabSize << std::endl;
+    //         res += this->children[i]->toString(tabSize);
+    //     }
+    // }
+    // else {
         //initiate res with tabSize * ' '
-        res = std::string(tabSize, ' ');
-        res += this->nodeKindToString[this->kind];
-        if(this->attr.size() > 0) {
-            res += ' ';
-            res += '[';
-            res += this->attr;
-            res += ']';
-        }
-        if(this->loc.begin.filename != nullptr) {
-            res += ' ';
-            res += "@ line ";
-            res += std::to_string(this->loc.begin.line);
-            res += " @ col ";
-            res += std::to_string(this->loc.begin.column);
-        }
-        res += '\n';
-        for(size_t i = 0; i < this->children.size(); i++) {
-            res += this->children[i]->toString(tabSize + TAB_SIZE);
-        }
+    res = std::string(tabSize, ' ');
+    res += this->nodeKindToString[this->kind];
+    if(this->attr.size() > 0) {
+        res += ' ';
+        res += '[';
+        res += this->attr;
+        res += ']';
     }
+    if(this->loc.begin.filename != nullptr) {
+        res += ' ';
+        res += "@ line ";
+        res += std::to_string(this->loc.begin.line);
+        res += " @ col ";
+        res += std::to_string(this->loc.begin.column);
+    }
+    res += '\n';
+    for(size_t i = 0; i < this->children.size(); i++) {
+        res += this->children[i]->toString(tabSize + TAB_SIZE);
+    }
+// }
     return res;
 }
 

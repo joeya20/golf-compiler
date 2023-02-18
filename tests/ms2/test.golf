@@ -10,4 +10,5 @@ func test(n int) {
     for {
         
     }
+    n = 10
 }

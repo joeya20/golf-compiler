@@ -153,7 +153,7 @@ Type    : ID    {
 //DONE
 FuncDecl    : "func" ID FuncSign Block  { 
                                             $$ = std::make_shared<AstNode>(AstNode::Kind::FuncDecl, @$);
-                                            std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, $2, @$);
+                                            std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, $2, @2);
                                             $$->addChild(id);
                                             $$->addChild($3);
                                             $$->addChild($4);
@@ -163,7 +163,7 @@ FuncDecl    : "func" ID FuncSign Block  {
 //DONE
 FuncSign    : Params        { 
                                 $$ = std::make_shared<AstNode>(AstNode::Kind::FuncSign);
-                                std::shared_ptr<AstNode> type = std::make_shared<AstNode>(AstNode::Kind::Type, "$void", @$); 
+                                std::shared_ptr<AstNode> type = std::make_shared<AstNode>(AstNode::Kind::Type, "$void"); 
                                 $$->addChild($1);
                                 $$->addChild(type);
                             }
@@ -178,11 +178,15 @@ FuncSign    : Params        {
 Params      : "(" ")"                   { $$ = std::make_shared<AstNode>(AstNode::Kind::Params); }
             |  "(" ParamList ")"        { 
                                             $$ = std::make_shared<AstNode>(AstNode::Kind::Params);
-                                            $$->addChild($2);
+                                            for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
+                                                $$->addChild(*it);
+                                            }
                                         }
             |  "(" ParamList "," ")"    { 
                                             $$ = std::make_shared<AstNode>(AstNode::Kind::Params);
-                                            $$->addChild($2);
+                                            for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
+                                                $$->addChild(*it);
+                                            }
                                         }
             ;
 
@@ -209,7 +213,9 @@ ParamDecl   : ID Type   {
 //DONE
 Block       : "{" StmtList "}"  { 
                                     $$ = std::make_shared<AstNode>(AstNode::Block);
-                                    $$->addChild($2);
+                                    for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
+                                        $$->addChild(*it);
+                                    }
                                 }
             ;
 
@@ -277,7 +283,7 @@ ElseStmt    : "else" IfStmt             {
 //DONE
 ForStmt     : "for" Block       { 
                                     $$ = std::make_shared<AstNode>(AstNode::Kind::ForStmt, @$);
-                                    std::shared_ptr<AstNode> e = std::make_shared<AstNode>(AstNode::Kind::Ident, "$true", @$);
+                                    std::shared_ptr<AstNode> e = std::make_shared<AstNode>(AstNode::Kind::Ident, "$true");
                                     $$->addChild(e);
                                     $$->addChild($2); 
                                 }
