@@ -3,7 +3,7 @@ var i int;
 func main() {
     var j int
     var k str
-    i = j()
+    i = j(k)
 }
 
 func test(n int) {

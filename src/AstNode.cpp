@@ -22,15 +22,18 @@ GoLF::AstNode::AstNode(Kind kind, std::string attr, location loc) {
     this->loc = loc;
 }
 
+// nothing to really do here since we are using shared pointers
+// normally I would have to destroy the children before destroying the node
 GoLF::AstNode::~AstNode() {
-    while(children.size() > 0) {
-        AstNode* child = children.back();
-        children.pop_back();
-        delete child;
-    };
+    // std::cout << "here" << std::endl;
+    // while(children.size() > 0) {
+    //     AstNode* child = children.back();
+    //     children.pop_back();
+            // delete child;
+    // };
 }
 
-void GoLF::AstNode::addChild(AstNode* child) {
+void GoLF::AstNode::addChild(std::shared_ptr<AstNode> child) {
     children.push_back(child);
 }
 
@@ -62,6 +65,8 @@ std::string GoLF::AstNode::toString(int tabSize) {
             res += ' ';
             res += "@ line ";
             res += std::to_string(this->loc.begin.line);
+            res += " @ col ";
+            res += std::to_string(this->loc.begin.column);
         }
         res += '\n';
         for(size_t i = 0; i < this->children.size(); i++) {

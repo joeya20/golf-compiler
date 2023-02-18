@@ -423,13 +423,13 @@ namespace  GoLF  {
       // UnaryExpr
       // PrimaryExpr
       // FuncCall
-      // Arguments
+      // FuncArgs
       // Operand
       // UnaryOp
       // RelOp
       // AddOp
       // MultOp
-      char dummy1[sizeof (AstNode*)];
+      char dummy1[sizeof (std::shared_ptr<AstNode>)];
 
       // ";"
       // "("
@@ -628,7 +628,7 @@ namespace  GoLF  {
         S_UnaryExpr = 64,                        // UnaryExpr
         S_PrimaryExpr = 65,                      // PrimaryExpr
         S_FuncCall = 66,                         // FuncCall
-        S_Arguments = 67,                        // Arguments
+        S_FuncArgs = 67,                         // FuncArgs
         S_Operand = 68,                          // Operand
         S_UnaryOp = 69,                          // UnaryOp
         S_RelOp = 70,                            // RelOp
@@ -700,13 +700,13 @@ namespace  GoLF  {
       case symbol_kind::S_UnaryExpr: // UnaryExpr
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
-      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_FuncArgs: // FuncArgs
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
       case symbol_kind::S_AddOp: // AddOp
       case symbol_kind::S_MultOp: // MultOp
-        value.move< AstNode* > (std::move (that.value));
+        value.move< std::shared_ptr<AstNode> > (std::move (that.value));
         break;
 
       case symbol_kind::S_SEMICOLON: // ";"
@@ -767,13 +767,13 @@ namespace  GoLF  {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, AstNode*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, std::shared_ptr<AstNode>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const AstNode*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const std::shared_ptr<AstNode>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -848,13 +848,13 @@ switch (yykind)
       case symbol_kind::S_UnaryExpr: // UnaryExpr
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
-      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_FuncArgs: // FuncArgs
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
       case symbol_kind::S_AddOp: // AddOp
       case symbol_kind::S_MultOp: // MultOp
-        value.template destroy< AstNode* > ();
+        value.template destroy< std::shared_ptr<AstNode> > ();
         break;
 
       case symbol_kind::S_SEMICOLON: // ";"
@@ -1985,13 +1985,13 @@ switch (yykind)
       case symbol_kind::S_UnaryExpr: // UnaryExpr
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
-      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_FuncArgs: // FuncArgs
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
       case symbol_kind::S_AddOp: // AddOp
       case symbol_kind::S_MultOp: // MultOp
-        value.copy< AstNode* > (YY_MOVE (that.value));
+        value.copy< std::shared_ptr<AstNode> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_SEMICOLON: // ";"
@@ -2089,13 +2089,13 @@ switch (yykind)
       case symbol_kind::S_UnaryExpr: // UnaryExpr
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
-      case symbol_kind::S_Arguments: // Arguments
+      case symbol_kind::S_FuncArgs: // FuncArgs
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
       case symbol_kind::S_AddOp: // AddOp
       case symbol_kind::S_MultOp: // MultOp
-        value.move< AstNode* > (YY_MOVE (s.value));
+        value.move< std::shared_ptr<AstNode> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_SEMICOLON: // ";"

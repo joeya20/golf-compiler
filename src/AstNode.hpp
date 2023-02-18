@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 #include "location.hh"
+#include <memory>
 
 #define ARR_SIZE 50
 #define TAB_SIZE 4
@@ -26,6 +27,7 @@ namespace GoLF {
             "ReturnStmt",
             "FuncSign",
             "FuncCall",
+            "FuncArgs",
             "StmtList",
             "Params",
             "ParamList",
@@ -58,6 +60,7 @@ namespace GoLF {
             ReturnStmt,
             FuncSign,
             FuncCall,
+            FuncArgs,
             StmtList,
             Params,
             ParamList,
@@ -81,17 +84,20 @@ namespace GoLF {
         location loc;
         Kind kind;
         std::string attr;
-        std::vector<AstNode*> children;
+        std::vector<std::shared_ptr<AstNode>> children;
 
         AstNode(Kind kind);
         AstNode(Kind kind, std::string attr);
         AstNode(Kind kind, location loc);
         AstNode(Kind kind, std::string attr, location loc);
+        
+        // nothing to really do here since we are using shared pointers
+        // normally I would have to destroy the children before destroying the node
         ~AstNode();
         
         std::string toString(int tabSize = 0);
 
-        void addChild(AstNode* child);
+        void addChild(std::shared_ptr<AstNode> child);
     };
 
     std::ostream& operator<<(std::ostream& os, AstNode *node);
