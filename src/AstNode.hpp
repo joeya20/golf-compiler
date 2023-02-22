@@ -8,6 +8,7 @@
 #include <iostream>
 #include "location.hh"
 #include <memory>
+#include <functional>
 
 #define ARR_SIZE 50
 #define TAB_SIZE 4
@@ -15,7 +16,7 @@
 /* AST Structure is loosely based off of the Go language AST available here: https://pkg.go.dev/go/ast */
 namespace GoLF {
 
-    struct AstNode {
+    struct AstNode : std::enable_shared_from_this<AstNode> {
         // it is crucial that the ordering of the array is the same as the enum
         // as it is __just__ an array that we index into
         const std::array<const std::string, ARR_SIZE> nodeKindToString = {
@@ -23,7 +24,6 @@ namespace GoLF {
             "AssignStmt",
             "ExprStmt",
             "EmptyStmt",
-            "CondStmt",
             "IfStmt",
             "ForStmt",
             "BreakStmt",
@@ -31,18 +31,14 @@ namespace GoLF {
             "FuncSign",
             "FuncCall",
             "FuncArgs",
-            "StmtList",
             "Params",
-            "ParamList",
             "ParamDecl",
             "Block",
             "GlobVarDecl",
             "VarDecl",
             "FuncDecl",
-            "ExprList",
             "BinaryExpr",
             "UnaryExpr",
-            "PrimaryExpr",
             "Ident",
             "Type",
             "IntLit",
@@ -61,45 +57,49 @@ namespace GoLF {
             ExprStmt,
             // no children
             EmptyStmt,
-            //
-            CondStmt,
-            //
+            // children[0] = expr
+            // children[1] = block
+            // children[2] = IfStmt/block/None
             IfStmt,
-            //
+            // children[0] = expr (Ident '$true' if missing)
+            // children[1] = block
             ForStmt,
-            //
+            // no children
             BreakStmt,
-            //
+            // children[0] = Expr or None
             ReturnStmt,
-            //
+            // children[0] = params
+            // children[1] = Type ($void if missing)
             FuncSign,
-            //
+            // children[0] = operand (Ident)
+            // children[1] = FuncArgs
             FuncCall,
-            //
+            // children 0 to N: expr
             FuncArgs,
-            //
-            StmtList,
+            // children 0 to N: ParamDecl
             Params,
-            //
-            ParamList,
-            //
+            // A defined function parameter
+            // children[0] = Ident
+            // children[1] = Type
             ParamDecl,
-            //
+            // children 0 to N: Stmt
             Block,
-            //
+            // children[0] = Ident
+            // children[1] = Type
             GlobVarDecl,
-            //
+            // children[0] = Ident
+            // children[1] = Type
             VarDecl,
-            //
+            // children[0] = Ident
+            // children[1] = FuncSign
+            // children[2] = Block
             FuncDecl,
-            //exprs
-            ExprList,
-            //
+            // children[0] = lhs
+            // children[1] = rhs
             BinaryExpr,
-            //
+            // children[0] = UnaryExpr or None
+            // resolves to Operand (Ident, Int Lit, Str Lit) or FuncCall
             UnaryExpr,
-            //
-            PrimaryExpr,
             // terminals aka symbols
             Ident,
             Type,   //special kind of identifier
@@ -117,13 +117,16 @@ namespace GoLF {
         AstNode(Kind kind, location loc);
         AstNode(Kind kind, std::string attr, location loc);
         
-        // nothing to really do here since we are using shared pointers
-        // normally I would have to destroy the children before destroying the node
         ~AstNode();
         
         std::string toString(int tabSize = 0);
 
         void addChild(std::shared_ptr<AstNode> child);
+
+        // generic function that will traverse the AST starting from the calling node
+        // and call the provided function for each node
+        // its basically a janky version of the visitor pattern
+        void dfsPreOrderTraversal(std::function<void(const std::shared_ptr<AstNode>)> func);
     };
 
     std::ostream& operator<<(std::ostream& os, AstNode *node);

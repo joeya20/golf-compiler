@@ -34,7 +34,7 @@
 %define parse.error verbose
 
 %param { Lexer &lexer }
-%parse-param { AstNode *& root }
+%parse-param { std::shared_ptr<GoLF::AstNode>& root }
 
 //I don't need to use strings for all but the last 3, but too late
 %token <std::string>
@@ -112,7 +112,7 @@
 
 %%
 //DONE
-SourceFile  : %empty                    { root = new AstNode(AstNode::Kind::Program); }
+SourceFile  : %empty                    { root = std::make_shared<AstNode>(AstNode::Kind::Program); }
             | SourceFile Program YYEOF  { /* Janky workaround; maybe fix one day */   }
             ;
 
@@ -127,31 +127,31 @@ TopLevelDecl    : GlobVarDecl   { $$ = $1; }
                 ;
 
 //DONE
-GlobVarDecl     : "var" ID Type { 
+GlobVarDecl     : "var" ID Type {
                                     $$ = std::make_shared<AstNode>(AstNode::Kind::GlobVarDecl, @$);
                                     std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, $2, @2);
                                     $$->addChild(id);
-                                    $$->addChild($3); 
+                                    $$->addChild($3);
                                 }
                 ;
 
 //DONE
-VarDecl : "var" ID Type { 
+VarDecl : "var" ID Type {
                             $$ = std::make_shared<AstNode>(AstNode::Kind::VarDecl, @$);
                             std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, $2, @2);
-                            $$->addChild(id); 
-                            $$->addChild($3); 
+                            $$->addChild(id);
+                            $$->addChild($3);
                         }
         ;
 
 //DONE
-Type    : ID    { 
-                    $$ = std::make_shared<AstNode>(AstNode::Kind::Type, $1, @$); 
+Type    : ID    {
+                    $$ = std::make_shared<AstNode>(AstNode::Kind::Type, $1, @$);
                 }
         ;
 
 //DONE
-FuncDecl    : "func" ID FuncSign Block  { 
+FuncDecl    : "func" ID FuncSign Block  {
                                             $$ = std::make_shared<AstNode>(AstNode::Kind::FuncDecl, @$);
                                             std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, $2, @2);
                                             $$->addChild(id);
@@ -161,9 +161,9 @@ FuncDecl    : "func" ID FuncSign Block  {
             ;
 
 //DONE
-FuncSign    : Params        { 
+FuncSign    : Params        {
                                 $$ = std::make_shared<AstNode>(AstNode::Kind::FuncSign);
-                                std::shared_ptr<AstNode> type = std::make_shared<AstNode>(AstNode::Kind::Type, "$void"); 
+                                std::shared_ptr<AstNode> type = std::make_shared<AstNode>(AstNode::Kind::Type, "$void");
                                 $$->addChild($1);
                                 $$->addChild(type);
                             }
@@ -176,33 +176,27 @@ FuncSign    : Params        {
 
 //DONE
 Params      : "(" ")"                   { $$ = std::make_shared<AstNode>(AstNode::Kind::Params); }
-            |  "(" ParamList ")"        { 
-                                            $$ = std::make_shared<AstNode>(AstNode::Kind::Params);
-                                            for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
-                                                $$->addChild(*it);
-                                            }
+            |  "(" ParamList ")"        {
+                                            $$ = $2;
                                         }
-            |  "(" ParamList "," ")"    { 
-                                            $$ = std::make_shared<AstNode>(AstNode::Kind::Params);
-                                            for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
-                                                $$->addChild(*it);
-                                            }
+            |  "(" ParamList "," ")"    {
+                                            $$ = $2;
                                         }
             ;
 
 //DONE
-ParamList   : ParamDecl                 { 
-                                            $$ = std::make_shared<AstNode>(AstNode::Kind::ParamList);
+ParamList   : ParamDecl                 {
+                                            $$ = std::make_shared<AstNode>(AstNode::Kind::Params);
                                             $$->addChild($1);
                                         }
-            | ParamList "," ParamDecl   { 
+            | ParamList "," ParamDecl   {
                                             $1->addChild($3);
                                             $$ = $1;
                                         }
             ;
 
 //DONE
-ParamDecl   : ID Type   { 
+ParamDecl   : ID Type   {
                             $$ = std::make_shared<AstNode>(AstNode::Kind::ParamDecl, @$);
                             std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, $1, @1);
                             $$->addChild(id);
@@ -211,16 +205,13 @@ ParamDecl   : ID Type   {
             ;
 
 //DONE
-Block       : "{" StmtList "}"  { 
-                                    $$ = std::make_shared<AstNode>(AstNode::Block);
-                                    for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
-                                        $$->addChild(*it);
-                                    }
+Block       : "{" StmtList "}"  {
+                                    $$ = $2;
                                 }
             ;
 
 //DONE
-StmtList    : %empty            { $$ = std::make_shared<AstNode>(AstNode::Kind::StmtList); }
+StmtList    : %empty            { $$ = std::make_shared<AstNode>(AstNode::Kind::Block); }
             | StmtList Stmt ";" {
                                     $1->addChild($2);
                                     $$ = $1;
@@ -228,27 +219,27 @@ StmtList    : %empty            { $$ = std::make_shared<AstNode>(AstNode::Kind::
             ;
 
 //DONE
-Stmt        : VarDecl           { $$ = $1; }    
-            | SimpleStmt        { $$ = $1; }        
-            | ReturnStmt        { $$ = $1; }        
-            | BreakStmt         { $$ = $1; }    
-            | Block             { $$ = $1; }
-            | IfStmt            { $$ = $1; }    
-            | ForStmt           { $$ = $1; }    
+Stmt        : VarDecl       { $$ = $1; }
+            | SimpleStmt    { $$ = $1; }
+            | ReturnStmt    { $$ = $1; }
+            | BreakStmt     { $$ = $1; }
+            | Block         { $$ = $1; }
+            | IfStmt        { $$ = $1; }
+            | ForStmt       { $$ = $1; }
             ;
 
 //DONE
-SimpleStmt  : EmptyStmt         { $$ = $1; }
-            | ExprStmt          { $$ = $1; }
-            | AssignStmt        { $$ = $1; }
+SimpleStmt  : EmptyStmt     { $$ = $1; }
+            | ExprStmt      { $$ = $1; }
+            | AssignStmt    { $$ = $1; }
             ;
 
 //DONE
-ReturnStmt  : "return"          { $$ = std::make_shared<AstNode>(AstNode::Kind::ReturnStmt, @$); }
-            | "return" Expr     {
-                                    $$ = std::make_shared<AstNode>(AstNode::Kind::ReturnStmt, @$);
-                                    $$->addChild($2);
-                                }
+ReturnStmt  : "return"      { $$ = std::make_shared<AstNode>(AstNode::Kind::ReturnStmt, @$); }
+            | "return" Expr {
+                                $$ = std::make_shared<AstNode>(AstNode::Kind::ReturnStmt, @$);
+                                $$->addChild($2);
+                            }
             ;
 
 //DONE
@@ -270,59 +261,47 @@ IfStmt      : "if" Expr Block           {
             ;
 
 //DONE
-ElseStmt    : "else" IfStmt             {
-                                            // just return the IfStmt
-                                            $$ = $2;
-                                        }
-            | "else" Block              {
-                                            // just return the block
-                                            $$ = $2;
-                                        }
-            ;
-
-//DONE
-ForStmt     : "for" Block       { 
-                                    $$ = std::make_shared<AstNode>(AstNode::Kind::ForStmt, @$);
-                                    std::shared_ptr<AstNode> e = std::make_shared<AstNode>(AstNode::Kind::Ident, "$true");
-                                    $$->addChild(e);
-                                    $$->addChild($2); 
-                                }
-            | "for" Expr Block  {
-                                    $$ = std::make_shared<AstNode>(AstNode::Kind::ForStmt, @$);
-                                    //intentionally add Expr after Block
-                                    $$->addChild($3);
-                                    $$->addChild($2);
-                                }
-            ;
-
-//DONE
-EmptyStmt   : %empty  { $$ = std::make_shared<AstNode>(AstNode::Kind::EmptyStmt, @$); }
-            ;
-
-//DONE
-ExprStmt    : Expr  { 
-                        $$ = std::make_shared<AstNode>(AstNode::Kind::ExprStmt, @$);
-                        $$->addChild($1); 
-                    }
-            ;
-
-//DONE
-AssignStmt  : Expr "=" Expr {   
-                                $$ = std::make_shared<AstNode>(AstNode::Kind::AssignStmt, @$); 
-                                $$->addChild($1); 
-                                $$->addChild($3);
+ElseStmt    : "else" IfStmt {
+                                // just return the IfStmt
+                                $$ = $2;
+                            }
+            | "else" Block  {
+                                // just return the block
+                                $$ = $2;
                             }
             ;
 
 //DONE
-ExprList    : Expr                  { 
-                                        $$ = std::make_shared<AstNode>(AstNode::Kind::ExprList);
-                                        $$->addChild($1);
-                                    }
-            | ExprList "," Expr     { 
-                                        $1->addChild($3);
-                                        $$ = $1;
-                                    }
+ForStmt     : "for" Block       {
+                                    $$ = std::make_shared<AstNode>(AstNode::Kind::ForStmt, @$);
+                                    std::shared_ptr<AstNode> e = std::make_shared<AstNode>(AstNode::Kind::Ident, "$true");
+                                    $$->addChild(e);
+                                    $$->addChild($2);
+                                }
+            | "for" Expr Block  {
+                                    $$ = std::make_shared<AstNode>(AstNode::Kind::ForStmt, @$);
+                                    $$->addChild($2);
+                                    $$->addChild($3);
+                                }
+            ;
+
+//DONE
+EmptyStmt   : %empty    { $$ = std::make_shared<AstNode>(AstNode::Kind::EmptyStmt, @$); }
+            ;
+
+//DONE
+ExprStmt    : Expr  {
+                        $$ = std::make_shared<AstNode>(AstNode::Kind::ExprStmt, @$);
+                        $$->addChild($1);
+                    }
+            ;
+
+//DONE
+AssignStmt  : Expr "=" Expr {
+                                $$ = std::make_shared<AstNode>(AstNode::Kind::AssignStmt, @$);
+                                $$->addChild($1);
+                                $$->addChild($3);
+                            }
             ;
 
 //DONE
@@ -372,11 +351,18 @@ MultExpr    : MultExpr MultOp UnaryExpr {
 
 //DONE
 UnaryExpr   : PrimaryExpr           {
-                                        $$ = $1;    
+                                        $$ = $1;
                                     }
             | UnaryOp UnaryExpr     {
-                                        $$ = $1;
-                                        $$->addChild($2);
+                                        if($1->attr == "-" && 
+                                        $2->kind == AstNode::Kind::IntLit && 
+                                        $2->attr[0] != '-') {
+                                            $$ = std::make_shared<AstNode>(AstNode::Kind::IntLit, "-" + $2->attr, @$);
+                                        }
+                                        else {
+                                            $$ = $1;
+                                            $$->addChild($2);
+                                        }
                                     }
             ;
 
@@ -395,19 +381,23 @@ FuncCall        : Operand FuncArgs {
 //DONE
 FuncArgs        : "(" ")"                   { $$ = std::make_shared<AstNode>(AstNode::Kind::FuncArgs); }
                 |  "(" ExprList ")"         {
-                                                $$ = std::make_shared<AstNode>(AstNode::Kind::FuncArgs);
-                                                for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
-                                                    $$->addChild(*it);
-                                                }
+                                                $$ = $2;
                                             }
                 |  "(" ExprList "," ")"     {
-                                                $$ = std::make_shared<AstNode>(AstNode::Kind::FuncArgs);
-                                                for(auto it = $2->children.begin(); it != $2->children.end(); it++) {
-                                                    $$->addChild(*it);
-                                                }
+                                                $$ = $2;
                                             }
                 ;
-                
+//DONE
+ExprList    : Expr              {
+                                    $$ = std::make_shared<AstNode>(AstNode::Kind::FuncArgs);
+                                    $$->addChild($1);
+                                }
+            | ExprList "," Expr {
+                                    $1->addChild($3);
+                                    $$ = $1;
+                                }
+            ;
+
 //DONE
 Operand         : INT_LIT       { $$ = std::make_shared<AstNode>(AstNode::Kind::IntLit, $1, @$); }
                 | STR_LIT       { $$ = std::make_shared<AstNode>(AstNode::Kind::StrLit, $1, @$); }
@@ -443,5 +433,5 @@ MultOp      : "*"   { $$ = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, 
 
 //TODO: call error routine
 void GoLF::Parser::error (const location_type& loc, const std::string& msg) {
-    std::cerr << msg << " @ line " << loc.begin.line << '\n';
+    std::cerr << msg << " @ line " << loc.begin.line << " @ col " << loc.begin.column << std::endl;
 }

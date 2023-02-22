@@ -2,6 +2,10 @@
 
 std::string inputFileName;
 
+// void testDfs(const std::shared_ptr<GoLF::AstNode> node) {
+//     std::cout << "here: " << node << std::endl;
+// }
+
 int main(int argc, char **argv) {
     std::ifstream inputFile;
 
@@ -22,15 +26,13 @@ int main(int argc, char **argv) {
     }
     
     GoLF::Lexer lexer {inputFile, std::cout};
-    GoLF::AstNode *root;
+    std::shared_ptr<GoLF::AstNode> root;
     GoLF::Parser parser {lexer, root};
 
     parser();
     std::cout << root << std::endl;
     
-    // tear down ast
-    //root will never be null :)
-    delete root;
+    // root->dfsPreOrderTraversal(&testDfs);
 
     //close input file stream
     inputFile.close();

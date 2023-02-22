@@ -414,7 +414,6 @@ namespace  GoLF  {
       // EmptyStmt
       // ExprStmt
       // AssignStmt
-      // ExprList
       // Expr
       // AndExpr
       // RelExpr
@@ -424,6 +423,7 @@ namespace  GoLF  {
       // PrimaryExpr
       // FuncCall
       // FuncArgs
+      // ExprList
       // Operand
       // UnaryOp
       // RelOp
@@ -619,16 +619,16 @@ namespace  GoLF  {
         S_EmptyStmt = 55,                        // EmptyStmt
         S_ExprStmt = 56,                         // ExprStmt
         S_AssignStmt = 57,                       // AssignStmt
-        S_ExprList = 58,                         // ExprList
-        S_Expr = 59,                             // Expr
-        S_AndExpr = 60,                          // AndExpr
-        S_RelExpr = 61,                          // RelExpr
-        S_AddExpr = 62,                          // AddExpr
-        S_MultExpr = 63,                         // MultExpr
-        S_UnaryExpr = 64,                        // UnaryExpr
-        S_PrimaryExpr = 65,                      // PrimaryExpr
-        S_FuncCall = 66,                         // FuncCall
-        S_FuncArgs = 67,                         // FuncArgs
+        S_Expr = 58,                             // Expr
+        S_AndExpr = 59,                          // AndExpr
+        S_RelExpr = 60,                          // RelExpr
+        S_AddExpr = 61,                          // AddExpr
+        S_MultExpr = 62,                         // MultExpr
+        S_UnaryExpr = 63,                        // UnaryExpr
+        S_PrimaryExpr = 64,                      // PrimaryExpr
+        S_FuncCall = 65,                         // FuncCall
+        S_FuncArgs = 66,                         // FuncArgs
+        S_ExprList = 67,                         // ExprList
         S_Operand = 68,                          // Operand
         S_UnaryOp = 69,                          // UnaryOp
         S_RelOp = 70,                            // RelOp
@@ -691,7 +691,6 @@ namespace  GoLF  {
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
-      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Expr: // Expr
       case symbol_kind::S_AndExpr: // AndExpr
       case symbol_kind::S_RelExpr: // RelExpr
@@ -701,6 +700,7 @@ namespace  GoLF  {
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
       case symbol_kind::S_FuncArgs: // FuncArgs
+      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
@@ -839,7 +839,6 @@ switch (yykind)
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
-      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Expr: // Expr
       case symbol_kind::S_AndExpr: // AndExpr
       case symbol_kind::S_RelExpr: // RelExpr
@@ -849,6 +848,7 @@ switch (yykind)
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
       case symbol_kind::S_FuncArgs: // FuncArgs
+      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
@@ -998,7 +998,7 @@ switch (yykind)
     };
 
     /// Build a parser object.
-     Parser  (Lexer &lexer_yyarg, AstNode *& root_yyarg);
+     Parser  (Lexer &lexer_yyarg, std::shared_ptr<GoLF::AstNode>& root_yyarg);
     virtual ~ Parser  ();
 
 #if 201103L <= YY_CPLUSPLUS
@@ -1891,7 +1891,7 @@ switch (yykind)
 
     // User arguments.
     Lexer &lexer;
-    AstNode *& root;
+    std::shared_ptr<GoLF::AstNode>& root;
 
   };
 
@@ -1976,7 +1976,6 @@ switch (yykind)
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
-      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Expr: // Expr
       case symbol_kind::S_AndExpr: // AndExpr
       case symbol_kind::S_RelExpr: // RelExpr
@@ -1986,6 +1985,7 @@ switch (yykind)
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
       case symbol_kind::S_FuncArgs: // FuncArgs
+      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
@@ -2080,7 +2080,6 @@ switch (yykind)
       case symbol_kind::S_EmptyStmt: // EmptyStmt
       case symbol_kind::S_ExprStmt: // ExprStmt
       case symbol_kind::S_AssignStmt: // AssignStmt
-      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Expr: // Expr
       case symbol_kind::S_AndExpr: // AndExpr
       case symbol_kind::S_RelExpr: // RelExpr
@@ -2090,6 +2089,7 @@ switch (yykind)
       case symbol_kind::S_PrimaryExpr: // PrimaryExpr
       case symbol_kind::S_FuncCall: // FuncCall
       case symbol_kind::S_FuncArgs: // FuncArgs
+      case symbol_kind::S_ExprList: // ExprList
       case symbol_kind::S_Operand: // Operand
       case symbol_kind::S_UnaryOp: // UnaryOp
       case symbol_kind::S_RelOp: // RelOp
