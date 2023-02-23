@@ -2068,5 +2068,5 @@ namespace  GoLF  {
 
 //TODO: call error routine
 void GoLF::Parser::error (const location_type& loc, const std::string& msg) {
-    std::cerr << msg << " @ line " << loc.begin.line << " @ col " << loc.begin.column << std::endl;
+   handleError(3, msg.c_str(), loc.begin.line, loc.begin.column);
 }

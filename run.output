@@ -1,6 +1,6 @@
-Run started on Tue Feb 21 19:10:18 2023
+Run started on Thu Feb 23 15:37:33 2023
 
-Hostname: csx2.cs.ucalgary.ca
+Hostname: csx3.cs.ucalgary.ca
 
 -------------------------------------------------------------------------------
 Running make |
@@ -9,15 +9,7 @@ Running make |
 % /usr/bin/make
 
 STDOUT:
-g++ -c -Wall src/util.cpp -o build/util.o
-flex -o src/lex.yy.cc src/lex.l
-bison -o src/parse.tab.cc src/parse.y
-g++ -c -Wall src/lex.yy.cc -o build/lex.yy.o
-g++ -c -Wall src/lexer.cpp -o build/lexer.o
-g++ -c -Wall src/parse.tab.cc -o build/parse.tab.o
-g++ -c -Wall src/AstNode.cpp -o build/AstNode.o
-g++ -c -Wall src/main.cpp -o build/main.o
-g++ -Wall build/util.o build/lex.yy.o build/lexer.o build/parse.tab.o build/AstNode.o build/main.o -o golf
+make: 'golf' is up to date.
 
 
 STDERR:
@@ -83,15 +75,13 @@ Test: func open brace in wrong place |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t1
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { @ line 3 @ col 12
+error: /home/profs/aycock/411/TEST/ms2/parse.t1:3:12: syntax error, unexpected ;, expecting {
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: "for" open brace exception |
@@ -126,15 +116,13 @@ Test: "for" open brace in wrong place |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t3
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { or || @ line 4 @ col 10
+error: /home/profs/aycock/411/TEST/ms2/parse.t3:4:10: syntax error, unexpected ;, expecting { or ||
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: "if" open brace in wrong place |
@@ -143,15 +131,13 @@ Test: "if" open brace in wrong place |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t4
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { or || @ line 4 @ col 9
+error: /home/profs/aycock/411/TEST/ms2/parse.t4:4:9: syntax error, unexpected ;, expecting { or ||
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: weird but correct formatting |
@@ -342,15 +328,13 @@ Test: func open brace in wrong place, with semicolon |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t9
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { @ line 4 @ col 12
+error: /home/profs/aycock/411/TEST/ms2/parse.t9:4:12: syntax error, unexpected ;, expecting {
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: func open brace with bonus semicolon |
@@ -359,15 +343,13 @@ Test: func open brace with bonus semicolon |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t10
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { @ line 4 @ col 12
+error: /home/profs/aycock/411/TEST/ms2/parse.t10:4:12: syntax error, unexpected ;, expecting {
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: "for" open brace in wrong place, with semicolon |
@@ -376,15 +358,13 @@ Test: "for" open brace in wrong place, with semicolon |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t11
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { or || @ line 5 @ col 10
+error: /home/profs/aycock/411/TEST/ms2/parse.t11:5:10: syntax error, unexpected ;, expecting { or ||
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: "for" with bonus semicolon |
@@ -393,15 +373,13 @@ Test: "for" with bonus semicolon |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t12
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { or || @ line 5 @ col 10
+error: /home/profs/aycock/411/TEST/ms2/parse.t12:5:10: syntax error, unexpected ;, expecting { or ||
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: "if" open brace in wrong place, with semicolon |
@@ -410,15 +388,13 @@ Test: "if" open brace in wrong place, with semicolon |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t13
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { or || @ line 5 @ col 9
+error: /home/profs/aycock/411/TEST/ms2/parse.t13:5:9: syntax error, unexpected ;, expecting { or ||
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: "if" with bonus semicolon |
@@ -427,15 +403,13 @@ Test: "if" with bonus semicolon |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t14
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting { or || @ line 5 @ col 9
+error: /home/profs/aycock/411/TEST/ms2/parse.t14:5:9: syntax error, unexpected ;, expecting { or ||
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: func line breaks using trailing commas |
@@ -476,15 +450,13 @@ Test: func line breaks sans trailing comma |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t16
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting ) or "," @ line 6 @ col 7
+error: /home/profs/aycock/411/TEST/ms2/parse.t16:6:7: syntax error, unexpected ;, expecting ) or ","
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: func call line breaks with trailing commas |
@@ -522,15 +494,13 @@ Test: func call line breaks sans trailing comma |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t18
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected ;, expecting ) or "," @ line 7 @ col 4
+error: /home/profs/aycock/411/TEST/ms2/parse.t18:7:4: syntax error, unexpected ;, expecting ) or ","
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: legit syntax salad |
@@ -631,15 +601,13 @@ Test: assignment |
 % ./golf /home/profs/aycock/411/TEST/ms2/parse.t20
 
 STDOUT:
-Program
-
 
 
 STDERR:
-syntax error, unexpected =, expecting ; @ line 7 @ col 8
+error: /home/profs/aycock/411/TEST/ms2/parse.t20:7:8: syntax error, unexpected =, expecting ;
 
 
-RETURN CODE: 0
+RETURN CODE: 1
 
 -------------------------------------------------------------------------------
 Test: associativity test |
@@ -1400,5 +1368,5 @@ STDERR:
 
 RETURN CODE: 0
 
-Run ended on Tue Feb 21 19:10:19 2023
+Run ended on Thu Feb 23 15:37:33 2023
 

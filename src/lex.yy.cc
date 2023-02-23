@@ -834,7 +834,7 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 110 "src/lex.l"
-{ error(3, "Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
+{ handleError(3, "Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
@@ -891,7 +891,7 @@ YY_RULE_SETUP
 case 16:
 YY_RULE_SETUP
 #line 147 "src/lex.l"
-{ error(3, "Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
+{ handleError(3, "Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
@@ -1187,14 +1187,14 @@ YY_RULE_SETUP
                                     // check if newline or EOF is after; those take precedence but doesn't matter either way
                                     char badChar = yyinput();
                                     if(badChar == 0) {
-                                        error(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
+                                        handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
                                     }
                                     else if (badChar == 0x0A) {
-                                        error(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
+                                        handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
                                     }
                                     else {
                                         char badString[] = {'\\', badChar, '\0'};
-                                        error(4, "Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
+                                        handleError(4, "Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
                                     }
                                 }
 	YY_BREAK
@@ -1202,7 +1202,7 @@ case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
 #line 361 "src/lex.l"
-{ error(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
+{ handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
@@ -1211,7 +1211,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(STRING):
 #line 363 "src/lex.l"
-{ error(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
+{ handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 #line 364 "src/lex.l"

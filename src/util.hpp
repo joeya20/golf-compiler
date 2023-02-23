@@ -10,7 +10,7 @@
 extern std::string inputFileName;
 
 // prints error message and terminates program
-void error(const int argNum, ...);
+void handleError(const int argNum, ...);
 void warning(const int argNum, ...);
 
 #endif

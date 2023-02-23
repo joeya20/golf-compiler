@@ -11,18 +11,18 @@ int main(int argc, char **argv) {
 
     //check that input file was provided
     if(argc == 1) {
-        error(1, "No input file provided");
+        handleError(1, "No input file provided");
     }
     else if(argc == 2){        
         inputFileName = argv[1];
         inputFile.open(inputFileName);
     }
     else {
-        error(1, "Too many input files provided");
+        handleError(1, "Too many input files provided");
     }
     //check that file was opened successfully
     if(!inputFile.is_open()) {
-        error(1, "Error opening input file");
+        handleError(1, "Error opening input file");
     }
     
     GoLF::Lexer lexer {inputFile, std::cout};

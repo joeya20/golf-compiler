@@ -1,5 +1,7 @@
 #include "util.hpp"
-
+namespace GoLF {
+    
+}
 int warningCount = 0;
 
 void warning(const int argNum, ...) {
@@ -9,7 +11,7 @@ void warning(const int argNum, ...) {
     }
     // exit after 15 warnings
     if(warningCount++ == 15) {
-        error(1, "Too many warnings");
+        handleError(1, "Too many warnings");
     }
     // print different messages based on amount of information given
     va_list args;
@@ -39,7 +41,7 @@ void warning(const int argNum, ...) {
     va_end(args);
 }
 
-void error(const int argNum, ...) {
+void handleError(const int argNum, ...) {
     va_list args;
     va_start(args, argNum);
     // print different messages based on amount of information given

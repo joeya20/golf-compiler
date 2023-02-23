@@ -107,7 +107,7 @@ digit   [0-9]
                                     GoLF::location loc {start, startPos};
                                     return GoLF::Parser::make_VAR(std::string(yytext), loc); 
                                 }
-"&"                             { error(3, "Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
+"&"                             { handleError(3, "Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
 "&&"                            { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -144,7 +144,7 @@ digit   [0-9]
                                     GoLF::location loc {start, startPos};
                                     return GoLF::Parser::make_NOT(std::string(yytext), loc);
                                 }
-"|"                             { error(3, "Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
+"|"                             { handleError(3, "Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
 "||"                            { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -348,19 +348,19 @@ digit   [0-9]
                                     // check if newline or EOF is after; those take precedence but doesn't matter either way
                                     char badChar = yyinput();
                                     if(badChar == 0) {
-                                        error(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
+                                        handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
                                     }
                                     else if (badChar == 0x0A) {
-                                        error(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
+                                        handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
                                     }
                                     else {
                                         char badString[] = {'\\', badChar, '\0'};
-                                        error(4, "Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
+                                        handleError(4, "Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
                                     }
                                 }
-<STRING>\n                      { error(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
+<STRING>\n                      { handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
 <STRING>.                       { yymore(); }
-<STRING><<EOF>>                 { error(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
+<STRING><<EOF>>                 { handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
 <<EOF>>                         {
                                     if(checkCurrentToken()) {
                                         eofReached = true;
