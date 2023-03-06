@@ -41,7 +41,7 @@ namespace GoLF {
     //tabSize default size is 0
     std::string AstNode::toString(int tabSize) {
 
-        std::string res;
+        std::string res (tabSize, ' ');
         // handle lists; just ignore them and go to the next level
         // this is done for output consistency with reference compiler
         // if (this->kind == AstNode::Kind::ExprList ||
@@ -54,7 +54,7 @@ namespace GoLF {
         // }
         // else {
             //initiate res with tabSize * ' '
-        res = std::string(tabSize, ' ');
+            // res = std::string(tabSize, ' ');
         res += this->nodeKindToString[this->kind];
         if(this->attr.size() > 0) {
             res += ' ';

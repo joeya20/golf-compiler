@@ -1,14 +1,6 @@
 var i int;
 
 func main() {
-    var j int
-    var k str
-    i = j(k)
-}
-
-func test(n int) {
-    for {
-        
-    }
-    n = 10
+    i + j * k
+    i + j + k
 }
