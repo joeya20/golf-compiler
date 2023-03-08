@@ -35,7 +35,7 @@
 // private implementation details that can be changed or removed.
 
 // "%code top" blocks.
-#line 21 "src/parse.y"
+#line 22 "src/parse.y"
 
     #include <FlexLexer.h>
     #include "lexer.hpp"
@@ -141,7 +141,7 @@
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 31 "src/parse.y"
+#line 32 "src/parse.y"
 namespace  GoLF  {
 #line 147 "src/parse.tab.cc"
 
@@ -901,43 +901,43 @@ namespace  GoLF  {
           switch (yyn)
             {
   case 2: // SourceFile: %empty
-#line 115 "src/parse.y"
+#line 116 "src/parse.y"
                                         { root = std::make_shared<AstNode>(AstNode::Kind::Program); }
 #line 907 "src/parse.tab.cc"
     break;
 
   case 3: // SourceFile: SourceFile Program $end
-#line 116 "src/parse.y"
+#line 117 "src/parse.y"
                                         { /* Janky workaround; maybe fix one day */   }
 #line 913 "src/parse.tab.cc"
     break;
 
   case 4: // Program: TopLevelDecl ";"
-#line 120 "src/parse.y"
+#line 121 "src/parse.y"
                                         { root->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ()); }
 #line 919 "src/parse.tab.cc"
     break;
 
   case 5: // Program: Program TopLevelDecl ";"
-#line 121 "src/parse.y"
+#line 122 "src/parse.y"
                                         { root->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ()); }
 #line 925 "src/parse.tab.cc"
     break;
 
   case 6: // TopLevelDecl: GlobVarDecl
-#line 125 "src/parse.y"
+#line 126 "src/parse.y"
                                 { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 931 "src/parse.tab.cc"
     break;
 
   case 7: // TopLevelDecl: FuncDecl
-#line 126 "src/parse.y"
+#line 127 "src/parse.y"
                                 { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 937 "src/parse.tab.cc"
     break;
 
   case 8: // GlobVarDecl: "var" ID Type
-#line 130 "src/parse.y"
+#line 131 "src/parse.y"
                                 {
                                     yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::GlobVarDecl, yylhs.location);
                                     std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, yystack_[1].value.as < std::string > (), yystack_[1].location);
@@ -948,7 +948,7 @@ namespace  GoLF  {
     break;
 
   case 9: // VarDecl: "var" ID Type
-#line 139 "src/parse.y"
+#line 140 "src/parse.y"
                         {
                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::VarDecl, yylhs.location);
                             std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, yystack_[1].value.as < std::string > (), yystack_[1].location);
@@ -959,7 +959,7 @@ namespace  GoLF  {
     break;
 
   case 10: // Type: ID
-#line 148 "src/parse.y"
+#line 149 "src/parse.y"
                 {
                     yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::Type, yystack_[0].value.as < std::string > (), yylhs.location);
                 }
@@ -967,7 +967,7 @@ namespace  GoLF  {
     break;
 
   case 11: // FuncDecl: "func" ID FuncSign Block
-#line 154 "src/parse.y"
+#line 155 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::FuncDecl, yylhs.location);
                                             std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, yystack_[2].value.as < std::string > (), yystack_[2].location);
@@ -979,7 +979,7 @@ namespace  GoLF  {
     break;
 
   case 12: // FuncSign: Params
-#line 164 "src/parse.y"
+#line 165 "src/parse.y"
                             {
                                 yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::FuncSign);
                                 std::shared_ptr<AstNode> type = std::make_shared<AstNode>(AstNode::Kind::Type, "$void");
@@ -990,7 +990,7 @@ namespace  GoLF  {
     break;
 
   case 13: // FuncSign: Params Type
-#line 170 "src/parse.y"
+#line 171 "src/parse.y"
                             {
                                 yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::FuncSign);
                                 yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ());
@@ -1000,13 +1000,13 @@ namespace  GoLF  {
     break;
 
   case 14: // Params: "(" ")"
-#line 178 "src/parse.y"
+#line 179 "src/parse.y"
                                         { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::Params); }
 #line 1006 "src/parse.tab.cc"
     break;
 
   case 15: // Params: "(" ParamList ")"
-#line 179 "src/parse.y"
+#line 180 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[1].value.as < std::shared_ptr<AstNode> > ();
                                         }
@@ -1014,7 +1014,7 @@ namespace  GoLF  {
     break;
 
   case 16: // Params: "(" ParamList "," ")"
-#line 182 "src/parse.y"
+#line 183 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[2].value.as < std::shared_ptr<AstNode> > ();
                                         }
@@ -1022,7 +1022,7 @@ namespace  GoLF  {
     break;
 
   case 17: // ParamList: ParamDecl
-#line 188 "src/parse.y"
+#line 189 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::Params);
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
@@ -1031,7 +1031,7 @@ namespace  GoLF  {
     break;
 
   case 18: // ParamList: ParamList "," ParamDecl
-#line 192 "src/parse.y"
+#line 193 "src/parse.y"
                                         {
                                             yystack_[2].value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[2].value.as < std::shared_ptr<AstNode> > ();
@@ -1040,7 +1040,7 @@ namespace  GoLF  {
     break;
 
   case 19: // ParamDecl: ID Type
-#line 199 "src/parse.y"
+#line 200 "src/parse.y"
                         {
                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::ParamDecl, yylhs.location);
                             std::shared_ptr<AstNode> id = std::make_shared<AstNode>(AstNode::Kind::Ident, yystack_[1].value.as < std::string > (), yystack_[1].location);
@@ -1051,7 +1051,7 @@ namespace  GoLF  {
     break;
 
   case 20: // Block: "{" StmtList "}"
-#line 208 "src/parse.y"
+#line 209 "src/parse.y"
                                 {
                                     yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[1].value.as < std::shared_ptr<AstNode> > ();
                                 }
@@ -1059,13 +1059,13 @@ namespace  GoLF  {
     break;
 
   case 21: // StmtList: %empty
-#line 214 "src/parse.y"
+#line 215 "src/parse.y"
                                 { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::Block); }
 #line 1065 "src/parse.tab.cc"
     break;
 
   case 22: // StmtList: StmtList Stmt ";"
-#line 215 "src/parse.y"
+#line 216 "src/parse.y"
                                 {
                                     yystack_[2].value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ());
                                     yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[2].value.as < std::shared_ptr<AstNode> > ();
@@ -1074,73 +1074,73 @@ namespace  GoLF  {
     break;
 
   case 23: // Stmt: VarDecl
-#line 222 "src/parse.y"
+#line 223 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1080 "src/parse.tab.cc"
     break;
 
   case 24: // Stmt: SimpleStmt
-#line 223 "src/parse.y"
+#line 224 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1086 "src/parse.tab.cc"
     break;
 
   case 25: // Stmt: ReturnStmt
-#line 224 "src/parse.y"
+#line 225 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1092 "src/parse.tab.cc"
     break;
 
   case 26: // Stmt: BreakStmt
-#line 225 "src/parse.y"
+#line 226 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1098 "src/parse.tab.cc"
     break;
 
   case 27: // Stmt: Block
-#line 226 "src/parse.y"
+#line 227 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1104 "src/parse.tab.cc"
     break;
 
   case 28: // Stmt: IfStmt
-#line 227 "src/parse.y"
+#line 228 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1110 "src/parse.tab.cc"
     break;
 
   case 29: // Stmt: ForStmt
-#line 228 "src/parse.y"
+#line 229 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1116 "src/parse.tab.cc"
     break;
 
   case 30: // SimpleStmt: EmptyStmt
-#line 232 "src/parse.y"
+#line 233 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1122 "src/parse.tab.cc"
     break;
 
   case 31: // SimpleStmt: ExprStmt
-#line 233 "src/parse.y"
+#line 234 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1128 "src/parse.tab.cc"
     break;
 
   case 32: // SimpleStmt: AssignStmt
-#line 234 "src/parse.y"
+#line 235 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1134 "src/parse.tab.cc"
     break;
 
   case 33: // ReturnStmt: "return"
-#line 238 "src/parse.y"
+#line 239 "src/parse.y"
                             { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::ReturnStmt, yylhs.location); }
 #line 1140 "src/parse.tab.cc"
     break;
 
   case 34: // ReturnStmt: "return" Expr
-#line 239 "src/parse.y"
+#line 240 "src/parse.y"
                             {
                                 yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::ReturnStmt, yylhs.location);
                                 yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
@@ -1149,13 +1149,13 @@ namespace  GoLF  {
     break;
 
   case 35: // BreakStmt: "break"
-#line 246 "src/parse.y"
+#line 247 "src/parse.y"
                       { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BreakStmt, yylhs.location); }
 #line 1155 "src/parse.tab.cc"
     break;
 
   case 36: // IfStmt: "if" Expr Block
-#line 250 "src/parse.y"
+#line 251 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::IfStmt);
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ());
@@ -1165,7 +1165,7 @@ namespace  GoLF  {
     break;
 
   case 37: // IfStmt: "if" Expr Block ElseStmt
-#line 255 "src/parse.y"
+#line 256 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::IfStmt);
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[2].value.as < std::shared_ptr<AstNode> > ());
@@ -1176,7 +1176,7 @@ namespace  GoLF  {
     break;
 
   case 38: // ElseStmt: "else" IfStmt
-#line 264 "src/parse.y"
+#line 265 "src/parse.y"
                             {
                                 // just return the IfStmt
                                 yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > ();
@@ -1185,7 +1185,7 @@ namespace  GoLF  {
     break;
 
   case 39: // ElseStmt: "else" Block
-#line 268 "src/parse.y"
+#line 269 "src/parse.y"
                             {
                                 // just return the block
                                 yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > ();
@@ -1194,7 +1194,7 @@ namespace  GoLF  {
     break;
 
   case 40: // ForStmt: "for" Block
-#line 275 "src/parse.y"
+#line 276 "src/parse.y"
                                 {
                                     yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::ForStmt, yylhs.location);
                                     std::shared_ptr<AstNode> e = std::make_shared<AstNode>(AstNode::Kind::Ident, "$true");
@@ -1205,7 +1205,7 @@ namespace  GoLF  {
     break;
 
   case 41: // ForStmt: "for" Expr Block
-#line 281 "src/parse.y"
+#line 282 "src/parse.y"
                                 {
                                     yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::ForStmt, yylhs.location);
                                     yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ());
@@ -1215,13 +1215,13 @@ namespace  GoLF  {
     break;
 
   case 42: // EmptyStmt: %empty
-#line 289 "src/parse.y"
+#line 290 "src/parse.y"
                         { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::EmptyStmt, yylhs.location); }
 #line 1221 "src/parse.tab.cc"
     break;
 
   case 43: // ExprStmt: Expr
-#line 293 "src/parse.y"
+#line 294 "src/parse.y"
                     {
                         yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::ExprStmt, yylhs.location);
                         yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
@@ -1230,7 +1230,7 @@ namespace  GoLF  {
     break;
 
   case 44: // AssignStmt: Expr "=" Expr
-#line 300 "src/parse.y"
+#line 301 "src/parse.y"
                             {
                                 yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::AssignStmt, yylhs.location);
                                 yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[2].value.as < std::shared_ptr<AstNode> > ());
@@ -1240,7 +1240,7 @@ namespace  GoLF  {
     break;
 
   case 45: // Expr: Expr "||" AndExpr
-#line 308 "src/parse.y"
+#line 309 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > (), yylhs.location);
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[2].value.as < std::shared_ptr<AstNode> > ());
@@ -1250,13 +1250,13 @@ namespace  GoLF  {
     break;
 
   case 46: // Expr: AndExpr
-#line 313 "src/parse.y"
+#line 314 "src/parse.y"
                                         { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1256 "src/parse.tab.cc"
     break;
 
   case 47: // AndExpr: AndExpr "&&" RelExpr
-#line 317 "src/parse.y"
+#line 318 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[1].value.as < std::string > (), yylhs.location);
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[2].value.as < std::shared_ptr<AstNode> > ());
@@ -1266,13 +1266,13 @@ namespace  GoLF  {
     break;
 
   case 48: // AndExpr: RelExpr
-#line 322 "src/parse.y"
+#line 323 "src/parse.y"
                                         { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1272 "src/parse.tab.cc"
     break;
 
   case 49: // RelExpr: RelExpr RelOp AddExpr
-#line 326 "src/parse.y"
+#line 327 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[1].value.as < std::shared_ptr<AstNode> > ();
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[2].value.as < std::shared_ptr<AstNode> > ());
@@ -1282,13 +1282,13 @@ namespace  GoLF  {
     break;
 
   case 50: // RelExpr: AddExpr
-#line 331 "src/parse.y"
+#line 332 "src/parse.y"
                                         { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1288 "src/parse.tab.cc"
     break;
 
   case 51: // AddExpr: AddExpr AddOp MultExpr
-#line 335 "src/parse.y"
+#line 336 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[1].value.as < std::shared_ptr<AstNode> > ();
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[2].value.as < std::shared_ptr<AstNode> > ());
@@ -1298,13 +1298,13 @@ namespace  GoLF  {
     break;
 
   case 52: // AddExpr: MultExpr
-#line 340 "src/parse.y"
+#line 341 "src/parse.y"
                                         { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1304 "src/parse.tab.cc"
     break;
 
   case 53: // MultExpr: MultExpr MultOp UnaryExpr
-#line 344 "src/parse.y"
+#line 345 "src/parse.y"
                                         {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[1].value.as < std::shared_ptr<AstNode> > ();
                                             yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[2].value.as < std::shared_ptr<AstNode> > ());
@@ -1314,13 +1314,13 @@ namespace  GoLF  {
     break;
 
   case 54: // MultExpr: UnaryExpr
-#line 349 "src/parse.y"
+#line 350 "src/parse.y"
                                         { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1320 "src/parse.tab.cc"
     break;
 
   case 55: // UnaryExpr: PrimaryExpr
-#line 353 "src/parse.y"
+#line 354 "src/parse.y"
                                     {
                                         yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > ();
                                     }
@@ -1328,7 +1328,7 @@ namespace  GoLF  {
     break;
 
   case 56: // UnaryExpr: UnaryOp UnaryExpr
-#line 356 "src/parse.y"
+#line 357 "src/parse.y"
                                     {
                                         if(yystack_[1].value.as < std::shared_ptr<AstNode> > ()->attr == "-" && 
                                         yystack_[0].value.as < std::shared_ptr<AstNode> > ()->kind == AstNode::Kind::IntLit && 
@@ -1344,35 +1344,35 @@ namespace  GoLF  {
     break;
 
   case 57: // PrimaryExpr: Operand
-#line 370 "src/parse.y"
+#line 371 "src/parse.y"
                                     { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1350 "src/parse.tab.cc"
     break;
 
   case 58: // PrimaryExpr: FuncCall
-#line 371 "src/parse.y"
+#line 372 "src/parse.y"
                                     { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[0].value.as < std::shared_ptr<AstNode> > (); }
 #line 1356 "src/parse.tab.cc"
     break;
 
-  case 59: // FuncCall: Operand FuncArgs
-#line 375 "src/parse.y"
-                                   {
-                                        yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::FuncCall, yylhs.location);
-                                        yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ());
-                                        yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
-                                    }
+  case 59: // FuncCall: PrimaryExpr FuncArgs
+#line 376 "src/parse.y"
+                                        {
+                                            yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::FuncCall, yylhs.location);
+                                            yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[1].value.as < std::shared_ptr<AstNode> > ());
+                                            yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
+                                        }
 #line 1366 "src/parse.tab.cc"
     break;
 
   case 60: // FuncArgs: "(" ")"
-#line 382 "src/parse.y"
+#line 384 "src/parse.y"
                                             { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::FuncArgs); }
 #line 1372 "src/parse.tab.cc"
     break;
 
   case 61: // FuncArgs: "(" ExprList ")"
-#line 383 "src/parse.y"
+#line 385 "src/parse.y"
                                             {
                                                 yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[1].value.as < std::shared_ptr<AstNode> > ();
                                             }
@@ -1380,7 +1380,7 @@ namespace  GoLF  {
     break;
 
   case 62: // FuncArgs: "(" ExprList "," ")"
-#line 386 "src/parse.y"
+#line 388 "src/parse.y"
                                             {
                                                 yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[2].value.as < std::shared_ptr<AstNode> > ();
                                             }
@@ -1388,7 +1388,7 @@ namespace  GoLF  {
     break;
 
   case 63: // ExprList: Expr
-#line 391 "src/parse.y"
+#line 393 "src/parse.y"
                                 {
                                     yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::FuncArgs);
                                     yylhs.value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
@@ -1397,7 +1397,7 @@ namespace  GoLF  {
     break;
 
   case 64: // ExprList: ExprList "," Expr
-#line 395 "src/parse.y"
+#line 397 "src/parse.y"
                                 {
                                     yystack_[2].value.as < std::shared_ptr<AstNode> > ()->addChild(yystack_[0].value.as < std::shared_ptr<AstNode> > ());
                                     yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[2].value.as < std::shared_ptr<AstNode> > ();
@@ -1406,103 +1406,103 @@ namespace  GoLF  {
     break;
 
   case 65: // Operand: INT_LIT
-#line 402 "src/parse.y"
+#line 404 "src/parse.y"
                                 { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::IntLit, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1412 "src/parse.tab.cc"
     break;
 
   case 66: // Operand: STR_LIT
-#line 403 "src/parse.y"
+#line 405 "src/parse.y"
                                 { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::StrLit, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1418 "src/parse.tab.cc"
     break;
 
   case 67: // Operand: ID
-#line 404 "src/parse.y"
+#line 406 "src/parse.y"
                                 { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::Ident, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1424 "src/parse.tab.cc"
     break;
 
   case 68: // Operand: "(" Expr ")"
-#line 405 "src/parse.y"
+#line 407 "src/parse.y"
                                 { yylhs.value.as < std::shared_ptr<AstNode> > () = yystack_[1].value.as < std::shared_ptr<AstNode> > (); }
 #line 1430 "src/parse.tab.cc"
     break;
 
   case 69: // UnaryOp: "-"
-#line 409 "src/parse.y"
+#line 411 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1436 "src/parse.tab.cc"
     break;
 
   case 70: // UnaryOp: "!"
-#line 410 "src/parse.y"
+#line 412 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1442 "src/parse.tab.cc"
     break;
 
   case 71: // RelOp: "=="
-#line 414 "src/parse.y"
+#line 416 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1448 "src/parse.tab.cc"
     break;
 
   case 72: // RelOp: "!="
-#line 415 "src/parse.y"
+#line 417 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1454 "src/parse.tab.cc"
     break;
 
   case 73: // RelOp: "<"
-#line 416 "src/parse.y"
+#line 418 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1460 "src/parse.tab.cc"
     break;
 
   case 74: // RelOp: "<="
-#line 417 "src/parse.y"
+#line 419 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1466 "src/parse.tab.cc"
     break;
 
   case 75: // RelOp: ">"
-#line 418 "src/parse.y"
+#line 420 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1472 "src/parse.tab.cc"
     break;
 
   case 76: // RelOp: ">="
-#line 419 "src/parse.y"
+#line 421 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1478 "src/parse.tab.cc"
     break;
 
   case 77: // AddOp: "+"
-#line 423 "src/parse.y"
+#line 425 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1484 "src/parse.tab.cc"
     break;
 
   case 78: // AddOp: "-"
-#line 424 "src/parse.y"
+#line 426 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1490 "src/parse.tab.cc"
     break;
 
   case 79: // MultOp: "*"
-#line 428 "src/parse.y"
+#line 430 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1496 "src/parse.tab.cc"
     break;
 
   case 80: // MultOp: "/"
-#line 429 "src/parse.y"
+#line 431 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1502 "src/parse.tab.cc"
     break;
 
   case 81: // MultOp: "%"
-#line 430 "src/parse.y"
+#line 432 "src/parse.y"
                     { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
 #line 1508 "src/parse.tab.cc"
     break;
@@ -1873,7 +1873,7 @@ namespace  GoLF  {
       18,   -62,   -62,    60,   -62,   -62,   -62,   -62,    60,    48,
       60,    30,   -62,   -62,   -62,   -62,   -62,    62,   -62,   -62,
      -62,   -62,   -62,   -62,   -62,   -62,    -1,    67,    85,    55,
-      83,   -62,   -62,   -62,    64,    60,     8,    84,   -62,    84,
+      83,   -62,    64,   -62,   -62,    60,     8,    84,   -62,    84,
       58,    -6,   -62,    60,    60,    60,   -62,   -62,   -62,   -62,
      -62,   -62,    60,   -62,   -62,    60,   -62,   -62,   -62,    60,
       51,   -62,   -62,   -62,    59,   -62,   -62,    67,    58,    85,
@@ -2020,15 +2020,15 @@ namespace  GoLF  {
   const short
    Parser ::yyrline_[] =
   {
-       0,   115,   115,   116,   120,   121,   125,   126,   130,   139,
-     148,   154,   164,   170,   178,   179,   182,   188,   192,   199,
-     208,   214,   215,   222,   223,   224,   225,   226,   227,   228,
-     232,   233,   234,   238,   239,   246,   250,   255,   264,   268,
-     275,   281,   289,   293,   300,   308,   313,   317,   322,   326,
-     331,   335,   340,   344,   349,   353,   356,   370,   371,   375,
-     382,   383,   386,   391,   395,   402,   403,   404,   405,   409,
-     410,   414,   415,   416,   417,   418,   419,   423,   424,   428,
-     429,   430
+       0,   116,   116,   117,   121,   122,   126,   127,   131,   140,
+     149,   155,   165,   171,   179,   180,   183,   189,   193,   200,
+     209,   215,   216,   223,   224,   225,   226,   227,   228,   229,
+     233,   234,   235,   239,   240,   247,   251,   256,   265,   269,
+     276,   282,   290,   294,   301,   309,   314,   318,   323,   327,
+     332,   336,   341,   345,   350,   354,   357,   371,   372,   376,
+     384,   385,   388,   393,   397,   404,   405,   406,   407,   411,
+     412,   416,   417,   418,   419,   420,   421,   425,   426,   430,
+     431,   432
   };
 
   void
@@ -2059,14 +2059,13 @@ namespace  GoLF  {
 #endif // YYDEBUG
 
 
-#line 31 "src/parse.y"
+#line 32 "src/parse.y"
 } //  GoLF 
 #line 2065 "src/parse.tab.cc"
 
-#line 432 "src/parse.y"
+#line 434 "src/parse.y"
 
 
-//TODO: call error routine
 void GoLF::Parser::error (const location_type& loc, const std::string& msg) {
-   handleError(3, msg.c_str(), loc.begin.line, loc.begin.column);
+   GoLF::handleError(msg.c_str(), loc.begin.line, loc.begin.column);
 }

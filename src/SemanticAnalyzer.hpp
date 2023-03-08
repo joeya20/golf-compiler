@@ -12,5 +12,7 @@ namespace GoLF {
         SemanticAnalyzer(std::shared_ptr<AstNode> root);
         // kickstarts analysis of AST
         void doAnalysis();
+        // helper function to build symbol table
+        void buildSymbolTable();
     };
 }

@@ -59,9 +59,10 @@
     //forward declaration needed because we are passing lexer as a param
     namespace GoLF {
         class Lexer;
+        // test
     }
 
-#line 65 "src/parse.tab.hh"
+#line 66 "src/parse.tab.hh"
 
 
 # include <cstdlib> // std::abort
@@ -195,9 +196,9 @@
 # define YYDEBUG 0
 #endif
 
-#line 31 "src/parse.y"
+#line 32 "src/parse.y"
 namespace  GoLF  {
-#line 201 "src/parse.tab.hh"
+#line 202 "src/parse.tab.hh"
 
 
 
@@ -2197,9 +2198,9 @@ switch (yykind)
   }
 
 
-#line 31 "src/parse.y"
+#line 32 "src/parse.y"
 } //  GoLF 
-#line 2203 "src/parse.tab.hh"
+#line 2204 "src/parse.tab.hh"
 
 
 

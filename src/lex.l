@@ -107,7 +107,7 @@ digit   [0-9]
                                     GoLF::location loc {start, startPos};
                                     return GoLF::Parser::make_VAR(std::string(yytext), loc); 
                                 }
-"&"                             { handleError(3, "Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
+"&"                             { GoLF::handleError("Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
 "&&"                            { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -144,7 +144,7 @@ digit   [0-9]
                                     GoLF::location loc {start, startPos};
                                     return GoLF::Parser::make_NOT(std::string(yytext), loc);
                                 }
-"|"                             { handleError(3, "Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
+"|"                             { GoLF::handleError("Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
 "||"                            { 
                                     // create temp copy of startPos
                                     GoLF::position start = startPos;
@@ -348,19 +348,19 @@ digit   [0-9]
                                     // check if newline or EOF is after; those take precedence but doesn't matter either way
                                     char badChar = yyinput();
                                     if(badChar == 0) {
-                                        handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
+                                        GoLF::handleError("String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
                                     }
                                     else if (badChar == 0x0A) {
-                                        handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
+                                        GoLF::handleError("Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
                                     }
                                     else {
                                         char badString[] = {'\\', badChar, '\0'};
-                                        handleError(4, "Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
+                                        GoLF::handleError("Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
                                     }
                                 }
-<STRING>\n                      { handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
+<STRING>\n                      { GoLF::handleError("Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
 <STRING>.                       { yymore(); }
-<STRING><<EOF>>                 { handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
+<STRING><<EOF>>                 { GoLF::handleError("String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
 <<EOF>>                         {
                                     if(checkCurrentToken()) {
                                         eofReached = true;
@@ -375,39 +375,39 @@ digit   [0-9]
                                     return GoLF::Parser::make_YYEOF(GoLF::location(startPos));
                                 }
 \a                              {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column, "\\a");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column, "\\a");
                                     startPos.columns(YYLeng());
                                 }
 \b                              {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\b");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\b");
                                     startPos.columns(YYLeng());
                                 }
 \f                              {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\f");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\f");
                                     startPos.columns(YYLeng());
                                 }
 \v                              {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\v");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\v");
                                     startPos.columns(YYLeng());
                                 }
 \\                              {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\\\");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\\\");
                                     startPos.columns(YYLeng());
                                 }
 \'                              {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\'");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\'");
                                     startPos.columns(YYLeng());
                                 }                            
 \0                              { 
-                                    warning(3, "Skipping NUL character", startPos.line, startPos.column+YYLeng());
+                                    GoLF::handleWarning("Skipping NUL character", startPos.line, startPos.column+YYLeng());
                                     startPos.columns(YYLeng());
                                 }
 [\x80-\xff]                     { 
-                                    warning(3, "Skipping non-ascii character", startPos.line, startPos.column+YYLeng());
+                                    GoLF::handleWarning("Skipping non-ascii character", startPos.line, startPos.column+YYLeng());
                                     startPos.columns(YYLeng());
                                 }
 .                               {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), yytext);
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), yytext);
                                     startPos.columns(YYLeng());
                                 }
 %%

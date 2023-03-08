@@ -834,7 +834,7 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 110 "src/lex.l"
-{ handleError(3, "Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
+{ GoLF::handleError("Bitwise AND not supported in GoLF", startPos.line, startPos.column); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
@@ -891,7 +891,7 @@ YY_RULE_SETUP
 case 16:
 YY_RULE_SETUP
 #line 147 "src/lex.l"
-{ handleError(3, "Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
+{ GoLF::handleError("Bitwise OR not supported in GoLF", startPos.line, startPos.column); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
@@ -1187,14 +1187,14 @@ YY_RULE_SETUP
                                     // check if newline or EOF is after; those take precedence but doesn't matter either way
                                     char badChar = yyinput();
                                     if(badChar == 0) {
-                                        handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
+                                        GoLF::handleError("String literal terminated with EOF", startPos.line, startPos.column+YYLeng());
                                     }
                                     else if (badChar == 0x0A) {
-                                        handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
+                                        GoLF::handleError("Invalid newline in string literal", startPos.line, startPos.column+YYLeng());
                                     }
                                     else {
                                         char badString[] = {'\\', badChar, '\0'};
-                                        handleError(4, "Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
+                                        GoLF::handleError("Invalid escape in string literal", startPos.line, startPos.column+YYLeng(), badString);
                                     }
                                 }
 	YY_BREAK
@@ -1202,7 +1202,7 @@ case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
 #line 361 "src/lex.l"
-{ handleError(3, "Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
+{ GoLF::handleError("Invalid newline in string literal", startPos.line, startPos.column+YYLeng()); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
@@ -1211,7 +1211,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(STRING):
 #line 363 "src/lex.l"
-{ handleError(3, "String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
+{ GoLF::handleError("String literal terminated with EOF", startPos.line, startPos.column+YYLeng()); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 #line 364 "src/lex.l"
@@ -1233,7 +1233,7 @@ case 42:
 YY_RULE_SETUP
 #line 377 "src/lex.l"
 {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column, "\\a");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column, "\\a");
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK
@@ -1241,7 +1241,7 @@ case 43:
 YY_RULE_SETUP
 #line 381 "src/lex.l"
 {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\b");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\b");
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK
@@ -1249,7 +1249,7 @@ case 44:
 YY_RULE_SETUP
 #line 385 "src/lex.l"
 {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\f");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\f");
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK
@@ -1257,7 +1257,7 @@ case 45:
 YY_RULE_SETUP
 #line 389 "src/lex.l"
 {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\v");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\v");
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK
@@ -1265,7 +1265,7 @@ case 46:
 YY_RULE_SETUP
 #line 393 "src/lex.l"
 {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\\\");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\\\");
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK
@@ -1273,7 +1273,7 @@ case 47:
 YY_RULE_SETUP
 #line 397 "src/lex.l"
 {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\'");
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), "\\'");
                                     startPos.columns(YYLeng());
                                 }                            
 	YY_BREAK
@@ -1281,7 +1281,7 @@ case 48:
 YY_RULE_SETUP
 #line 401 "src/lex.l"
 { 
-                                    warning(3, "Skipping NUL character", startPos.line, startPos.column+YYLeng());
+                                    GoLF::handleWarning("Skipping NUL character", startPos.line, startPos.column+YYLeng());
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK
@@ -1289,7 +1289,7 @@ case 49:
 YY_RULE_SETUP
 #line 405 "src/lex.l"
 { 
-                                    warning(3, "Skipping non-ascii character", startPos.line, startPos.column+YYLeng());
+                                    GoLF::handleWarning("Skipping non-ascii character", startPos.line, startPos.column+YYLeng());
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK
@@ -1297,7 +1297,7 @@ case 50:
 YY_RULE_SETUP
 #line 409 "src/lex.l"
 {
-                                    warning(4, "Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), yytext);
+                                    GoLF::handleWarning("Skipping invalid character: ", startPos.line, startPos.column+YYLeng(), yytext);
                                     startPos.columns(YYLeng());
                                 }
 	YY_BREAK

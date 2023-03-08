@@ -15,6 +15,7 @@
     //forward declaration needed because we are passing lexer as a param
     namespace GoLF {
         class Lexer;
+        // test
     }
 }
 
@@ -372,11 +373,12 @@ PrimaryExpr     : Operand           { $$ = $1; }
                 ;
 
 //DONE
-FuncCall        : Operand FuncArgs {
-                                        $$ = std::make_shared<AstNode>(AstNode::Kind::FuncCall, @$);
-                                        $$->addChild($1);
-                                        $$->addChild($2);
-                                    }
+FuncCall        : PrimaryExpr FuncArgs  {
+                                            $$ = std::make_shared<AstNode>(AstNode::Kind::FuncCall, @$);
+                                            $$->addChild($1);
+                                            $$->addChild($2);
+                                        }
+                ;
 
 //DONE
 FuncArgs        : "(" ")"                   { $$ = std::make_shared<AstNode>(AstNode::Kind::FuncArgs); }
@@ -431,7 +433,6 @@ MultOp      : "*"   { $$ = std::make_shared<AstNode>(AstNode::Kind::BinaryExpr, 
             ;
 %%
 
-//TODO: call error routine
 void GoLF::Parser::error (const location_type& loc, const std::string& msg) {
-   handleError(3, msg.c_str(), loc.begin.line, loc.begin.column);
+   GoLF::handleError(msg.c_str(), loc.begin.line, loc.begin.column);
 }

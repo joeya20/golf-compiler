@@ -1,16 +1,26 @@
-#ifndef __UTIL_HPP__
-#define __UTIL_HPP__
+#pragma once
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string>
+#include <iostream>
 
 // defined in main from command line arg
 extern std::string inputFileName;
 
-// prints error message and terminates program
-void handleError(const int argNum, ...);
-void warning(const int argNum, ...);
+#include "util.hpp"
 
-#endif
+namespace GoLF {
+void warningCheck();
+
+void handleWarning(const char* msg);
+void handleWarning(const char* msg, int lineno);
+void handleWarning(const char* msg, int lineno, int colno);
+void handleWarning(const char* msg, int lineno, int colno, const char* badString);
+
+void handleError(const char* msg);
+void handleError(const char* msg, int lineno);
+void handleError(const char* msg, int lineno, int colno);
+void handleError(const char* msg, int lineno, int colno, const char* badString);
+}

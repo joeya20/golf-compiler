@@ -1,6 +1,5 @@
 var i int;
 
 func main() {
-    i + j * k
-    i + j + k
+    test(1)(2)
 }
