@@ -2,10 +2,6 @@
 
 std::string inputFileName;
 
-// void testDfs(const std::shared_ptr<GoLF::AstNode> node) {
-//     std::cout << "here: " << node << std::endl;
-// }
-
 int main(int argc, char **argv) {
     std::ifstream inputFile;
 

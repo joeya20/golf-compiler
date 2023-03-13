@@ -77,11 +77,28 @@ namespace GoLF {
         return res;
     }
 
-    void AstNode::dfsPreOrderTraversal(std::function<void(const std::shared_ptr<AstNode>)> func) {
-        func(shared_from_this());
+    void AstNode::preOrderTraversal(std::function<void(const std::shared_ptr<AstNode>)> callback) {
+        callback(shared_from_this());
         for(size_t i = 0; i < this->children.size(); i++) {
-            this->children[i]->dfsPreOrderTraversal(func);
+            this->children[i]->preOrderTraversal(callback);
         }
+    }
+
+    void AstNode::postOrderTraversal(std::function<void(const std::shared_ptr<AstNode>)> callback) {
+        callback(shared_from_this());
+        for(size_t i = 0; i < this->children.size(); i++) {
+            this->children[i]->preOrderTraversal(callback);
+        }
+    }
+
+    void AstNode::prePostOrderTraversal(std::function<void(std::shared_ptr<AstNode>)> preCallback, std::function<void(std::shared_ptr<AstNode>)> postCallback) {
+        preOrderTraversal(preCallback);
+
+        for(size_t i = 0; i < this->children.size(); i++) {
+            this->children[i]->prePostOrderTraversal(preCallback, postCallback);
+        }
+        
+        postOrderTraversal(postCallback);
     }
 
     std::ostream& operator<<(std::ostream& os, AstNode *node) {
