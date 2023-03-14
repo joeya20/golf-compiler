@@ -125,13 +125,6 @@ namespace GoLF {
         std::string toString(int tabSize = 0);
 
         void addChild(std::shared_ptr<AstNode> child);
-
-        // generic function that will traverse the AST starting from the calling node
-        // and call the provided function for each node
-        // its basically a janky version of the visitor pattern
-        void preOrderTraversal(std::function<void(const std::shared_ptr<AstNode>)> func);
-        void postOrderTraversal(std::function<void(const std::shared_ptr<AstNode>)> callback);
-        void prePostOrderTraversal(std::function<void(std::shared_ptr<AstNode>)> preCallback, std::function<void(std::shared_ptr<AstNode>)> postCallback);
     };
 
     std::ostream& operator<<(std::ostream& os, AstNode *node);

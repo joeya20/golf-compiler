@@ -1431,7 +1431,7 @@ namespace  GoLF  {
 
   case 69: // UnaryOp: "-"
 #line 411 "src/parse.y"
-                    { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, yystack_[0].value.as < std::string > (), yylhs.location); }
+                    { yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, "u-", yylhs.location); }
 #line 1436 "src/parse.tab.cc"
     break;
 

@@ -408,7 +408,7 @@ Operand         : INT_LIT       { $$ = std::make_shared<AstNode>(AstNode::Kind::
                 ;
 
 //DONE
-UnaryOp     : "-"   { $$ = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, $1, @$); }
+UnaryOp     : "-"   { $$ = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, "u-", @$); }
             | "!"   { $$ = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, $1, @$); }
             ;
 

@@ -40,22 +40,21 @@ void SymbolTable::insertUniverseBlock() {
     scopeStack.push_back(universe);
 }
 
-std::shared_ptr<Symbol> SymbolTable::lookup(std::string name) {
+std::shared_ptr<Symbol> SymbolTable::lookup(std::string& name) {
     for(auto it = scopeStack.rbegin(); it!= scopeStack.rend(); it++) {
         auto res = it->find(name);
         if(res != it->end()) {
             return res->second;
         }
     }
-    handleError("Undefined Symbol");
     // just to get rid of warning
     return nullptr;
 }
 
-std::shared_ptr<Symbol> SymbolTable::define(std::string& name, location& loc) {
-    auto currScope = scopeStack.back();
+std::shared_ptr<Symbol> SymbolTable::define(std::string& name, location& loc, bool isType, bool isConst) {
+    auto & currScope = scopeStack.back();
     if(currScope.find(name) == currScope.end()) {
-        auto sym = std::make_shared<Symbol>(name, loc);
+        auto sym = std::make_shared<Symbol>(name, loc, isType, isConst);
         currScope[name] = sym;
         return sym;
     }
@@ -67,10 +66,12 @@ std::shared_ptr<Symbol> SymbolTable::define(std::string& name, location& loc) {
 }
 
 void SymbolTable::pushScope() {
+    std::cout << "adding scope " << std::endl;  //TODO: remove
     scopeStack.emplace_back();
 }
 
 std::unordered_map<std::string, std::shared_ptr<Symbol>> SymbolTable::popScope() {
+    std::cout << "removing scope " << std::endl;    // TODO: remove
     auto temp = scopeStack.back();
     scopeStack.pop_back();
     return temp;

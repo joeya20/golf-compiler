@@ -1,9 +1,6 @@
 func main() {
     var i int;
-    i = 10;
     i = 20;
 }
 
-func test() {
-    var i int;
-}
+var j bool;

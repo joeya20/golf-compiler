@@ -35,12 +35,20 @@ namespace GoLF {
 
         SemanticAnalyzer(std::shared_ptr<AstNode> root);
 
+        void preOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
+        void postOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
+        void prePostOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
+        
         // kickstarts semantic analysis
         void doAnalysis();
         // declaring all callbacks as friend functions so it works easier with std::function
         // check declarations
         void pass1();
+        void pass2();
         // check types
-        friend void pass2Callback(std::shared_ptr<AstNode> node);
+        friend void pass2PreOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
+        friend void pass2PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
     };
+        void pass2PreOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
+        void pass2PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 }

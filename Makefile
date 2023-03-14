@@ -15,7 +15,7 @@ golf: $(BUILD_PATH)/util.o $(BUILD_PATH)/lex.yy.o $(BUILD_PATH)/lexer.o $(BUILD_
 $(BUILD_PATH)/main.o: $(SRC_PATH)/main.cpp $(SRC_PATH)/main.hpp $(SRC_PATH)/parse.tab.cc $(SRC_PATH)/lexer.cpp $(SRC_PATH)/lexer.hpp $(SRC_PATH)/util.cpp $(SRC_PATH)/util.hpp
 	$(CXX) -c $(CFLAGS) -o $@ $<
 
-$(BUILD_PATH)/util.o: $(SRC_PATH)/util.cpp $(SRC_PATH)/util.hpp $(SRC_PATH)/main.cpp $(SRC_PATH)/main.hpp
+$(BUILD_PATH)/util.o: $(SRC_PATH)/util.cpp $(SRC_PATH)/util.hpp $(SRC_PATH)/main.cpp $(SRC_PATH)/main.hpp $(BUILD_PATH)/parse.tab.o
 	$(CXX) -c $(CFLAGS) -o $@ $<
 
 $(BUILD_PATH)/lexer.o: $(SRC_PATH)/lexer.cpp $(SRC_PATH)/lexer.hpp $(SRC_PATH)/util.cpp $(SRC_PATH)/util.hpp $(SRC_PATH)/parse.tab.cc
