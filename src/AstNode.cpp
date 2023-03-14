@@ -57,17 +57,22 @@ namespace GoLF {
             // res = std::string(tabSize, ' ');
         res += this->nodeKindToString[this->kind];
         if(this->attr.size() > 0) {
-            res += ' ';
-            res += '[';
+            res += " [";
             res += this->attr;
             res += ']';
         }
         if(this->loc.begin.filename != nullptr) {
-            res += ' ';
-            res += "@ line ";
+            res += " @ line ";
             res += std::to_string(this->loc.begin.line);
             res += " @ col ";
             res += std::to_string(this->loc.begin.column);
+        }
+        if(this->symbol != nullptr) {
+            res += " <symbol addr: ";
+            std::stringstream addr;
+            addr << this->symbol.get();
+            res += addr.str();
+            res += '>';
         }
         res += '\n';
         for(size_t i = 0; i < this->children.size(); i++) {

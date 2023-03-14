@@ -9,6 +9,7 @@
 #include "location.hh"
 #include <memory>
 #include <functional>
+#include <sstream>
 #include "Symbol.hpp"
 
 #define ARR_SIZE 50
@@ -112,7 +113,7 @@ namespace GoLF {
         Kind kind;
         std::string attr;
         std::vector<std::shared_ptr<AstNode>> children;
-        std::shared_ptr<Symbol> symbol;
+        std::shared_ptr<Symbol> symbol = nullptr;
 
         AstNode(Kind kind);
         AstNode(Kind kind, std::string attr);

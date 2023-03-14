@@ -31,14 +31,15 @@ namespace GoLF {
         };
         const static std::unordered_map<std::string, std::vector<AllowedType>> allowedTypes;
         std::shared_ptr<AstNode> root;
+        SymbolTable symTab;
+
         SemanticAnalyzer(std::shared_ptr<AstNode> root);
 
-        // kickstarts analysis of AST
+        // kickstarts semantic analysis
         void doAnalysis();
-        // declaring callbacks as friend functions so it works with std::function
+        // declaring all callbacks as friend functions so it works easier with std::function
         // check declarations
-        friend void pass1PreOrderCallback(std::shared_ptr<AstNode> node);
-        friend void pass1PostOrderCallback(std::shared_ptr<AstNode> node);
+        void pass1();
         // check types
         friend void pass2Callback(std::shared_ptr<AstNode> node);
     };

@@ -5,7 +5,7 @@
 
 namespace GoLF {
 
-SymbolTable::SymbolTable() {
+void SymbolTable::insertUniverseBlock() {    
     // set up universe scope
     struct Entry {
         std::string name;
@@ -13,6 +13,8 @@ SymbolTable::SymbolTable() {
         std::string rvSig;
         bool isConst;
         bool isType;
+        Entry(std::string name, std::string sig, std::string rvSig, bool isConst, bool isType)
+        : name(name), sig(sig), rvSig(rvSig), isConst(isConst), isType(isType) {}
     };
     Entry temp[14] = {
         // name       sig           rvsig    isConst     isType
@@ -38,7 +40,7 @@ SymbolTable::SymbolTable() {
     scopeStack.push_back(universe);
 }
 
-std::shared_ptr<const Symbol> SymbolTable::lookup(std::string name) {
+std::shared_ptr<Symbol> SymbolTable::lookup(std::string name) {
     for(auto it = scopeStack.rbegin(); it!= scopeStack.rend(); it++) {
         auto res = it->find(name);
         if(res != it->end()) {
@@ -50,15 +52,18 @@ std::shared_ptr<const Symbol> SymbolTable::lookup(std::string name) {
     return nullptr;
 }
 
-void SymbolTable::define(std::string name, position pos) {
+std::shared_ptr<Symbol> SymbolTable::define(std::string& name, location& loc) {
     auto currScope = scopeStack.back();
     if(currScope.find(name) == currScope.end()) {
-        auto sym = std::make_shared<Symbol>(name, pos);
+        auto sym = std::make_shared<Symbol>(name, loc);
         currScope[name] = sym;
+        return sym;
     }
     else {
         handleError("Symbol redefined");
     }
+    // handle dumb warning
+    return nullptr;
 }
 
 void SymbolTable::pushScope() {

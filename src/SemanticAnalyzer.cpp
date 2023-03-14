@@ -74,12 +74,32 @@ namespace GoLF {
     SemanticAnalyzer::SemanticAnalyzer(std::shared_ptr<AstNode> root) : root(root) {}
 
     /* Pass 1 */
-    void pass1PreOrderCallback(std::shared_ptr<AstNode> node) {
-        
+    // gather global definitions
+    // its not necessary to use the traversal engine for this
+    // since we just need to check the children of the Program node
+    void SemanticAnalyzer::pass1() {
+        for(auto & topLevelDecl : root->children) {
+            if(topLevelDecl->kind == AstNode::Kind::GlobVarDecl) {
+                auto IdentNode = topLevelDecl->children[0];
+                auto symbol = symTab.define(IdentNode->attr, IdentNode->loc);
+                symbol->isConst = false;
+                symbol->isType = false;
+                symbol->sig = topLevelDecl->children[1]->attr;
+                topLevelDecl->symbol = symbol;
+            }
+            else if(topLevelDecl->kind == AstNode::Kind::FuncDecl) {
+                auto IdentNode = topLevelDecl->children[0];
+                auto symbol = symTab.define(IdentNode->attr, IdentNode->loc);
+                symbol->isConst = false;
+                symbol->isType = false;
+                symbol->rvSig = topLevelDecl->children[1]->attr;
+                topLevelDecl->symbol = symbol;
+            }
+            else {
+                handleError("unexpected node kind under program node!");
+            }
+        }
     }
-    void pass1PostOrderCallback(std::shared_ptr<AstNode> node) {
-        
-    }    
 
     /* Pass 2 */
     void pass2Callback(std::shared_ptr<AstNode> node) {
@@ -95,9 +115,10 @@ namespace GoLF {
     };
 
     void SemanticAnalyzer::doAnalysis() {
-        // first pass -- build up symbol table
-        root->prePostOrderTraversal(&pass1PreOrderCallback, &pass1PostOrderCallback);
-
+        this->symTab.insertUniverseBlock();
+        // first pass -- add global declarations
+        this->symTab.pushScope();
+        this->pass1();
         // second pass -- ?
     }
 }

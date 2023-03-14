@@ -2,9 +2,9 @@
 
 namespace GoLF {
 
-Symbol::Symbol(std::string& name, position& pos) {
+Symbol::Symbol(std::string& name, location& loc) {
     this->name = name;
-    this->pos = pos;
+    this->loc = loc;
 }
 
 Symbol::Symbol(std::string& name, std::string& sig, std::string& rvSig, bool& isConst, bool& isType) {

@@ -9,3 +9,4 @@
 #include "util.hpp"
 #include "parse.tab.hh"
 #include "location.hh"
+#include "SemanticAnalyzer.hpp"

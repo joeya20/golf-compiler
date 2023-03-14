@@ -24,10 +24,12 @@ int main(int argc, char **argv) {
     GoLF::Lexer lexer {inputFile, std::cout};
     std::shared_ptr<GoLF::AstNode> root;
     GoLF::Parser parser {lexer, root};
-
     parser();
-    std::cout << root << std::endl;
+    // std::cout << root << std::endl;
     
+    GoLF::SemanticAnalyzer analyzer(root);
+    analyzer.doAnalysis();
+    std::cout << root << std::endl;
     // root->dfsPreOrderTraversal(&testDfs);
 
     //close input file stream

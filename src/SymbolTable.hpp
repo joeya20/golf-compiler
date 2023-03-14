@@ -15,11 +15,11 @@ class SymbolTable {
         std::vector<std::unordered_map<std::string, std::shared_ptr<Symbol>>> scopeStack;
     
     public:
-        SymbolTable();
-        std::shared_ptr<const Symbol> lookup(std::string name);
-        void define(std::string name, position pos);        
+        void insertUniverseBlock();
         void pushScope();
         std::unordered_map<std::string, std::shared_ptr<Symbol>> popScope();
+        std::shared_ptr<Symbol> lookup(std::string name);
+        std::shared_ptr<Symbol> define(std::string& name, location& loc);
 };
 
 } // namespace GoLF
