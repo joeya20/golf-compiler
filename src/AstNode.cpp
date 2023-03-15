@@ -1,4 +1,5 @@
 #include "AstNode.hpp"
+#include <cstddef>
 
 namespace GoLF {
     AstNode::AstNode(Kind kind) {
@@ -60,6 +61,16 @@ namespace GoLF {
             res += " [";
             res += this->attr;
             res += ']';
+        }
+        if(this->symbol != nullptr) {
+            if(this->kind == AstNode::Kind::FuncCall) {
+                res += " sig=";
+                res += this->symbol->rvSig;
+            }
+            if(this->kind == AstNode::Kind::Ident) {
+                res += " sig=";
+                res += this->symbol->sig;
+            }
         }
         if(this->loc.begin.filename != nullptr) {
             res += " @ line ";

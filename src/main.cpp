@@ -29,6 +29,7 @@ int main(int argc, char **argv) {
     
     GoLF::SemanticAnalyzer analyzer(root);
     analyzer.doAnalysis();
+    std::cout << "here" << std::endl;
     std::cout << root << std::endl;
     // root->dfsPreOrderTraversal(&testDfs);
 

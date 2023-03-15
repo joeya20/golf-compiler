@@ -1,6 +1,12 @@
 func main() {
     var i int;
-    i = 20;
+    var test int;
+    i+test();
+    // i = 20;
+    // j = -i;
+    // printi(test());
 }
 
-var j bool;
+func test() int {
+    return 10;
+}

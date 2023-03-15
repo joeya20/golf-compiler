@@ -1,5 +1,6 @@
 #include "SemanticAnalyzer.hpp"
 #include "location.hh"
+#include <memory>
 
 namespace GoLF {
     // TODO: factor out common sets and only define once
@@ -137,50 +138,72 @@ namespace GoLF {
         prePostOrderTraversal(this->root, pass2PreOrderCallback, pass2PostOrderCallback);
     }
 
+    void checkType(std::shared_ptr<AstNode> node, std::shared_ptr<Symbol> type) {
+        if(type == nullptr) {
+            handleInvalidType(node->children[1]->attr, node->children[1]->loc);
+        }
+        // the symbol was overridden and is no longer a type
+        if(!type->isType) {
+            handleInvalidType(type->name, type->loc);
+        }
+    }
+
+    void checkIdent(std::shared_ptr<AstNode> node, std::shared_ptr<Symbol> ident) {
+        if(ident == nullptr) {
+            std::string errorMsg = "Identifier '" + node->attr + "' is not defined.";
+            handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
+        }
+        if(ident->isType) {
+           std::string errorMsg = "Got type '" + ident->name + "', was expecting identifier.";
+            handleError(errorMsg.c_str(), ident->loc.begin.line, ident->loc.begin.column);
+        }
+        // I guess the reference compiler doenst check for this
+        // if(ident->isConst) {
+        //     errorMsg = "Cannot assign to constant'" + symbol->name + "'";
+        //     handleError(errorMsg.c_str());
+        // }
+    }
+
     void pass2PreOrderCallback(SemanticAnalyzer* anal /* lol */, std::shared_ptr<AstNode> node) {
         std::string errorMsg;
         switch (node->kind)
         {
-        case NodeKind::GlobVarDecl: {// DONE
+        case NodeKind::GlobVarDecl: { // DONE
             std::cout << "GlobVarDecl" << std::endl;
             /* fully define symbol (i.e. type) */
             auto type = anal->symTab.lookup(node->children[1]->attr);
             // the type does not exist
-            if(type == nullptr) {
-                handleInvalidType(node->children[1]->attr, node->children[1]->loc);
-            }
-            // the symbol was overridden and is no longer a type
-            if(!type->isType) {
-                handleInvalidType(type->name, type->loc);
-            }
+            checkType(node, type);
             // update node's symbol with sig
             node->symbol->sig = type->name;
             break;
         }
-        // case NodeKind::FuncDecl:    // TODO
-        //     /* fully define symbol */
-        //     symbol = anal->symTab.lookup(node->children[1]->attr);
-        //     // the type does not exist
-        //     if(symbol == nullptr) {
-        //         handleInvalidType(node->children[1]->attr, node->children[1]->loc);
-        //     }
-        //     // check if identifier is a type
-        //     if(!symbol->isType) {
-        //         handleInvalidType(symbol->name, symbol->loc);
-        //     }
-        //     break;
+        case NodeKind::FuncDecl: { // TODO
+            /* fully define symbol (i.e. type and rv type)*/
+            auto funcSign = node->children[1];
+            // handle return value
+            auto rvType = anal->symTab.lookup(funcSign->children[1]->attr);
+            checkType(funcSign->children[1], rvType);
+            node->symbol->rvSig = rvType->name;
+            funcSign->children[1]->symbol = rvType;
+            // handle param values
+            std::string type = "f(";
+            for(auto & param : node->children[0]->children) {
+                auto paramType = anal->symTab.lookup(param->attr);
+                checkType(param, paramType);
+                type += (paramType->name + ",");
+            }
+            type += ")";
+            node->symbol->sig = type;
+            break;
+        }
         case NodeKind::VarDecl: { // DONE
             auto ident = anal->symTab.define(node->children[0]->attr, node->children[0]->loc, false, false);
-            node->children[0]->symbol = ident;
+            node->symbol = ident;
             auto type = anal->symTab.lookup(node->children[1]->attr);
-            if(type == nullptr) {
-                handleInvalidType(node->children[1]->attr, node->children[1]->loc);
-            }
-            // the symbol was overridden and is no longer a type
-            if(!type->isType) {
-                handleInvalidType(type->name, type->loc);
-            }
+            checkType(node, type);
             ident->sig = type->name;
+            node->children[1]->symbol = type;
             break;
         }
         case NodeKind::AssignStmt: {
@@ -188,32 +211,42 @@ namespace GoLF {
             /* check for symbol */
             auto lhs = node->children[0];
             auto ident = anal->symTab.lookup(lhs->attr);
-            if(ident == nullptr) {
-                errorMsg = "Variable '" + lhs->attr + "' was not declared.";
-                handleError(errorMsg.c_str(), lhs->loc.begin.line, lhs->loc.begin.column);
-            }
-            if(ident->isType) {
-                errorMsg = "can only assign to a variable";
-                handleError(errorMsg.c_str(), lhs->loc.begin.line, lhs->loc.begin.column);
-            }
-            // I guess the reference compiler doenst check for this
-            // if(symbol->isConst) {
-            //     errorMsg = "Assigning to constant'" + symbol->name + "'";
-            //     handleError(errorMsg.c_str());
-            // }
-            // if we pass all checks, update identifier node
+            checkIdent(lhs, ident);
             lhs->symbol = ident;
             break;
         }
-        case NodeKind::BinaryExpr:
-            
+        case NodeKind::BinaryExpr: {
+            auto lhs = node->children[0];
+            if(lhs->kind == NodeKind::Ident) {
+                auto ident = anal->symTab.lookup(lhs->attr);
+                checkIdent(lhs, ident);
+                lhs->symbol = ident;
+            }
+            auto rhs = node->children[1];
+            if(rhs->kind == NodeKind::Ident) {
+                auto ident = anal->symTab.lookup(rhs->attr);
+                checkIdent(rhs, ident);
+                rhs->symbol = ident;
+            }
             break;
-        case NodeKind::UnaryExpr:
-
+        }
+        case NodeKind::UnaryExpr: {
+            // funccalls are handled in their own case stmt
+            auto expr = node->children[0];
+            if(expr->kind == NodeKind::Ident) {
+                auto ident = anal->symTab.lookup(expr->attr);
+                checkIdent(expr, ident);
+                expr->symbol = ident;
+            }
             break;
-        case NodeKind::FuncCall:
-
-            break;
+        }
+        case NodeKind::FuncCall: {
+            auto expr = node->children[0]; 
+            auto ident = anal->symTab.lookup(expr->attr);
+            checkIdent(expr, ident);
+            expr->symbol = ident;
+            break;            
+        }
         case NodeKind::Block:
             /* create new scope */
             anal->symTab.pushScope();
@@ -227,10 +260,10 @@ namespace GoLF {
         switch (node->kind)
         {
         case NodeKind::Block:
-            /* code */
             anal->symTab.popScope();
             break;
         default:
+
             break;
         }
     }
