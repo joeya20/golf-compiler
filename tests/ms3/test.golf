@@ -1,12 +1,12 @@
 func main() {
     var i int;
-    var test int;
-    i+test();
+    var j int;
+    i+test(4);
     // i = 20;
     // j = -i;
-    // printi(test());
+    // printi(test(10));
 }
 
-func test() int {
-    return 10;
+func test(k int) int {
+    return k+10;
 }

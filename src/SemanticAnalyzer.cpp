@@ -1,5 +1,6 @@
 #include "SemanticAnalyzer.hpp"
 #include "location.hh"
+#include <bits/types/struct_sched_param.h>
 #include <memory>
 
 namespace GoLF {
@@ -185,12 +186,15 @@ namespace GoLF {
             auto rvType = anal->symTab.lookup(funcSign->children[1]->attr);
             checkType(funcSign->children[1], rvType);
             node->symbol->rvSig = rvType->name;
+            // update rv identifier node
             funcSign->children[1]->symbol = rvType;
             // handle param values
             std::string type = "f(";
-            for(auto & param : node->children[0]->children) {
-                auto paramType = anal->symTab.lookup(param->attr);
-                checkType(param, paramType);
+            for(auto & paramDecl : funcSign->children[0]->children) {
+                // copy constructor would do practically the same thing so we might as well do it here
+                anal->paramDecls.push_back(paramDecl);
+                auto paramType = anal->symTab.lookup(paramDecl->children[1]->attr);
+                checkType(paramDecl, paramType);
                 type += (paramType->name + ",");
             }
             type += ")";
@@ -250,6 +254,20 @@ namespace GoLF {
         case NodeKind::Block:
             /* create new scope */
             anal->symTab.pushScope();
+            // need to add params to this block scope
+            // in case this block is for a FuncDecl
+            while(anal->paramDecls.size() > 0) {
+                auto paramDecl = anal->paramDecls.back();
+                auto ident = paramDecl->children[0];
+                auto type = paramDecl->children[1];
+                auto identSymbol = anal->symTab.define(ident->attr, ident->loc, false, false);
+                auto typeSymbol = anal->symTab.lookup(type->attr);
+                checkType(type, typeSymbol);
+                identSymbol->sig = typeSymbol->name;
+                type->symbol = typeSymbol;
+                ident->symbol = identSymbol;
+                anal->paramDecls.pop_back();
+            }
             break;
         default:
             break;
@@ -270,10 +288,18 @@ namespace GoLF {
 
     void SemanticAnalyzer::doAnalysis() {
         this->symTab.insertUniverseBlock();
-        // first pass -- add global declarations
         this->symTab.pushScope();
+        // first pass -- add global declarations
         this->pass1();
+        // second pass -- handle all identifiers
         this->pass2();
-        // second pass -- ?
+        std::string main = "main";
+        auto mainFunc = symTab.lookup(main);
+        if(mainFunc == nullptr) {
+            handleError("missing main() function");
+        }
+        root->symbol = mainFunc;
+        // third pass -- handle type checking
+        // fourth pass -- clean up random checks
     }
 }

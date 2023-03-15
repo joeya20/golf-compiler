@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <array>
 #include <memory>
+#include <vector>
 
 #include "AstNode.hpp"
 #include "util.hpp"
@@ -33,10 +34,18 @@ struct SemanticAnalyzer {
     std::shared_ptr<AstNode> root;
     SymbolTable symTab;
 
+    // vector to hold paramDecls so their symbols fall in the proper scope
+    std::vector<std::shared_ptr<AstNode>> paramDecls;
+
     SemanticAnalyzer(std::shared_ptr<AstNode> root);
 
+    // generic pre-order traversal function
     void preOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
+    // generic post-order traversal function
     void postOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
+
+    // generic "pre-post-order" traversal function
+    // aka do action on the way down and the way up
     void prePostOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
     
     // kickstarts semantic analysis

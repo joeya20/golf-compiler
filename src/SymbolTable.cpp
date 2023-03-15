@@ -41,13 +41,12 @@ void SymbolTable::insertUniverseBlock() {
 }
 
 std::shared_ptr<Symbol> SymbolTable::lookup(std::string& name) {
-    for(auto it = scopeStack.rbegin(); it!= scopeStack.rend(); it++) {
+    for(auto it = scopeStack.rbegin(); it!= scopeStack.rend(); ++it) {
         auto res = it->find(name);
         if(res != it->end()) {
             return res->second;
         }
     }
-    // just to get rid of warning
     return nullptr;
 }
 
@@ -58,11 +57,9 @@ std::shared_ptr<Symbol> SymbolTable::define(std::string& name, location& loc, bo
         currScope[name] = sym;
         return sym;
     }
-    else {
-        handleError("Symbol redefined");
-    }
-    // handle dumb warning
-    return nullptr;
+    std::string errorMsg = "Identifier '" + name+ "' already defined" ; 
+    handleError(errorMsg.c_str(), loc.begin.line, loc.begin.column);
+    return nullptr; // silence warning
 }
 
 void SymbolTable::pushScope() {
