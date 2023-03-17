@@ -49,9 +49,4 @@ void handleError(const char* msg, int lineno, int colno, const char* badString) 
     fprintf(stderr, "error: %s:%i:%i: %s '%s'\n", inputFileName.c_str(), lineno, colno, msg, badString);
     exit(EXIT_FAILURE);
 }
-
-void handleInvalidType(std::string& ident, location& loc) {
-    std::string errorMsg = "expected type, got '" + ident + "'";
-    handleError(errorMsg.c_str(), loc.begin.line, loc.begin.column);
-}
 }

@@ -64,7 +64,7 @@ struct SemanticAnalyzer {
     void prePostOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
     
     std::shared_ptr<Symbol> getIdent(std::shared_ptr<AstNode> node);
-
+    std::shared_ptr<Symbol> getType(std::shared_ptr<AstNode> node);
     // kickstarts semantic analysis
     void doAnalysis();
     void pass1();
@@ -79,6 +79,5 @@ void pass3PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 void pass4PreOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 void pass4PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 void checkType(std::shared_ptr<AstNode> node, std::shared_ptr<Symbol> type);
-void checkIdent(std::shared_ptr<AstNode> node, std::shared_ptr<Symbol> ident);
 
 }

@@ -24,7 +24,4 @@ void handleError(const char* msg);
 void handleError(const char* msg, int lineno);
 void handleError(const char* msg, int lineno, int colno);
 void handleError(const char* msg, int lineno, int colno, const char* badString);
-
-// semantic checker helper functions
-void handleInvalidType(std::string& ident, location& loc);
 }
