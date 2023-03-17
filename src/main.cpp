@@ -25,13 +25,12 @@ int main(int argc, char **argv) {
     std::shared_ptr<GoLF::AstNode> root;
     GoLF::Parser parser {lexer, root};
     parser();
-    // std::cout << root << std::endl;
     
     GoLF::SemanticAnalyzer analyzer(root);
+
     analyzer.doAnalysis();
-    std::cout << "here" << std::endl;
+    std::cout << "done analysis" << std::endl;
     std::cout << root << std::endl;
-    // root->dfsPreOrderTraversal(&testDfs);
 
     //close input file stream
     inputFile.close();

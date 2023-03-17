@@ -352,7 +352,8 @@ MultExpr    : MultExpr MultOp UnaryExpr {
 
 //DONE
 UnaryExpr   : PrimaryExpr           {
-                                        $$ = $1;
+                                        $$ = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, "", @$);
+                                        $$->addChild($1);
                                     }
             | UnaryOp UnaryExpr     {
                                         if($1->attr == "-" && 

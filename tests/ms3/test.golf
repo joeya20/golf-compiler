@@ -1,12 +1,22 @@
 func main() {
     var i int;
     var j int;
-    i+test(4);
+    var k bool;
+    var z bool;
+    var a string;
+    var b string;
+    // -k;
+    i < j;
+    i+test(i);
+    // true = k;
     // i = 20;
     // j = -i;
     // printi(test(10));
+    i
 }
 
 func test(k int) int {
-    return k+10;
+    return k;
 }
+
+var k string;

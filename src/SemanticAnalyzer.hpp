@@ -22,15 +22,25 @@ struct SemanticAnalyzer {
         std::string rType;
         std::string returnType;
 
-        AllowedType(std::string lType, std::string rType, std::string returnType) : lType(lType), rType(rType), returnType(returnType) {}
+        AllowedType(std::string lType, std::string rType, std::string returnType) 
+        : lType(lType), rType(rType), returnType(returnType) {}
 
-        AllowedType(std::string lType, std::string returnType) : lType(lType), returnType(returnType) {}
+        AllowedType(std::string lType, std::string returnType) 
+        : lType(lType), returnType(returnType) {}
 
-        bool operator ==(const AllowedType& rhs) {
-            return lType == rhs.lType && rType == rhs.rType && returnType == rhs.returnType;
-        }
+        AllowedType(std::string lType) 
+        : lType(lType) {}
     };
-    const static std::unordered_map<std::string, std::vector<AllowedType>> allowedTypes;
+
+    const static std::unordered_map<std::string, const std::string> returnTypes;
+    const static std::vector<AllowedType> arithmeticTypes;
+    const static std::vector<AllowedType> logicalEqualityTypes;
+    const static std::vector<AllowedType> unaryNotTypes;
+    const static std::vector<AllowedType> unaryMinusTypes;
+    const static std::vector<AllowedType> comparisonTypes;
+    const static std::vector<AllowedType> equalityTypes;
+    const static std::vector<AllowedType> logicalTypes;
+    const static std::unordered_map<std::string, const std::vector<AllowedType>*> allowedTypes;
     std::shared_ptr<AstNode> root;
     SymbolTable symTab;
 
@@ -48,19 +58,21 @@ struct SemanticAnalyzer {
     // aka do action on the way down and the way up
     void prePostOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
     
+    std::shared_ptr<Symbol> getIdent(std::shared_ptr<AstNode> node);
+
     // kickstarts semantic analysis
     void doAnalysis();
-    // declaring all callbacks as friend functions so it works easier with std::function
-    // check declarations
     void pass1();
     void pass2();
-    // check types
-    friend void pass2PreOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
-    friend void pass2PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
+    void pass3();
+    void pass4();
 };
 
 void pass2PreOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 void pass2PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
+void pass3PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>); 
+void pass4PreOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
+void pass4PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 void checkType(std::shared_ptr<AstNode> node, std::shared_ptr<Symbol> type);
 void checkIdent(std::shared_ptr<AstNode> node, std::shared_ptr<Symbol> ident);
 

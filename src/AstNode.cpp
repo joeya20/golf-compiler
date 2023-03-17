@@ -27,7 +27,6 @@ namespace GoLF {
     // nothing to really do here since we are using shared pointers
     // normally I would have to destroy the children before destroying the node
     AstNode::~AstNode() {
-        // std::cout << "here" << std::endl;
         // while(children.size() > 0) {
         //     AstNode* child = children.back();
         //     children.pop_back();
@@ -62,15 +61,15 @@ namespace GoLF {
             res += this->attr;
             res += ']';
         }
-        if(this->symbol != nullptr) {
-            if(this->kind == AstNode::Kind::FuncCall) {
+        if(this->sig != "") {
+            // if(this->kind == AstNode::Kind::FuncCall) {
+            //     res += " sig=";
+            //     res += this->symbol->sig;
+            // }
+            // if(this->kind == AstNode::Kind::Ident) {
                 res += " sig=";
-                res += this->symbol->rvSig;
-            }
-            if(this->kind == AstNode::Kind::Ident) {
-                res += " sig=";
-                res += this->symbol->sig;
-            }
+                res += this->sig;
+            // }
         }
         if(this->loc.begin.filename != nullptr) {
             res += " @ line ";

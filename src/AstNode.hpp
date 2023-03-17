@@ -114,6 +114,7 @@ namespace GoLF {
         std::string attr;
         std::vector<std::shared_ptr<AstNode>> children;
         std::shared_ptr<Symbol> symbol = nullptr;
+        std::string sig;    // return type for exprs; gets defined in pass 3 of semantic analysis
 
         AstNode(Kind kind);
         AstNode(Kind kind, std::string attr);
