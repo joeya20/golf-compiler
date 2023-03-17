@@ -162,7 +162,7 @@ namespace GoLF {
         }
         if(ident->isType) {
            std::string errorMsg = "Got type '" + ident->name + "', was expecting identifier.";
-            handleError(errorMsg.c_str(), ident->loc.begin.line, ident->loc.begin.column);
+            handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
         }
         // I think the reference compiler doesn't check for this the same way but this makes sense
         // if(ident->isConst) {

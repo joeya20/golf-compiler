@@ -8,7 +8,7 @@ func main() {
     // -k;
     i < j;
     // i+test(i);
-    // true = k;
+     true = k;
     // i = 20;
     // j = -i;
     // printi(test(10));
@@ -16,7 +16,7 @@ func main() {
 }
 
 func test(k int) int {
-    var i j;
+    var i bool;
     if(i) {
         return 5;
     }
