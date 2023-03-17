@@ -3,8 +3,10 @@
 #include "location.hh"
 #include "util.hpp"
 #include <bits/types/struct_sched_param.h>
+#include <cstdint>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -76,7 +78,9 @@ namespace GoLF {
         {"!"    , &SemanticAnalyzer::unaryNotTypes      }
     };
 
-    SemanticAnalyzer::SemanticAnalyzer(std::shared_ptr<AstNode> root) : root(root) {}
+    SemanticAnalyzer::SemanticAnalyzer(std::shared_ptr<AstNode> root) : root(root) {
+        forLoopCount = 0;
+    }
 
     void SemanticAnalyzer::preOrderTraversal(
     std::shared_ptr<AstNode> node,
@@ -222,7 +226,7 @@ namespace GoLF {
         }
         case NodeKind::AssignStmt: {
             /* check for symbol */
-            auto lhs = node->children[0];
+            auto lhs = node->children[0]->children[0];
             lhs->symbol = anal->getIdent(lhs);
             if(lhs->symbol->isConst) {
                 handleError("can't assign to a constant", node->children[0]->loc.begin.line, node->children[0]->loc.begin.column);
@@ -354,7 +358,7 @@ namespace GoLF {
                     }
                 }
                 else {
-                    handleError("debug un expr type");
+                    handleError("debug unary expr type");
                 }    
             }
             break;
@@ -414,7 +418,7 @@ namespace GoLF {
                 argsSig += ')';
                 if(argsSig != identNode->sig) {
                     handleError(
-                        " number/type of arguments in function call doesn't match function declaration"
+                        "number/type of arguments in function call doesn't match function declaration"
                         , identNode->loc.begin.line
                         , identNode->loc.begin.column
                     );
@@ -440,12 +444,83 @@ namespace GoLF {
 
     // actions
     void pass4PreOrderCallback(SemanticAnalyzer* anal, std::shared_ptr<AstNode> node) {
-
+        switch (node->kind) {
+        case NodeKind::FuncDecl: 
+            anal->funcReturnSig = node->children[0]->symbol->rvSig;
+            break;
+        case NodeKind::ReturnStmt:
+            if(node->children.size() > 0 && anal->funcReturnSig == "$void") {
+                handleError(
+                    "this function can't return a value"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            else if(node->children.size() == 0 && anal->funcReturnSig != "$void") {
+                handleError(
+                    "this function must return a value"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            else if(node->children.size() > 0 && anal->funcReturnSig != "$void") {
+                if(node->children[0]->sig != anal->funcReturnSig) {
+                    auto errorMsg = "return expression has incorrect type";
+                    handleError(
+                        errorMsg
+                        , node->loc.begin.line
+                        , node->loc.begin.column
+                    );
+                }
+                anal->funcReturnSig = "";
+            }
+            break;
+        case NodeKind::IntLit: {
+            auto val = std::stol(node->attr);
+            if(val > INT32_MAX || val < INT32_MIN) {
+                handleError(
+                    "integer literal is out of allowable range"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            break;
+        }
+        case NodeKind::ForStmt:
+            anal->forLoopCount++;
+            break;
+        case NodeKind::BreakStmt:
+            if(anal->forLoopCount == 0) {
+                handleError(
+                    "break statement must be inside a for loop"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+        default:
+            break;
+        }
     };
 
     // actions
     void pass4PostOrderCallback(SemanticAnalyzer* anal, std::shared_ptr<AstNode> node) {
-        
+        switch (node->kind) {
+        case NodeKind::ForStmt:
+            anal->forLoopCount++;
+            break;
+        case NodeKind::FuncDecl:
+            if(anal->funcReturnSig != "" && anal->funcReturnSig != "$void") {
+                std::string errorMsg = "missing return statement in declaration for function '" + node->children[0]->attr + "'";
+                handleError(
+                    errorMsg.c_str()
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            break;
+        default:
+            break;
+        }
     };
 
 

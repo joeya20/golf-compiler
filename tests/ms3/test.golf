@@ -7,16 +7,20 @@ func main() {
     var b string;
     // -k;
     i < j;
-    i+test(i);
+    // i+test(i);
     // true = k;
     // i = 20;
     // j = -i;
     // printi(test(10));
-    i
+    return;
 }
 
 func test(k int) int {
-    return k;
+    var i j;
+    if(i) {
+        return 5;
+    }
 }
+
 
 var k string;

@@ -44,8 +44,13 @@ struct SemanticAnalyzer {
     std::shared_ptr<AstNode> root;
     SymbolTable symTab;
 
-    // vector to hold paramDecls so their symbols fall in the proper scope
+    /* helper variables */
+    // vector to hold paramDecls so their symbols fall in the proper scope for pass 2
     std::vector<std::shared_ptr<AstNode>> paramDecls;
+    // counter to store number of for loops for pass 4
+    int forLoopCount;
+    //string to store the current funcDecl's rvSig for pass 4
+    std::string funcReturnSig;
 
     SemanticAnalyzer(std::shared_ptr<AstNode> root);
 
