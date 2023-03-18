@@ -4,6 +4,7 @@
 #include <array>
 #include <memory>
 #include <vector>
+#include <sys/stat.h>
 
 #include "AstNode.hpp"
 #include "util.hpp"
@@ -51,7 +52,7 @@ struct SemanticAnalyzer {
     int forLoopCount;
     //string to store the current funcDecl's rvSig for pass 4
     std::string funcReturnSig;
-
+    
     SemanticAnalyzer(std::shared_ptr<AstNode> root);
 
     // generic pre-order traversal function
@@ -64,7 +65,7 @@ struct SemanticAnalyzer {
     void prePostOrderTraversal(std::shared_ptr<AstNode>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>, std::function<void(SemanticAnalyzer*, std::shared_ptr<AstNode>)>);
     
     std::shared_ptr<Symbol> getIdent(std::shared_ptr<AstNode> node);
-    std::shared_ptr<Symbol> getType(std::shared_ptr<AstNode> node);
+    std::shared_ptr<Symbol> getSig(std::shared_ptr<AstNode> node);
     // kickstarts semantic analysis
     void doAnalysis();
     void pass1();
@@ -78,6 +79,4 @@ void pass2PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 void pass3PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>); 
 void pass4PreOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
 void pass4PostOrderCallback(SemanticAnalyzer*, std::shared_ptr<AstNode>);
-void checkType(std::shared_ptr<AstNode> node, std::shared_ptr<Symbol> type);
-
 }

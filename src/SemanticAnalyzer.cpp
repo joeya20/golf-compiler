@@ -60,7 +60,6 @@ namespace GoLF {
     };
 
     const std::unordered_map<std::string, const std::vector<SemanticAnalyzer::AllowedType>*> SemanticAnalyzer::allowedTypes {
-        // binary operators
         {"||"   , &SemanticAnalyzer::logicalTypes       },
         {"&&"   , &SemanticAnalyzer::logicalTypes       },
         {"=="   , &SemanticAnalyzer::equalityTypes      },
@@ -158,18 +157,18 @@ namespace GoLF {
         return ident;
     }
 
-    std::shared_ptr<Symbol> SemanticAnalyzer::getType(std::shared_ptr<AstNode> node) {
-        auto type = symTab.lookup(node->attr);
-        if(type == nullptr) {            
+    std::shared_ptr<Symbol> SemanticAnalyzer::getSig(std::shared_ptr<AstNode> node) {
+        auto sig = symTab.lookup(node->attr);
+        if(sig == nullptr) {            
             std::string errorMsg = "type '" + node->attr + "' is not defined.";
             handleError(errorMsg.c_str(), node->loc.begin.line,  node->loc.begin.column);
         }
         // the symbol was overridden and is no longer a type
-        if(!type->isType) {
-            std::string errorMsg = "expected type, got '" + type->name + "'";
+        if(!sig->isType) {
+            std::string errorMsg = "expected type, got '" + sig->name + "'";
             handleError(errorMsg.c_str(), node->loc.begin.line,  node->loc.begin.column);
         }
-        return type;
+        return sig;
     }
 
     void pass2PreOrderCallback(SemanticAnalyzer* anal /* lol */, std::shared_ptr<AstNode> node) {
@@ -177,16 +176,16 @@ namespace GoLF {
         switch (node->kind)
         {
         case NodeKind::GlobVarDecl: { // fully define symbol (i.e. type)
-            auto type = anal->getType(node->children[1]);
-            node->children[1]->sig = type->name;
-            node->children[1]->symbol = type;
+            auto sig = anal->getSig(node->children[1]);
+            node->children[0]->symbol->sig = sig->sig;
+            node->children[1]->symbol = sig;
             break;
         }
-        case NodeKind::FuncDecl: { // fully define symbol (i.e. type and rv type)            
+        case NodeKind::FuncDecl: { // fully define symbol (i.e. type and rv type)  
             auto funcSign = node->children[1];
             // handle return value
-            auto rvType = anal->getType(funcSign->children[1]);
-            node->children[0]->symbol->rvSig = rvType->name;
+            auto rvType = anal->getSig(funcSign->children[1]);
+            node->children[0]->symbol->rvSig = rvType->sig;
             funcSign->children[1]->symbol = rvType;
 
             // handle param values
@@ -196,45 +195,33 @@ namespace GoLF {
                 anal->paramDecls.push_back(paramDecl);
 
                 // check type and add to sig
-                auto paramType = anal->getType(paramDecl->children[1]);
+                auto paramType = anal->getSig(paramDecl->children[1]);
+                std::cout << "here" << std::endl;
                 sig += (paramType->name + ",");
             }
             if(sig.back() == ',') sig.pop_back();
             sig += ")";
-            node->children[0]->symbol->sig = sig;
+            node->children[0]->symbol->sig = sig;  
             break;
         }
         case NodeKind::VarDecl: {
+            auto sig = anal->getSig(node->children[1]);
             auto ident = anal->symTab.define(node->children[0]->attr, node->children[0]->loc, false, false);
+            ident->sig = sig->sig;
             node->children[0]->symbol = ident;
-            auto type = anal->getType(node->children[1]);
-            ident->sig = type->name;
-            node->children[1]->symbol = type;
-            break;
-        }
-        case NodeKind::AssignStmt: {
-            /* check for symbol */
-            auto lhs = node->children[0]->children[0];
-            lhs->symbol = anal->getIdent(lhs);
-            if(lhs->symbol->isConst) {
-                handleError("can't assign to a constant", node->children[0]->loc.begin.line, node->children[0]->loc.begin.column);
-            }
+            node->children[1]->symbol = sig;
             break;
         }
         case NodeKind::UnaryExpr: {
+            std::cout << node.get() << std::endl;
             // funccalls are handled in their own case stmt
             auto expr = node->children[0];
             if(expr->kind == NodeKind::Ident) {
                 expr->symbol = anal->getIdent(expr);
             }
-            break;
-        }
-        case NodeKind::FuncCall: {
-            auto expr = node->children[0]; 
-            expr->symbol = anal->getIdent(expr);
-        //     for(auto & funcArg : node->children[1]->children) {
-        //         funcArg->symbol = anal->getIdent(funcArg);
-        //     }
+            else if(expr->kind == NodeKind::FuncCall) {
+                expr->children[0]->symbol = anal->getIdent(expr->children[0]);
+            }
             break;
         }
         case NodeKind::Block:
@@ -245,15 +232,36 @@ namespace GoLF {
             while(anal->paramDecls.size() > 0) {
                 auto paramDecl = anal->paramDecls.back();
                 auto ident = paramDecl->children[0];
-                auto type = paramDecl->children[1];
+                auto sig = paramDecl->children[1];
+                auto typeSymbol = anal->getSig(sig);
                 auto identSymbol = anal->symTab.define(ident->attr, ident->loc, false, false);
-                auto typeSymbol = anal->getType(type);
                 identSymbol->sig = typeSymbol->name;
-                type->symbol = typeSymbol;
+                sig->symbol = typeSymbol;
                 ident->symbol = identSymbol;
                 anal->paramDecls.pop_back();
             }
             break;
+        // case NodeKind::AssignStmt: {
+        //     /* check for symbol */
+        //     std::cout << "start AssignStmt" << std::endl;
+        //     auto lhs = node->children[0]->children[0];
+        //     lhs->symbol = anal->getIdent(lhs);
+        //     if(lhs->symbol->isConst) {
+        //         handleError("can't assign to a constant", node->children[0]->loc.begin.line, node->children[0]->loc.begin.column);
+        //     }
+        //     std::cout << "end AssignStmt" << std::endl;
+        //     break;
+        // }
+        // case NodeKind::FuncCall: {
+        //     std::cout << "start FuncCall" << std::endl;
+        //     auto expr = node->children[0]; 
+        //     expr->symbol = anal->getIdent(expr);
+        // //     for(auto & funcArg : node->children[1]->children) {
+        // //         funcArg->symbol = anal->getIdent(funcArg);
+        // //     }
+        //     std::cout << "end FuncCall" << std::endl;
+        //     break;
+        // }
         // case NodeKind::BinaryExpr: {
         //     auto lhs = node->children[0];
         //     if(lhs->kind == NodeKind::Ident) {
@@ -394,14 +402,14 @@ namespace GoLF {
             }
             break;
         case NodeKind::FuncCall: {
-        auto identNode = node->children[0];
+            auto identNode = node->children[0];
             node->sig = identNode->symbol->rvSig;
             if(identNode->sig[0] == 'f') {
                 std::string argsSig = "f(";
                 for(auto & funcArg : node->children[1]->children) {
                     argsSig += (funcArg->sig + ',');
                 }
-                argsSig.pop_back();
+                if(argsSig.back() != '(') argsSig.pop_back();
                 argsSig += ')';
                 if(argsSig != identNode->sig) {
                     handleError(
@@ -433,24 +441,44 @@ namespace GoLF {
     void pass4PreOrderCallback(SemanticAnalyzer* anal, std::shared_ptr<AstNode> node) {
         switch (node->kind) {
         case NodeKind::FuncDecl: 
+            if(node->children[0]->attr == "main") {
+                // first check its return type
+                auto & funcSign = node->children[1];
+                if(funcSign->children[1]->attr != "$void") {
+                    handleError(
+                        " main() can't have a return value"
+                        , node->loc.begin.line
+                        , node->loc.begin.column
+                    );
+                }
+                auto & params = funcSign->children[0];
+                // then check its parameters
+                if(params->children.size() > 0) {
+                    handleError(
+                        "main() can't have arguments"
+                        , node->loc.begin.line
+                        , node->loc.begin.column
+                    );
+                }
+            }
             anal->funcReturnSig = node->children[0]->symbol->rvSig;
             break;
         case NodeKind::ReturnStmt:
-            if(node->children.size() > 0 && anal->funcReturnSig == "$void") {
+            if(node->children.size() > 0 && anal->funcReturnSig == "void") {
                 handleError(
                     "this function can't return a value"
                     , node->loc.begin.line
                     , node->loc.begin.column
                 );
             }
-            else if(node->children.size() == 0 && anal->funcReturnSig != "$void") {
+            else if(node->children.size() == 0 && anal->funcReturnSig != "void") {
                 handleError(
                     "this function must return a value"
                     , node->loc.begin.line
                     , node->loc.begin.column
                 );
             }
-            else if(node->children.size() > 0 && anal->funcReturnSig != "$void") {
+            else if(node->children.size() > 0 && anal->funcReturnSig != "void") {
                 if(node->children[0]->sig != anal->funcReturnSig) {
                     auto errorMsg = "return expression has incorrect type";
                     handleError(
@@ -463,10 +491,17 @@ namespace GoLF {
             }
             break;
         case NodeKind::IntLit: {
+            if(node->attr.size() > 11) {
+                handleError(
+                    "integer literal out of range"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
             auto val = std::stol(node->attr);
             if(val > INT32_MAX || val < INT32_MIN) {
                 handleError(
-                    "integer literal is out of allowable range"
+                    "integer literal out of range"
                     , node->loc.begin.line
                     , node->loc.begin.column
                 );
@@ -484,6 +519,50 @@ namespace GoLF {
                     , node->loc.begin.column
                 );
             }
+            break;
+        case NodeKind::AssignStmt: {
+            auto lhs = node->children[0];
+            if(lhs->kind != NodeKind::UnaryExpr) {
+                handleError(
+                    "can only assign to a variable"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            lhs = lhs->children[0];
+            
+            std::cout << "here" << std::endl;
+            std::cout << lhs.get() << std::endl;
+            if(lhs->kind != NodeKind::Ident) {
+                handleError(
+                    "can only assign to a variable"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            if(lhs->sig[0] == 'f') {    //TODO: review
+                handleError(
+                    "can only assign to a variable"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            else if(lhs->symbol->isConst) {
+                handleError(
+                    "cannot assign to a constant"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            else if(lhs->symbol->isType) {
+                handleError(
+                    "can only assign to a variable"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
+            break;
+        }
         default:
             break;
         }
@@ -496,7 +575,7 @@ namespace GoLF {
             anal->forLoopCount++;
             break;
         case NodeKind::FuncDecl:
-            if(anal->funcReturnSig != "" && anal->funcReturnSig != "$void") {
+            if(anal->funcReturnSig != "" && anal->funcReturnSig != "void") {
                 std::string errorMsg = "missing return statement in declaration for function '" + node->children[0]->attr + "'";
                 handleError(
                     errorMsg.c_str()
@@ -516,16 +595,14 @@ namespace GoLF {
         this->symTab.pushScope();
         // first pass -- add global declarations
         this->pass1();
-        std::cout << "pass 1 complete" << std::endl;
+        std::cout << root.get() << std::endl;
         // second pass -- handle all identifiers
         this->pass2();
-        std::cout << "pass 2 complete" << std::endl;
+        std::cout << root.get() << std::endl;
         // third pass -- type checking
         this->pass3();
-        std::cout << "pass 3 complete" << std::endl;
         // fourth pass -- everything else 
         this->pass4();
-        std::cout << "pass 4 complete" << std::endl;
         std::string main = "main";
         auto mainFunc = symTab.lookup(main);
         if(mainFunc == nullptr) {

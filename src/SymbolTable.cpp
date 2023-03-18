@@ -63,12 +63,10 @@ std::shared_ptr<Symbol> SymbolTable::define(std::string& name, location& loc, bo
 }
 
 void SymbolTable::pushScope() {
-    std::cout << "adding scope " << std::endl;  //TODO: remove
     scopeStack.emplace_back();
 }
 
 std::unordered_map<std::string, std::shared_ptr<Symbol>> SymbolTable::popScope() {
-    std::cout << "removing scope " << std::endl;    // TODO: remove
     auto temp = scopeStack.back();
     scopeStack.pop_back();
     return temp;

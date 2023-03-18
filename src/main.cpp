@@ -29,7 +29,6 @@ int main(int argc, char **argv) {
     GoLF::SemanticAnalyzer analyzer(root);
 
     analyzer.doAnalysis();
-    std::cout << "done analysis" << std::endl;
     std::cout << root << std::endl;
 
     //close input file stream
