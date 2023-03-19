@@ -1,0 +1,1077 @@
+Run started on Sat Mar 18 18:20:41 2023
+
+Hostname: csx2.cs.ucalgary.ca
+
+-------------------------------------------------------------------------------
+Running make |
+--------------
+
+% /usr/bin/make
+
+STDOUT:
+make: 'golf' is up to date.
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Locating GoLF compiler |
+------------------------
+
+Compiler will be run as ./golf
+
+-------------------------------------------------------------------------------
+Test: too few arguments |
+-------------------------
+
+% ./golf
+
+STDOUT:
+
+
+STDERR:
+error: : No input file provided
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: too many arguments |
+--------------------------
+
+% ./golf /dev/null /dev/zero
+
+STDOUT:
+
+
+STDERR:
+error: : Too many input files provided
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: nonexistent file |
+------------------------
+
+% ./golf /i/do/not/exist
+
+STDOUT:
+
+
+STDERR:
+error: /i/do/not/exist: Error opening input file
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: later global "int" redeclaration |
+----------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t1
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t1:4:9: expected type, got 'int'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: global var declaration loop |
+-----------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t2
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t2:4:9: expected type, got 'int'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: local var version of check.t2 |
+-------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t3
+
+STDOUT:
+Program <symbol addr: 0x46fc90>
+    FuncDecl @ line 4 @ col 1
+        Ident [main] sig=f() @ line 4 @ col 6 <symbol addr: 0x46fc90>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x46e870>
+        Block
+            VarDecl @ line 5 @ col 2
+                Ident [int] sig=int @ line 5 @ col 6 <symbol addr: 0x46fd30>
+                Type [int] @ line 5 @ col 10 <symbol addr: 0x46ea50>
+            ExprStmt @ line 6 @ col 2
+                UnaryExpr sig=void @ line 6 @ col 2
+                    FuncCall sig=void @ line 6 @ col 2
+                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0x46f0e0>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 6 @ col 9
+                                Ident [int] sig=int @ line 6 @ col 9 <symbol addr: 0x46fd30>
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: global name test |
+------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t4
+
+STDOUT:
+Program <symbol addr: 0x1a974c0>
+    GlobVarDecl @ line 3 @ col 1
+        Ident [b4int] sig=int @ line 3 @ col 5 <symbol addr: 0x1a97380>
+        Type [int] @ line 3 @ col 11 <symbol addr: 0x1a96140>
+    FuncDecl @ line 5 @ col 1
+        Ident [b4func] sig=f() @ line 5 @ col 6 <symbol addr: 0x1a97420>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x1a95fb0>
+        Block
+            ExprStmt @ line 6 @ col 2
+                UnaryExpr sig=void @ line 6 @ col 2
+                    FuncCall sig=void @ line 6 @ col 2
+                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0x1a967d0>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 6 @ col 9
+                                Ident [b4int] sig=int @ line 6 @ col 9 <symbol addr: 0x1a97380>
+            ExprStmt @ line 7 @ col 2
+                UnaryExpr sig=void @ line 7 @ col 2
+                    FuncCall sig=void @ line 7 @ col 2
+                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0x1a967d0>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 7 @ col 9
+                                Ident [aft3rint] sig=int @ line 7 @ col 9 <symbol addr: 0x1a97600>
+            ExprStmt @ line 8 @ col 2
+                UnaryExpr sig=void @ line 8 @ col 2
+                    FuncCall sig=void @ line 8 @ col 2
+                        Ident [aft3rfunc] sig=f() @ line 8 @ col 2 <symbol addr: 0x1a97560>
+                        FuncArgs
+    FuncDecl @ line 11 @ col 1
+        Ident [main] sig=f() @ line 11 @ col 6 <symbol addr: 0x1a974c0>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x1a95fb0>
+        Block
+            ExprStmt @ line 12 @ col 2
+                UnaryExpr sig=void @ line 12 @ col 2
+                    FuncCall sig=void @ line 12 @ col 2
+                        Ident [b4func] sig=f() @ line 12 @ col 2 <symbol addr: 0x1a97420>
+                        FuncArgs
+    FuncDecl @ line 15 @ col 1
+        Ident [aft3rfunc] sig=f() @ line 15 @ col 6 <symbol addr: 0x1a97560>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x1a95fb0>
+        Block
+            ExprStmt @ line 16 @ col 2
+                UnaryExpr sig=void @ line 16 @ col 2
+                    FuncCall sig=void @ line 16 @ col 2
+                        Ident [printi] sig=f(int) @ line 16 @ col 2 <symbol addr: 0x1a967d0>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 16 @ col 9
+                                Ident [b4int] sig=int @ line 16 @ col 9 <symbol addr: 0x1a97380>
+            ExprStmt @ line 17 @ col 2
+                UnaryExpr sig=void @ line 17 @ col 2
+                    FuncCall sig=void @ line 17 @ col 2
+                        Ident [printi] sig=f(int) @ line 17 @ col 2 <symbol addr: 0x1a967d0>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 17 @ col 9
+                                Ident [aft3rint] sig=int @ line 17 @ col 9 <symbol addr: 0x1a97600>
+    GlobVarDecl @ line 20 @ col 1
+        Ident [aft3rint] sig=int @ line 20 @ col 5 <symbol addr: 0x1a97600>
+        Type [int] @ line 20 @ col 14 <symbol addr: 0x1a96140>
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: block scope check |
+-------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t5
+
+STDOUT:
+Program <symbol addr: 0x6f31a0>
+    FuncDecl @ line 3 @ col 1
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x6f31a0>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x6f1d80>
+        Block
+            VarDecl @ line 4 @ col 2
+                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0x6f3240>
+                Type [int] @ line 4 @ col 8 <symbol addr: 0x6f1f60>
+            Block
+                VarDecl @ line 6 @ col 3
+                    Ident [x] sig=bool @ line 6 @ col 7 <symbol addr: 0x6f3350>
+                    Type [bool] @ line 6 @ col 9 <symbol addr: 0x6f1e70>
+                Block
+                    VarDecl @ line 8 @ col 4
+                        Ident [x] sig=string @ line 8 @ col 8 <symbol addr: 0x6f3630>
+                        Type [string] @ line 8 @ col 10 <symbol addr: 0x6f2050>
+                    AssignStmt @ line 9 @ col 4
+                        UnaryExpr sig=string @ line 9 @ col 4
+                            Ident [x] sig=string @ line 9 @ col 4 <symbol addr: 0x6f3630>
+                        UnaryExpr sig=string @ line 9 @ col 8
+                            StrLit ["asdf"] sig=string @ line 9 @ col 8
+                    Block
+                        VarDecl @ line 11 @ col 5
+                            Ident [x] sig=int @ line 11 @ col 9 <symbol addr: 0x6f3740>
+                            Type [int] @ line 11 @ col 11 <symbol addr: 0x6f1f60>
+                        AssignStmt @ line 12 @ col 5
+                            UnaryExpr sig=int @ line 12 @ col 5
+                                Ident [x] sig=int @ line 12 @ col 5 <symbol addr: 0x6f3740>
+                            BinaryExpr [+] sig=int @ line 12 @ col 11
+                                UnaryExpr sig=int @ line 12 @ col 9
+                                    Ident [x] sig=int @ line 12 @ col 9 <symbol addr: 0x6f3740>
+                                UnaryExpr sig=int @ line 12 @ col 13
+                                    IntLit [1] sig=int @ line 12 @ col 13
+                    ExprStmt @ line 14 @ col 4
+                        UnaryExpr sig=void @ line 14 @ col 4
+                            FuncCall sig=void @ line 14 @ col 4
+                                Ident [prints] sig=f(string) @ line 14 @ col 4 <symbol addr: 0x6f26e0>
+                                FuncArgs
+                                    UnaryExpr sig=string @ line 14 @ col 11
+                                        Ident [x] sig=string @ line 14 @ col 11 <symbol addr: 0x6f3630>
+                ExprStmt @ line 16 @ col 3
+                    UnaryExpr sig=void @ line 16 @ col 3
+                        FuncCall sig=void @ line 16 @ col 3
+                            Ident [printb] sig=f(bool) @ line 16 @ col 3 <symbol addr: 0x6f2410>
+                            FuncArgs
+                                UnaryExpr sig=bool @ line 16 @ col 10
+                                    Ident [x] sig=bool @ line 16 @ col 10 <symbol addr: 0x6f3350>
+            ExprStmt @ line 18 @ col 2
+                UnaryExpr sig=void @ line 18 @ col 2
+                    FuncCall sig=void @ line 18 @ col 2
+                        Ident [printi] sig=f(int) @ line 18 @ col 2 <symbol addr: 0x6f25f0>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 18 @ col 9
+                                Ident [x] sig=int @ line 18 @ col 9 <symbol addr: 0x6f3240>
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: global var declaration, complex loop |
+--------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t6
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t6:3:9: expected type, got 'bool'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: parameter scope test |
+----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t7
+
+STDOUT:
+Program <symbol addr: 0xb2a1e0>
+    FuncDecl @ line 3 @ col 1
+        Ident [foo] sig=f(int) @ line 3 @ col 6 <symbol addr: 0xb2a000>
+        FuncSign
+            Params
+                ParamDecl @ line 3 @ col 10
+                    Ident [int] sig=int @ line 3 @ col 10 <symbol addr: 0xb2a280>
+                    Type [int] @ line 3 @ col 14 <symbol addr: 0xb28dc0>
+            Type [int] @ line 3 @ col 19 <symbol addr: 0xb28dc0>
+        Block
+            ExprStmt @ line 4 @ col 2
+                UnaryExpr sig=void @ line 4 @ col 2
+                    FuncCall sig=void @ line 4 @ col 2
+                        Ident [printi] sig=f(int) @ line 4 @ col 2 <symbol addr: 0xb29450>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 4 @ col 9
+                                Ident [int] sig=int @ line 4 @ col 9 <symbol addr: 0xb2a280>
+            ReturnStmt @ line 5 @ col 2
+                UnaryExpr sig=int @ line 5 @ col 9
+                    Ident [int] sig=int @ line 5 @ col 9 <symbol addr: 0xb2a280>
+    FuncDecl @ line 8 @ col 1
+        Ident [bar] sig=f(int) @ line 8 @ col 6 <symbol addr: 0xb2a0a0>
+        FuncSign
+            Params
+                ParamDecl @ line 8 @ col 10
+                    Ident [bar] sig=int @ line 8 @ col 10 <symbol addr: 0xb2a400>
+                    Type [int] @ line 8 @ col 14 <symbol addr: 0xb28dc0>
+            Type [$void] <symbol addr: 0xb28be0>
+        Block
+            EmptyStmt @ line 8 @ col 20
+    FuncDecl @ line 11 @ col 1
+        Ident [string] sig=f(int) @ line 11 @ col 6 <symbol addr: 0xb2a140>
+        FuncSign
+            Params
+                ParamDecl @ line 11 @ col 13
+                    Ident [string] sig=int @ line 11 @ col 13 <symbol addr: 0xb2a4a0>
+                    Type [int] @ line 11 @ col 20 <symbol addr: 0xb28dc0>
+            Type [bool] @ line 11 @ col 25 <symbol addr: 0xb28cd0>
+        Block
+            ReturnStmt @ line 12 @ col 2
+                UnaryExpr sig=bool @ line 12 @ col 9
+                    Ident [true] sig=bool @ line 12 @ col 9 <symbol addr: 0xb29090>
+    FuncDecl @ line 15 @ col 1
+        Ident [main] sig=f() @ line 15 @ col 6 <symbol addr: 0xb2a1e0>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0xb28be0>
+        Block
+            EmptyStmt @ line 15 @ col 14
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: constants can't be changed |
+----------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t8
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t8:4:2: can't assign to a constant
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: nonexistent type name |
+-----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t9
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t9:3:7: type 'notthere' is not defined.
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: type name not a type |
+----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t10
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t10:4:7: expected type, got 't'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: formal parameters need types |
+------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t11
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t11:6:21: expected type, got 'main'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: multiple (main) functions, same name |
+--------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t12
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t12:7:6: Identifier 'main' already defined
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: no main function |
+------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t13
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t13: missing main() function
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: main can't have arguments |
+---------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t14
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t14:3:1: main() can't have arguments
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: main can't have a return value |
+--------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t15
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t15:3:1:  main() can't have a return value
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: dup check for formal parameters |
+---------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t16
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t16:7:10: Identifier 'i' already defined
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: function call as lvalue |
+-------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t17
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t17:6:2: can only assign to a variable
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: function name as lvalue |
+-------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t18
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t18:6:2: operand type mismatch for '='
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: humongous integer literal |
+---------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t19
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t19:5:6: integer literal out of range
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: positive integer literal out of range |
+---------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t20
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t20:6:6: integer literal out of range
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: negative integer literal out of range |
+---------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t21
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t21:5:7: integer literal out of range
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: "break" not inside "for" loop |
+-------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t22
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t22:7:2: break statement must be inside a for loop
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: "break" in block, but not in "for" |
+------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t23
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t23:5:3: break statement must be inside a for loop
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: "break" in "if" block |
+-----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t24
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t24:5:3: break statement must be inside a for loop
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: missing return statement |
+--------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t25
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t25:6:1: no return statement in function 'foo'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: returning value from void function |
+------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t26
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t26:4:2: this function can't return a value
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: return type mismatch |
+----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t27
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t27:7:2: returned value has the wrong type
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: missing return type |
+---------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t28
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t28:7:2: this function must return a value
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: "if" expr not a boolean type |
+------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t29
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t29:4:5: if expression must be boolean type
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: "if"-"else" not a boolean type |
+--------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t30
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t30:4:5: if expression must be boolean type
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: "for" expr not a boolean type |
+-------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t31
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t31:10:6: for expression must be boolean type
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: legit expression statements |
+-----------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t32
+
+STDOUT:
+Program <symbol addr: 0x56d580>
+    FuncDecl @ line 3 @ col 1
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x56d580>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x56c160>
+        Block
+            VarDecl @ line 4 @ col 2
+                Ident [i] sig=int @ line 4 @ col 6 <symbol addr: 0x56d620>
+                Type [int] @ line 4 @ col 8 <symbol addr: 0x56c340>
+            ExprStmt @ line 5 @ col 2
+                UnaryExpr sig=int @ line 5 @ col 2
+                    Ident [i] sig=int @ line 5 @ col 2 <symbol addr: 0x56d620>
+            ExprStmt @ line 6 @ col 2
+                UnaryExpr sig=int @ line 6 @ col 2
+                    IntLit [42] sig=int @ line 6 @ col 2
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: built-in routine check |
+------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t33
+
+STDOUT:
+Program <symbol addr: 0x18a1740>
+    FuncDecl @ line 3 @ col 1
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x18a1740>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x18a0320>
+        Block
+            ExprStmt @ line 4 @ col 9
+                UnaryExpr sig=void @ line 4 @ col 9
+                    FuncCall sig=void @ line 4 @ col 9
+                        Ident [prints] sig=f(string) @ line 4 @ col 9 <symbol addr: 0x18a0c80>
+                        FuncArgs
+                            UnaryExpr sig=string @ line 4 @ col 16
+                                StrLit ["Hello, world!\n"] sig=string @ line 4 @ col 16
+            ExprStmt @ line 5 @ col 9
+                UnaryExpr sig=void @ line 5 @ col 9
+                    FuncCall sig=void @ line 5 @ col 9
+                        Ident [printb] sig=f(bool) @ line 5 @ col 9 <symbol addr: 0x18a09b0>
+                        FuncArgs
+                            UnaryExpr sig=bool @ line 5 @ col 16
+                                Ident [true] sig=bool @ line 5 @ col 16 <symbol addr: 0x18a07d0>
+            ExprStmt @ line 6 @ col 9
+                UnaryExpr sig=void @ line 6 @ col 9
+                    FuncCall sig=void @ line 6 @ col 9
+                        Ident [printi] sig=f(int) @ line 6 @ col 9 <symbol addr: 0x18a0b90>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 6 @ col 16
+                                IntLit [123] sig=int @ line 6 @ col 16
+            ExprStmt @ line 7 @ col 9
+                UnaryExpr sig=void @ line 7 @ col 9
+                    FuncCall sig=void @ line 7 @ col 9
+                        Ident [printc] sig=f(int) @ line 7 @ col 9 <symbol addr: 0x18a0aa0>
+                        FuncArgs
+                            UnaryExpr sig=int @ line 7 @ col 16
+                                IntLit [123] sig=int @ line 7 @ col 16
+            VarDecl @ line 8 @ col 9
+                Ident [ch] sig=int @ line 8 @ col 13 <symbol addr: 0x18a17e0>
+                Type [int] @ line 8 @ col 16 <symbol addr: 0x18a0500>
+            AssignStmt @ line 9 @ col 2
+                UnaryExpr sig=int @ line 9 @ col 2
+                    Ident [ch] sig=int @ line 9 @ col 2 <symbol addr: 0x18a17e0>
+                UnaryExpr sig=int @ line 9 @ col 7
+                    FuncCall sig=int @ line 9 @ col 7
+                        Ident [getchar] sig=f() @ line 9 @ col 7 <symbol addr: 0x18a0d70>
+                        FuncArgs
+            ExprStmt @ line 10 @ col 2
+                UnaryExpr sig=void @ line 10 @ col 2
+                    FuncCall sig=void @ line 10 @ col 2
+                        Ident [halt] sig=f() @ line 10 @ col 2 <symbol addr: 0x18a0e60>
+                        FuncArgs
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: actual parameter type check |
+-----------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t34
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t34:4:2: number/type of arguments in function call doesn't match function declaration
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: operand type mismatch |
+-----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t35
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t35:10:15: operand type mismatch for '+'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: another actual parameter type check |
+-------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t36
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t36:7:9: number/type of arguments in function call doesn't match function declaration
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: return+argument checks |
+------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t37
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t37:8:16: number/type of arguments in function call doesn't match function declaration
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: scope check and undefined variable |
+------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t38
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t38:10:3: identifier 'c' is not defined.
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: redefined variable |
+--------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t39
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t39:13:7: Identifier 'b' already defined
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: comparable and ordered comparisons |
+------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t40
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t40:8:7: operand type mismatch for '>'
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: int/bool distinction |
+----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t41
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t41:5:2: operand type mismatch for '='
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: deep type propagation |
+-----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t42
+
+STDOUT:
+Program <symbol addr: 0x76d1c0>
+    FuncDecl @ line 3 @ col 1
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x76d1c0>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0x76bda0>
+        Block
+            VarDecl @ line 4 @ col 2
+                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0x76d260>
+                Type [int] @ line 4 @ col 8 <symbol addr: 0x76bf80>
+            ExprStmt @ line 5 @ col 2
+                BinaryExpr [>=] sig=bool @ line 5 @ col 18
+                    BinaryExpr [-] sig=int @ line 5 @ col 12
+                        BinaryExpr [+] sig=int @ line 5 @ col 4
+                            UnaryExpr sig=int @ line 5 @ col 2
+                                IntLit [2] sig=int @ line 5 @ col 2
+                            BinaryExpr [*] sig=int @ line 5 @ col 8
+                                UnaryExpr sig=int @ line 5 @ col 6
+                                    IntLit [3] sig=int @ line 5 @ col 6
+                                UnaryExpr sig=int @ line 5 @ col 10
+                                    IntLit [5] sig=int @ line 5 @ col 10
+                        UnaryExpr sig=int @ line 5 @ col 14
+                            IntLit [123] sig=int @ line 5 @ col 14
+                    UnaryExpr [u-] sig=int @ line 5 @ col 21
+                        UnaryExpr sig=int @ line 5 @ col 22
+                            UnaryExpr [u-] sig=int @ line 5 @ col 23
+                                UnaryExpr sig=int @ line 5 @ col 24
+                                    UnaryExpr [u-] sig=int @ line 5 @ col 25
+                                        UnaryExpr sig=int @ line 5 @ col 26
+                                            Ident [x] sig=int @ line 5 @ col 26 <symbol addr: 0x76d260>
+            VarDecl @ line 7 @ col 2
+                Ident [b] sig=bool @ line 7 @ col 6 <symbol addr: 0x76d370>
+                Type [bool] @ line 7 @ col 8 <symbol addr: 0x76be90>
+            ExprStmt @ line 8 @ col 2
+                BinaryExpr [!=] sig=bool @ line 8 @ col 34
+                    UnaryExpr [!] sig=bool @ line 8 @ col 2
+                        UnaryExpr [!] sig=bool @ line 8 @ col 3
+                            UnaryExpr [!] sig=bool @ line 8 @ col 4
+                                UnaryExpr sig=bool @ line 8 @ col 5
+                                    BinaryExpr [||] sig=bool @ line 8 @ col 6
+                                        BinaryExpr [&&] sig=bool @ line 8 @ col 6
+                                            UnaryExpr sig=bool @ line 8 @ col 6
+                                                Ident [true] sig=bool @ line 8 @ col 6 <symbol addr: 0x76c250>
+                                            UnaryExpr sig=bool @ line 8 @ col 14
+                                                Ident [false] sig=bool @ line 8 @ col 14 <symbol addr: 0x76c340>
+                                        BinaryExpr [==] sig=bool @ line 8 @ col 25
+                                            UnaryExpr sig=bool @ line 8 @ col 23
+                                                Ident [b] sig=bool @ line 8 @ col 23 <symbol addr: 0x76d370>
+                                            UnaryExpr sig=bool @ line 8 @ col 28
+                                                Ident [true] sig=bool @ line 8 @ col 28 <symbol addr: 0x76c250>
+                    UnaryExpr sig=bool @ line 8 @ col 37
+                        BinaryExpr [<=] sig=bool @ line 8 @ col 40
+                            UnaryExpr sig=int @ line 8 @ col 38
+                                IntLit [5] sig=int @ line 8 @ col 38
+                            UnaryExpr sig=int @ line 8 @ col 43
+                                IntLit [6] sig=int @ line 8 @ col 43
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: redefining "true" and "false" |
+-------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t43
+
+STDOUT:
+Program <symbol addr: 0xafb7d0>
+    GlobVarDecl @ line 3 @ col 1
+        Ident [true] sig=int @ line 3 @ col 5 <symbol addr: 0xafb730>
+        Type [int] @ line 3 @ col 10 <symbol addr: 0xafa4f0>
+    FuncDecl @ line 5 @ col 1
+        Ident [main] sig=f() @ line 5 @ col 6 <symbol addr: 0xafb7d0>
+        FuncSign
+            Params
+            Type [$void] <symbol addr: 0xafa310>
+        Block
+            VarDecl @ line 6 @ col 2
+                Ident [false] sig=int @ line 6 @ col 6 <symbol addr: 0xafb870>
+                Type [int] @ line 6 @ col 12 <symbol addr: 0xafa4f0>
+            ExprStmt @ line 7 @ col 2
+                UnaryExpr sig=void @ line 7 @ col 2
+                    FuncCall sig=void @ line 7 @ col 2
+                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0xafab80>
+                        FuncArgs
+                            BinaryExpr [*] sig=int @ line 7 @ col 14
+                                UnaryExpr sig=int @ line 7 @ col 9
+                                    Ident [true] sig=int @ line 7 @ col 9 <symbol addr: 0xafb730>
+                                UnaryExpr sig=int @ line 7 @ col 16
+                                    Ident [false] sig=int @ line 7 @ col 16 <symbol addr: 0xafb870>
+
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: call of non-function |
+----------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t44
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t44:4:2: identifier '"asdf"' is not defined.
+
+
+RETURN CODE: 1
+
+-------------------------------------------------------------------------------
+Test: type id used in wrong context |
+-------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/ms3/check.t45
+
+STDOUT:
+
+
+STDERR:
+error: /home/profs/aycock/411/TEST/ms3/check.t45:5:6: expected identifier, got type 'int'
+
+
+RETURN CODE: 1
+
+Run ended on Sat Mar 18 18:20:41 2023
+

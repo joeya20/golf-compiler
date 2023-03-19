@@ -275,8 +275,10 @@ ElseStmt    : "else" IfStmt {
 //DONE
 ForStmt     : "for" Block       {
                                     $$ = std::make_shared<AstNode>(AstNode::Kind::ForStmt, @$);
-                                    std::shared_ptr<AstNode> e = std::make_shared<AstNode>(AstNode::Kind::Ident, "$true");
-                                    $$->addChild(e);
+                                    std::shared_ptr<AstNode> unExpr = std::make_shared<AstNode>(AstNode::Kind::UnaryExpr, "");
+                                    std::shared_ptr<AstNode> ident = std::make_shared<AstNode>(AstNode::Kind::Ident, "$true");
+                                    unExpr->addChild(ident);
+                                    $$->addChild(unExpr);
                                     $$->addChild($2);
                                 }
             | "for" Expr Block  {

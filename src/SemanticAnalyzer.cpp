@@ -12,7 +12,6 @@
 #include <vector>
 
 namespace GoLF {
-    // TODO: factor out common sets and only define once
     const std::vector<SemanticAnalyzer::AllowedType> SemanticAnalyzer::arithmeticTypes =  {
         SemanticAnalyzer::AllowedType("int", "int", "int")
     };
@@ -196,7 +195,6 @@ namespace GoLF {
 
                 // check type and add to sig
                 auto paramType = anal->getSig(paramDecl->children[1]);
-                std::cout << "here" << std::endl;
                 sig += (paramType->name + ",");
             }
             if(sig.back() == ',') sig.pop_back();
@@ -213,7 +211,6 @@ namespace GoLF {
             break;
         }
         case NodeKind::UnaryExpr: {
-            std::cout << node.get() << std::endl;
             // funccalls are handled in their own case stmt
             auto expr = node->children[0];
             if(expr->kind == NodeKind::Ident) {
@@ -328,7 +325,6 @@ namespace GoLF {
             node->sig = node->symbol->sig;
             break;
         case NodeKind::UnaryExpr: {
-            std::cout << node.get() << std::endl;
             if(node->attr == "") {
                 node->sig = node->children[0]->sig;
             }
@@ -376,7 +372,8 @@ namespace GoLF {
                     }
                 }
                 if(!valid) {
-                    handleError("invalid type");
+                    auto errorMsg = "operand type mismatch for '" + node->attr + "'";
+                    handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
                 }
             }
             else {
@@ -427,6 +424,17 @@ namespace GoLF {
                 );
             }
             break;
+        }
+        case NodeKind::AssignStmt: {
+            auto & lhs = node->children[0];
+            auto & rhs = node->children[1];
+            if(lhs->sig != rhs->sig) {
+                handleError(
+                    "operand type mismatch for '='"
+                    , node->loc.begin.line
+                    , node->loc.begin.column
+                );
+            }
         }
         default:
             break;
@@ -480,7 +488,7 @@ namespace GoLF {
             }
             else if(node->children.size() > 0 && anal->funcReturnSig != "void") {
                 if(node->children[0]->sig != anal->funcReturnSig) {
-                    auto errorMsg = "return expression has incorrect type";
+                    auto errorMsg = "returned value has the wrong type";
                     handleError(
                         errorMsg
                         , node->loc.begin.line
@@ -530,9 +538,6 @@ namespace GoLF {
                 );
             }
             lhs = lhs->children[0];
-            
-            std::cout << "here" << std::endl;
-            std::cout << lhs.get() << std::endl;
             if(lhs->kind != NodeKind::Ident) {
                 handleError(
                     "can only assign to a variable"
@@ -549,7 +554,7 @@ namespace GoLF {
             }
             else if(lhs->symbol->isConst) {
                 handleError(
-                    "cannot assign to a constant"
+                    "can't assign to a constant"
                     , node->loc.begin.line
                     , node->loc.begin.column
                 );
@@ -572,11 +577,11 @@ namespace GoLF {
     void pass4PostOrderCallback(SemanticAnalyzer* anal, std::shared_ptr<AstNode> node) {
         switch (node->kind) {
         case NodeKind::ForStmt:
-            anal->forLoopCount++;
+            anal->forLoopCount--;
             break;
         case NodeKind::FuncDecl:
             if(anal->funcReturnSig != "" && anal->funcReturnSig != "void") {
-                std::string errorMsg = "missing return statement in declaration for function '" + node->children[0]->attr + "'";
+                std::string errorMsg = "no return statement in function '" + node->children[0]->attr + "'";
                 handleError(
                     errorMsg.c_str()
                     , node->loc.begin.line
@@ -595,10 +600,8 @@ namespace GoLF {
         this->symTab.pushScope();
         // first pass -- add global declarations
         this->pass1();
-        std::cout << root.get() << std::endl;
         // second pass -- handle all identifiers
         this->pass2();
-        std::cout << root.get() << std::endl;
         // third pass -- type checking
         this->pass3();
         // fourth pass -- everything else 
