@@ -146,7 +146,7 @@ namespace GoLF {
     std::shared_ptr<Symbol> SemanticAnalyzer::getIdent(std::shared_ptr<AstNode> node) {
         auto ident = symTab.lookup(node->attr);
         if(ident == nullptr) {
-            std::string errorMsg { "identifier '" + node->attr + "' is not defined."};
+            std::string errorMsg { "identifier '" + node->attr + "' is not defined"};
             handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
         }
         if(ident->isType) {
