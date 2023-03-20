@@ -146,11 +146,11 @@ namespace GoLF {
     std::shared_ptr<Symbol> SemanticAnalyzer::getIdent(std::shared_ptr<AstNode> node) {
         auto ident = symTab.lookup(node->attr);
         if(ident == nullptr) {
-            std::string errorMsg = "identifier '" + node->attr + "' is not defined.";
+            std::string errorMsg { "identifier '" + node->attr + "' is not defined."};
             handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
         }
         if(ident->isType) {
-           std::string errorMsg = "expected identifier, got type '" + ident->name + "'";
+           std::string errorMsg { "expected identifier, got type '" + ident->name + "'"};
             handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
         }
         return ident;
@@ -159,12 +159,12 @@ namespace GoLF {
     std::shared_ptr<Symbol> SemanticAnalyzer::getSig(std::shared_ptr<AstNode> node) {
         auto sig = symTab.lookup(node->attr);
         if(sig == nullptr) {            
-            std::string errorMsg = "type '" + node->attr + "' is not defined.";
+            std::string errorMsg { "type '" + node->attr + "' is not defined."};
             handleError(errorMsg.c_str(), node->loc.begin.line,  node->loc.begin.column);
         }
         // the symbol was overridden and is no longer a type
         if(!sig->isType) {
-            std::string errorMsg = "expected type, got '" + sig->name + "'";
+            std::string errorMsg { "expected type, got '" + sig->name + "'"};
             handleError(errorMsg.c_str(), node->loc.begin.line,  node->loc.begin.column);
         }
         return sig;
@@ -217,7 +217,15 @@ namespace GoLF {
                 expr->symbol = anal->getIdent(expr);
             }
             else if(expr->kind == NodeKind::FuncCall) {
-                expr->children[0]->symbol = anal->getIdent(expr->children[0]);
+                auto ident = expr->children[0];
+                if(ident->kind != NodeKind::Ident) {
+                    handleError(
+                        "can't call something that isn't a function"
+                        , ident->loc.begin.line
+                        , ident->loc.begin.column
+                    );
+                }
+                ident->symbol = anal->getIdent(expr->children[0]);
             }
             break;
         }
@@ -345,7 +353,11 @@ namespace GoLF {
                         }
                     }
                     if(!valid) {
-                        handleError("invalid type");
+                        std::string errorMsg {"operand type mismatch for '"};
+                        if(node->attr == "u-") errorMsg += "-";
+                        else errorMsg += node->attr;
+                        errorMsg += "'";
+                        handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
                     }
                 }
                 else {
@@ -372,7 +384,7 @@ namespace GoLF {
                     }
                 }
                 if(!valid) {
-                    auto errorMsg = "operand type mismatch for '" + node->attr + "'";
+                    std::string errorMsg {"operand type mismatch for '" + node->attr + "'"};
                     handleError(errorMsg.c_str(), node->loc.begin.line, node->loc.begin.column);
                 }
             }
@@ -395,7 +407,8 @@ namespace GoLF {
                 handleError(
                     "for expression must be boolean type"
                     , node->children[0]->loc.begin.line
-                    , node->children[0]->loc.begin.column);
+                    , node->children[0]->loc.begin.column
+                );
             }
             break;
         case NodeKind::FuncCall: {
@@ -488,9 +501,8 @@ namespace GoLF {
             }
             else if(node->children.size() > 0 && anal->funcReturnSig != "void") {
                 if(node->children[0]->sig != anal->funcReturnSig) {
-                    auto errorMsg = "returned value has the wrong type";
                     handleError(
-                        errorMsg
+                        "returned value has the wrong type"
                         , node->loc.begin.line
                         , node->loc.begin.column
                     );
@@ -581,7 +593,7 @@ namespace GoLF {
             break;
         case NodeKind::FuncDecl:
             if(anal->funcReturnSig != "" && anal->funcReturnSig != "void") {
-                std::string errorMsg = "no return statement in function '" + node->children[0]->attr + "'";
+                std::string errorMsg {"no return statement in function '" + node->children[0]->attr + "'"};
                 handleError(
                     errorMsg.c_str()
                     , node->loc.begin.line

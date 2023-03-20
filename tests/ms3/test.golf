@@ -5,6 +5,7 @@ func main() {
     var z bool;
     var a string;
     var b string;
+    -k;
     // -k;
     i < j;
     // i+test(i);
