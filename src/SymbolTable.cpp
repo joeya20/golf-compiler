@@ -57,7 +57,7 @@ std::shared_ptr<Symbol> SymbolTable::define(std::string& name, location& loc, bo
         currScope[name] = sym;
         return sym;
     }
-    std::string errorMsg = "Identifier '" + name+ "' already defined" ; 
+    std::string errorMsg = "identifier '" + name+ "' already defined" ; 
     handleError(errorMsg.c_str(), loc.begin.line, loc.begin.column);
     return nullptr; // silence warning
 }
