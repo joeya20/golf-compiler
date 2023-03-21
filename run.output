@@ -1,6 +1,6 @@
-Run started on Mon Mar 20 12:08:46 2023
+Run started on Mon Mar 20 21:18:22 2023
 
-Hostname: linux08-wc.cs.ucalgary.ca
+Hostname: csx.cs.ucalgary.ca
 
 -------------------------------------------------------------------------------
 Running make |
@@ -9,7 +9,18 @@ Running make |
 % /usr/bin/make
 
 STDOUT:
-make: 'golf' is up to date.
+bison -o src/parse.tab.cc src/parse.y
+g++ -c -Wall -o build/util.o src/util.cpp
+flex -o src/lex.yy.cc src/lex.l
+g++ -c -Wall -o build/lex.yy.o src/lex.yy.cc
+g++ -c -Wall -o build/lexer.o src/lexer.cpp
+g++ -c -Wall src/parse.tab.cc -o build/parse.tab.o
+g++ -c -Wall -o build/AstNode.o src/AstNode.cpp
+g++ -c -Wall src/SemanticAnalyzer.cpp -o build/SemanticAnalyzer.o
+g++ -c -Wall src/SymbolTable.cpp -o build/SymbolTable.o
+g++ -c -Wall src/Symbol.cpp -o build/Symbol.o
+g++ -c -Wall -o build/main.o src/main.cpp
+g++ -Wall -o golf build/util.o build/lex.yy.o build/lexer.o build/parse.tab.o build/AstNode.o build/SemanticAnalyzer.o build/SymbolTable.o build/Symbol.o build/main.o
 
 
 STDERR:
@@ -105,23 +116,23 @@ Test: local var version of check.t2 |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t3
 
 STDOUT:
-Program <symbol addr: 0x5d2c90>
+Program <symbol addr: 0xf1ac90>
     FuncDecl @ line 4 @ col 1
-        Ident [main] sig=f() @ line 4 @ col 6 <symbol addr: 0x5d2c90>
+        Ident [main] sig=f() @ line 4 @ col 6 <symbol addr: 0xf1ac90>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x5d1870>
+            Type [$void] <symbol addr: 0xf19870>
         Block
             VarDecl @ line 5 @ col 2
-                Ident [int] sig=int @ line 5 @ col 6 <symbol addr: 0x5d2d30>
-                Type [int] @ line 5 @ col 10 <symbol addr: 0x5d1a50>
+                Ident [int] sig=int @ line 5 @ col 6 <symbol addr: 0xf1ad30>
+                Type [int] @ line 5 @ col 10 <symbol addr: 0xf19a50>
             ExprStmt @ line 6 @ col 2
                 UnaryExpr sig=void @ line 6 @ col 2
                     FuncCall sig=void @ line 6 @ col 2
-                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0x5d20e0>
+                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0xf1a0e0>
                         FuncArgs
                             UnaryExpr sig=int @ line 6 @ col 9
-                                Ident [int] sig=int @ line 6 @ col 9 <symbol addr: 0x5d2d30>
+                                Ident [int] sig=int @ line 6 @ col 9 <symbol addr: 0xf1ad30>
 
 
 
@@ -137,69 +148,69 @@ Test: global name test |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t4
 
 STDOUT:
-Program <symbol addr: 0x1e7a4c0>
+Program <symbol addr: 0x1e124c0>
     GlobVarDecl @ line 3 @ col 1
-        Ident [b4int] sig=int @ line 3 @ col 5 <symbol addr: 0x1e7a380>
-        Type [int] @ line 3 @ col 11 <symbol addr: 0x1e79140>
+        Ident [b4int] sig=int @ line 3 @ col 5 <symbol addr: 0x1e12380>
+        Type [int] @ line 3 @ col 11 <symbol addr: 0x1e11140>
     FuncDecl @ line 5 @ col 1
-        Ident [b4func] sig=f() @ line 5 @ col 6 <symbol addr: 0x1e7a420>
+        Ident [b4func] sig=f() @ line 5 @ col 6 <symbol addr: 0x1e12420>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x1e78fb0>
+            Type [$void] <symbol addr: 0x1e10fb0>
         Block
             ExprStmt @ line 6 @ col 2
                 UnaryExpr sig=void @ line 6 @ col 2
                     FuncCall sig=void @ line 6 @ col 2
-                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0x1e797d0>
+                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0x1e117d0>
                         FuncArgs
                             UnaryExpr sig=int @ line 6 @ col 9
-                                Ident [b4int] sig=int @ line 6 @ col 9 <symbol addr: 0x1e7a380>
+                                Ident [b4int] sig=int @ line 6 @ col 9 <symbol addr: 0x1e12380>
             ExprStmt @ line 7 @ col 2
                 UnaryExpr sig=void @ line 7 @ col 2
                     FuncCall sig=void @ line 7 @ col 2
-                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0x1e797d0>
+                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0x1e117d0>
                         FuncArgs
                             UnaryExpr sig=int @ line 7 @ col 9
-                                Ident [aft3rint] sig=int @ line 7 @ col 9 <symbol addr: 0x1e7a600>
+                                Ident [aft3rint] sig=int @ line 7 @ col 9 <symbol addr: 0x1e12600>
             ExprStmt @ line 8 @ col 2
                 UnaryExpr sig=void @ line 8 @ col 2
                     FuncCall sig=void @ line 8 @ col 2
-                        Ident [aft3rfunc] sig=f() @ line 8 @ col 2 <symbol addr: 0x1e7a560>
+                        Ident [aft3rfunc] sig=f() @ line 8 @ col 2 <symbol addr: 0x1e12560>
                         FuncArgs
     FuncDecl @ line 11 @ col 1
-        Ident [main] sig=f() @ line 11 @ col 6 <symbol addr: 0x1e7a4c0>
+        Ident [main] sig=f() @ line 11 @ col 6 <symbol addr: 0x1e124c0>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x1e78fb0>
+            Type [$void] <symbol addr: 0x1e10fb0>
         Block
             ExprStmt @ line 12 @ col 2
                 UnaryExpr sig=void @ line 12 @ col 2
                     FuncCall sig=void @ line 12 @ col 2
-                        Ident [b4func] sig=f() @ line 12 @ col 2 <symbol addr: 0x1e7a420>
+                        Ident [b4func] sig=f() @ line 12 @ col 2 <symbol addr: 0x1e12420>
                         FuncArgs
     FuncDecl @ line 15 @ col 1
-        Ident [aft3rfunc] sig=f() @ line 15 @ col 6 <symbol addr: 0x1e7a560>
+        Ident [aft3rfunc] sig=f() @ line 15 @ col 6 <symbol addr: 0x1e12560>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x1e78fb0>
+            Type [$void] <symbol addr: 0x1e10fb0>
         Block
             ExprStmt @ line 16 @ col 2
                 UnaryExpr sig=void @ line 16 @ col 2
                     FuncCall sig=void @ line 16 @ col 2
-                        Ident [printi] sig=f(int) @ line 16 @ col 2 <symbol addr: 0x1e797d0>
+                        Ident [printi] sig=f(int) @ line 16 @ col 2 <symbol addr: 0x1e117d0>
                         FuncArgs
                             UnaryExpr sig=int @ line 16 @ col 9
-                                Ident [b4int] sig=int @ line 16 @ col 9 <symbol addr: 0x1e7a380>
+                                Ident [b4int] sig=int @ line 16 @ col 9 <symbol addr: 0x1e12380>
             ExprStmt @ line 17 @ col 2
                 UnaryExpr sig=void @ line 17 @ col 2
                     FuncCall sig=void @ line 17 @ col 2
-                        Ident [printi] sig=f(int) @ line 17 @ col 2 <symbol addr: 0x1e797d0>
+                        Ident [printi] sig=f(int) @ line 17 @ col 2 <symbol addr: 0x1e117d0>
                         FuncArgs
                             UnaryExpr sig=int @ line 17 @ col 9
-                                Ident [aft3rint] sig=int @ line 17 @ col 9 <symbol addr: 0x1e7a600>
+                                Ident [aft3rint] sig=int @ line 17 @ col 9 <symbol addr: 0x1e12600>
     GlobVarDecl @ line 20 @ col 1
-        Ident [aft3rint] sig=int @ line 20 @ col 5 <symbol addr: 0x1e7a600>
-        Type [int] @ line 20 @ col 14 <symbol addr: 0x1e79140>
+        Ident [aft3rint] sig=int @ line 20 @ col 5 <symbol addr: 0x1e12600>
+        Type [int] @ line 20 @ col 14 <symbol addr: 0x1e11140>
 
 
 
@@ -215,62 +226,62 @@ Test: block scope check |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t5
 
 STDOUT:
-Program <symbol addr: 0x8d41a0>
+Program <symbol addr: 0x1dde1a0>
     FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x8d41a0>
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x1dde1a0>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x8d2d80>
+            Type [$void] <symbol addr: 0x1ddcd80>
         Block
             VarDecl @ line 4 @ col 2
-                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0x8d4240>
-                Type [int] @ line 4 @ col 8 <symbol addr: 0x8d2f60>
+                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0x1dde240>
+                Type [int] @ line 4 @ col 8 <symbol addr: 0x1ddcf60>
             Block
                 VarDecl @ line 6 @ col 3
-                    Ident [x] sig=bool @ line 6 @ col 7 <symbol addr: 0x8d4350>
-                    Type [bool] @ line 6 @ col 9 <symbol addr: 0x8d2e70>
+                    Ident [x] sig=bool @ line 6 @ col 7 <symbol addr: 0x1dde350>
+                    Type [bool] @ line 6 @ col 9 <symbol addr: 0x1ddce70>
                 Block
                     VarDecl @ line 8 @ col 4
-                        Ident [x] sig=string @ line 8 @ col 8 <symbol addr: 0x8d4630>
-                        Type [string] @ line 8 @ col 10 <symbol addr: 0x8d3050>
+                        Ident [x] sig=string @ line 8 @ col 8 <symbol addr: 0x1dde630>
+                        Type [string] @ line 8 @ col 10 <symbol addr: 0x1ddd050>
                     AssignStmt @ line 9 @ col 4
                         UnaryExpr sig=string @ line 9 @ col 4
-                            Ident [x] sig=string @ line 9 @ col 4 <symbol addr: 0x8d4630>
+                            Ident [x] sig=string @ line 9 @ col 4 <symbol addr: 0x1dde630>
                         UnaryExpr sig=string @ line 9 @ col 8
                             StrLit ["asdf"] sig=string @ line 9 @ col 8
                     Block
                         VarDecl @ line 11 @ col 5
-                            Ident [x] sig=int @ line 11 @ col 9 <symbol addr: 0x8d4740>
-                            Type [int] @ line 11 @ col 11 <symbol addr: 0x8d2f60>
+                            Ident [x] sig=int @ line 11 @ col 9 <symbol addr: 0x1dde740>
+                            Type [int] @ line 11 @ col 11 <symbol addr: 0x1ddcf60>
                         AssignStmt @ line 12 @ col 5
                             UnaryExpr sig=int @ line 12 @ col 5
-                                Ident [x] sig=int @ line 12 @ col 5 <symbol addr: 0x8d4740>
+                                Ident [x] sig=int @ line 12 @ col 5 <symbol addr: 0x1dde740>
                             BinaryExpr [+] sig=int @ line 12 @ col 11
                                 UnaryExpr sig=int @ line 12 @ col 9
-                                    Ident [x] sig=int @ line 12 @ col 9 <symbol addr: 0x8d4740>
+                                    Ident [x] sig=int @ line 12 @ col 9 <symbol addr: 0x1dde740>
                                 UnaryExpr sig=int @ line 12 @ col 13
                                     IntLit [1] sig=int @ line 12 @ col 13
                     ExprStmt @ line 14 @ col 4
                         UnaryExpr sig=void @ line 14 @ col 4
                             FuncCall sig=void @ line 14 @ col 4
-                                Ident [prints] sig=f(string) @ line 14 @ col 4 <symbol addr: 0x8d36e0>
+                                Ident [prints] sig=f(string) @ line 14 @ col 4 <symbol addr: 0x1ddd6e0>
                                 FuncArgs
                                     UnaryExpr sig=string @ line 14 @ col 11
-                                        Ident [x] sig=string @ line 14 @ col 11 <symbol addr: 0x8d4630>
+                                        Ident [x] sig=string @ line 14 @ col 11 <symbol addr: 0x1dde630>
                 ExprStmt @ line 16 @ col 3
                     UnaryExpr sig=void @ line 16 @ col 3
                         FuncCall sig=void @ line 16 @ col 3
-                            Ident [printb] sig=f(bool) @ line 16 @ col 3 <symbol addr: 0x8d3410>
+                            Ident [printb] sig=f(bool) @ line 16 @ col 3 <symbol addr: 0x1ddd410>
                             FuncArgs
                                 UnaryExpr sig=bool @ line 16 @ col 10
-                                    Ident [x] sig=bool @ line 16 @ col 10 <symbol addr: 0x8d4350>
+                                    Ident [x] sig=bool @ line 16 @ col 10 <symbol addr: 0x1dde350>
             ExprStmt @ line 18 @ col 2
                 UnaryExpr sig=void @ line 18 @ col 2
                     FuncCall sig=void @ line 18 @ col 2
-                        Ident [printi] sig=f(int) @ line 18 @ col 2 <symbol addr: 0x8d35f0>
+                        Ident [printi] sig=f(int) @ line 18 @ col 2 <symbol addr: 0x1ddd5f0>
                         FuncArgs
                             UnaryExpr sig=int @ line 18 @ col 9
-                                Ident [x] sig=int @ line 18 @ col 9 <symbol addr: 0x8d4240>
+                                Ident [x] sig=int @ line 18 @ col 9 <symbol addr: 0x1dde240>
 
 
 
@@ -301,53 +312,53 @@ Test: parameter scope test |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t7
 
 STDOUT:
-Program <symbol addr: 0x1d991e0>
+Program <symbol addr: 0x15d51e0>
     FuncDecl @ line 3 @ col 1
-        Ident [foo] sig=f(int) @ line 3 @ col 6 <symbol addr: 0x1d99000>
+        Ident [foo] sig=f(int) @ line 3 @ col 6 <symbol addr: 0x15d5000>
         FuncSign
             Params
                 ParamDecl @ line 3 @ col 10
-                    Ident [int] sig=int @ line 3 @ col 10 <symbol addr: 0x1d99280>
-                    Type [int] @ line 3 @ col 14 <symbol addr: 0x1d97dc0>
-            Type [int] @ line 3 @ col 19 <symbol addr: 0x1d97dc0>
+                    Ident [int] sig=int @ line 3 @ col 10 <symbol addr: 0x15d5280>
+                    Type [int] @ line 3 @ col 14 <symbol addr: 0x15d3dc0>
+            Type [int] @ line 3 @ col 19 <symbol addr: 0x15d3dc0>
         Block
             ExprStmt @ line 4 @ col 2
                 UnaryExpr sig=void @ line 4 @ col 2
                     FuncCall sig=void @ line 4 @ col 2
-                        Ident [printi] sig=f(int) @ line 4 @ col 2 <symbol addr: 0x1d98450>
+                        Ident [printi] sig=f(int) @ line 4 @ col 2 <symbol addr: 0x15d4450>
                         FuncArgs
                             UnaryExpr sig=int @ line 4 @ col 9
-                                Ident [int] sig=int @ line 4 @ col 9 <symbol addr: 0x1d99280>
+                                Ident [int] sig=int @ line 4 @ col 9 <symbol addr: 0x15d5280>
             ReturnStmt @ line 5 @ col 2
                 UnaryExpr sig=int @ line 5 @ col 9
-                    Ident [int] sig=int @ line 5 @ col 9 <symbol addr: 0x1d99280>
+                    Ident [int] sig=int @ line 5 @ col 9 <symbol addr: 0x15d5280>
     FuncDecl @ line 8 @ col 1
-        Ident [bar] sig=f(int) @ line 8 @ col 6 <symbol addr: 0x1d990a0>
+        Ident [bar] sig=f(int) @ line 8 @ col 6 <symbol addr: 0x15d50a0>
         FuncSign
             Params
                 ParamDecl @ line 8 @ col 10
-                    Ident [bar] sig=int @ line 8 @ col 10 <symbol addr: 0x1d99400>
-                    Type [int] @ line 8 @ col 14 <symbol addr: 0x1d97dc0>
-            Type [$void] <symbol addr: 0x1d97be0>
+                    Ident [bar] sig=int @ line 8 @ col 10 <symbol addr: 0x15d5400>
+                    Type [int] @ line 8 @ col 14 <symbol addr: 0x15d3dc0>
+            Type [$void] <symbol addr: 0x15d3be0>
         Block
             EmptyStmt @ line 8 @ col 20
     FuncDecl @ line 11 @ col 1
-        Ident [string] sig=f(int) @ line 11 @ col 6 <symbol addr: 0x1d99140>
+        Ident [string] sig=f(int) @ line 11 @ col 6 <symbol addr: 0x15d5140>
         FuncSign
             Params
                 ParamDecl @ line 11 @ col 13
-                    Ident [string] sig=int @ line 11 @ col 13 <symbol addr: 0x1d994a0>
-                    Type [int] @ line 11 @ col 20 <symbol addr: 0x1d97dc0>
-            Type [bool] @ line 11 @ col 25 <symbol addr: 0x1d97cd0>
+                    Ident [string] sig=int @ line 11 @ col 13 <symbol addr: 0x15d54a0>
+                    Type [int] @ line 11 @ col 20 <symbol addr: 0x15d3dc0>
+            Type [bool] @ line 11 @ col 25 <symbol addr: 0x15d3cd0>
         Block
             ReturnStmt @ line 12 @ col 2
                 UnaryExpr sig=bool @ line 12 @ col 9
-                    Ident [true] sig=bool @ line 12 @ col 9 <symbol addr: 0x1d98090>
+                    Ident [true] sig=bool @ line 12 @ col 9 <symbol addr: 0x15d4090>
     FuncDecl @ line 15 @ col 1
-        Ident [main] sig=f() @ line 15 @ col 6 <symbol addr: 0x1d991e0>
+        Ident [main] sig=f() @ line 15 @ col 6 <symbol addr: 0x15d51e0>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x1d97be0>
+            Type [$void] <symbol addr: 0x15d3be0>
         Block
             EmptyStmt @ line 15 @ col 14
 
@@ -428,7 +439,7 @@ STDOUT:
 
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t12:7:6: Identifier 'main' already defined
+error: /home/profs/aycock/411/TEST/ms3/check.t12:7:6: identifier 'main' already defined
 
 
 RETURN CODE: 1
@@ -488,7 +499,7 @@ STDOUT:
 
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t16:7:10: Identifier 'i' already defined
+error: /home/profs/aycock/411/TEST/ms3/check.t16:7:10: identifier 'i' already defined
 
 
 RETURN CODE: 1
@@ -725,19 +736,19 @@ Test: legit expression statements |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t32
 
 STDOUT:
-Program <symbol addr: 0x850580>
+Program <symbol addr: 0x101a580>
     FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x850580>
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x101a580>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x84f160>
+            Type [$void] <symbol addr: 0x1019160>
         Block
             VarDecl @ line 4 @ col 2
-                Ident [i] sig=int @ line 4 @ col 6 <symbol addr: 0x850620>
-                Type [int] @ line 4 @ col 8 <symbol addr: 0x84f340>
+                Ident [i] sig=int @ line 4 @ col 6 <symbol addr: 0x101a620>
+                Type [int] @ line 4 @ col 8 <symbol addr: 0x1019340>
             ExprStmt @ line 5 @ col 2
                 UnaryExpr sig=int @ line 5 @ col 2
-                    Ident [i] sig=int @ line 5 @ col 2 <symbol addr: 0x850620>
+                    Ident [i] sig=int @ line 5 @ col 2 <symbol addr: 0x101a620>
             ExprStmt @ line 6 @ col 2
                 UnaryExpr sig=int @ line 6 @ col 2
                     IntLit [42] sig=int @ line 6 @ col 2
@@ -756,55 +767,55 @@ Test: built-in routine check |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t33
 
 STDOUT:
-Program <symbol addr: 0x1338740>
+Program <symbol addr: 0x1662740>
     FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x1338740>
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x1662740>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x1337320>
+            Type [$void] <symbol addr: 0x1661320>
         Block
             ExprStmt @ line 4 @ col 9
                 UnaryExpr sig=void @ line 4 @ col 9
                     FuncCall sig=void @ line 4 @ col 9
-                        Ident [prints] sig=f(string) @ line 4 @ col 9 <symbol addr: 0x1337c80>
+                        Ident [prints] sig=f(string) @ line 4 @ col 9 <symbol addr: 0x1661c80>
                         FuncArgs
                             UnaryExpr sig=string @ line 4 @ col 16
                                 StrLit ["Hello, world!\n"] sig=string @ line 4 @ col 16
             ExprStmt @ line 5 @ col 9
                 UnaryExpr sig=void @ line 5 @ col 9
                     FuncCall sig=void @ line 5 @ col 9
-                        Ident [printb] sig=f(bool) @ line 5 @ col 9 <symbol addr: 0x13379b0>
+                        Ident [printb] sig=f(bool) @ line 5 @ col 9 <symbol addr: 0x16619b0>
                         FuncArgs
                             UnaryExpr sig=bool @ line 5 @ col 16
-                                Ident [true] sig=bool @ line 5 @ col 16 <symbol addr: 0x13377d0>
+                                Ident [true] sig=bool @ line 5 @ col 16 <symbol addr: 0x16617d0>
             ExprStmt @ line 6 @ col 9
                 UnaryExpr sig=void @ line 6 @ col 9
                     FuncCall sig=void @ line 6 @ col 9
-                        Ident [printi] sig=f(int) @ line 6 @ col 9 <symbol addr: 0x1337b90>
+                        Ident [printi] sig=f(int) @ line 6 @ col 9 <symbol addr: 0x1661b90>
                         FuncArgs
                             UnaryExpr sig=int @ line 6 @ col 16
                                 IntLit [123] sig=int @ line 6 @ col 16
             ExprStmt @ line 7 @ col 9
                 UnaryExpr sig=void @ line 7 @ col 9
                     FuncCall sig=void @ line 7 @ col 9
-                        Ident [printc] sig=f(int) @ line 7 @ col 9 <symbol addr: 0x1337aa0>
+                        Ident [printc] sig=f(int) @ line 7 @ col 9 <symbol addr: 0x1661aa0>
                         FuncArgs
                             UnaryExpr sig=int @ line 7 @ col 16
                                 IntLit [123] sig=int @ line 7 @ col 16
             VarDecl @ line 8 @ col 9
-                Ident [ch] sig=int @ line 8 @ col 13 <symbol addr: 0x13387e0>
-                Type [int] @ line 8 @ col 16 <symbol addr: 0x1337500>
+                Ident [ch] sig=int @ line 8 @ col 13 <symbol addr: 0x16627e0>
+                Type [int] @ line 8 @ col 16 <symbol addr: 0x1661500>
             AssignStmt @ line 9 @ col 2
                 UnaryExpr sig=int @ line 9 @ col 2
-                    Ident [ch] sig=int @ line 9 @ col 2 <symbol addr: 0x13387e0>
+                    Ident [ch] sig=int @ line 9 @ col 2 <symbol addr: 0x16627e0>
                 UnaryExpr sig=int @ line 9 @ col 7
                     FuncCall sig=int @ line 9 @ col 7
-                        Ident [getchar] sig=f() @ line 9 @ col 7 <symbol addr: 0x1337d70>
+                        Ident [getchar] sig=f() @ line 9 @ col 7 <symbol addr: 0x1661d70>
                         FuncArgs
             ExprStmt @ line 10 @ col 2
                 UnaryExpr sig=void @ line 10 @ col 2
                     FuncCall sig=void @ line 10 @ col 2
-                        Ident [halt] sig=f() @ line 10 @ col 2 <symbol addr: 0x1337e60>
+                        Ident [halt] sig=f() @ line 10 @ col 2 <symbol addr: 0x1661e60>
                         FuncArgs
 
 
@@ -884,7 +895,7 @@ STDOUT:
 
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t38:10:3: identifier 'c' is not defined.
+error: /home/profs/aycock/411/TEST/ms3/check.t38:10:3: identifier 'c' is not defined
 
 
 RETURN CODE: 1
@@ -899,7 +910,7 @@ STDOUT:
 
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t39:13:7: Identifier 'b' already defined
+error: /home/profs/aycock/411/TEST/ms3/check.t39:13:7: identifier 'b' already defined
 
 
 RETURN CODE: 1
@@ -941,16 +952,16 @@ Test: deep type propagation |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t42
 
 STDOUT:
-Program <symbol addr: 0xa941c0>
+Program <symbol addr: 0x9fe1c0>
     FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0xa941c0>
+        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x9fe1c0>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0xa92da0>
+            Type [$void] <symbol addr: 0x9fcda0>
         Block
             VarDecl @ line 4 @ col 2
-                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0xa94260>
-                Type [int] @ line 4 @ col 8 <symbol addr: 0xa92f80>
+                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0x9fe260>
+                Type [int] @ line 4 @ col 8 <symbol addr: 0x9fcf80>
             ExprStmt @ line 5 @ col 2
                 BinaryExpr [>=] sig=bool @ line 5 @ col 18
                     BinaryExpr [-] sig=int @ line 5 @ col 12
@@ -970,10 +981,10 @@ Program <symbol addr: 0xa941c0>
                                 UnaryExpr sig=int @ line 5 @ col 24
                                     UnaryExpr [u-] sig=int @ line 5 @ col 25
                                         UnaryExpr sig=int @ line 5 @ col 26
-                                            Ident [x] sig=int @ line 5 @ col 26 <symbol addr: 0xa94260>
+                                            Ident [x] sig=int @ line 5 @ col 26 <symbol addr: 0x9fe260>
             VarDecl @ line 7 @ col 2
-                Ident [b] sig=bool @ line 7 @ col 6 <symbol addr: 0xa94370>
-                Type [bool] @ line 7 @ col 8 <symbol addr: 0xa92e90>
+                Ident [b] sig=bool @ line 7 @ col 6 <symbol addr: 0x9fe370>
+                Type [bool] @ line 7 @ col 8 <symbol addr: 0x9fce90>
             ExprStmt @ line 8 @ col 2
                 BinaryExpr [!=] sig=bool @ line 8 @ col 34
                     UnaryExpr [!] sig=bool @ line 8 @ col 2
@@ -983,14 +994,14 @@ Program <symbol addr: 0xa941c0>
                                     BinaryExpr [||] sig=bool @ line 8 @ col 6
                                         BinaryExpr [&&] sig=bool @ line 8 @ col 6
                                             UnaryExpr sig=bool @ line 8 @ col 6
-                                                Ident [true] sig=bool @ line 8 @ col 6 <symbol addr: 0xa93250>
+                                                Ident [true] sig=bool @ line 8 @ col 6 <symbol addr: 0x9fd250>
                                             UnaryExpr sig=bool @ line 8 @ col 14
-                                                Ident [false] sig=bool @ line 8 @ col 14 <symbol addr: 0xa93340>
+                                                Ident [false] sig=bool @ line 8 @ col 14 <symbol addr: 0x9fd340>
                                         BinaryExpr [==] sig=bool @ line 8 @ col 25
                                             UnaryExpr sig=bool @ line 8 @ col 23
-                                                Ident [b] sig=bool @ line 8 @ col 23 <symbol addr: 0xa94370>
+                                                Ident [b] sig=bool @ line 8 @ col 23 <symbol addr: 0x9fe370>
                                             UnaryExpr sig=bool @ line 8 @ col 28
-                                                Ident [true] sig=bool @ line 8 @ col 28 <symbol addr: 0xa93250>
+                                                Ident [true] sig=bool @ line 8 @ col 28 <symbol addr: 0x9fd250>
                     UnaryExpr sig=bool @ line 8 @ col 37
                         BinaryExpr [<=] sig=bool @ line 8 @ col 40
                             UnaryExpr sig=int @ line 8 @ col 38
@@ -1012,29 +1023,29 @@ Test: redefining "true" and "false" |
 % ./golf /home/profs/aycock/411/TEST/ms3/check.t43
 
 STDOUT:
-Program <symbol addr: 0x19137d0>
+Program <symbol addr: 0x1ca47d0>
     GlobVarDecl @ line 3 @ col 1
-        Ident [true] sig=int @ line 3 @ col 5 <symbol addr: 0x1913730>
-        Type [int] @ line 3 @ col 10 <symbol addr: 0x19124f0>
+        Ident [true] sig=int @ line 3 @ col 5 <symbol addr: 0x1ca4730>
+        Type [int] @ line 3 @ col 10 <symbol addr: 0x1ca34f0>
     FuncDecl @ line 5 @ col 1
-        Ident [main] sig=f() @ line 5 @ col 6 <symbol addr: 0x19137d0>
+        Ident [main] sig=f() @ line 5 @ col 6 <symbol addr: 0x1ca47d0>
         FuncSign
             Params
-            Type [$void] <symbol addr: 0x1912310>
+            Type [$void] <symbol addr: 0x1ca3310>
         Block
             VarDecl @ line 6 @ col 2
-                Ident [false] sig=int @ line 6 @ col 6 <symbol addr: 0x1913870>
-                Type [int] @ line 6 @ col 12 <symbol addr: 0x19124f0>
+                Ident [false] sig=int @ line 6 @ col 6 <symbol addr: 0x1ca4870>
+                Type [int] @ line 6 @ col 12 <symbol addr: 0x1ca34f0>
             ExprStmt @ line 7 @ col 2
                 UnaryExpr sig=void @ line 7 @ col 2
                     FuncCall sig=void @ line 7 @ col 2
-                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0x1912b80>
+                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0x1ca3b80>
                         FuncArgs
                             BinaryExpr [*] sig=int @ line 7 @ col 14
                                 UnaryExpr sig=int @ line 7 @ col 9
-                                    Ident [true] sig=int @ line 7 @ col 9 <symbol addr: 0x1913730>
+                                    Ident [true] sig=int @ line 7 @ col 9 <symbol addr: 0x1ca4730>
                                 UnaryExpr sig=int @ line 7 @ col 16
-                                    Ident [false] sig=int @ line 7 @ col 16 <symbol addr: 0x1913870>
+                                    Ident [false] sig=int @ line 7 @ col 16 <symbol addr: 0x1ca4870>
 
 
 
@@ -1073,5 +1084,5 @@ error: /home/profs/aycock/411/TEST/ms3/check.t45:5:6: expected identifier, got t
 
 RETURN CODE: 1
 
-Run ended on Mon Mar 20 12:08:46 2023
+Run ended on Mon Mar 20 21:18:24 2023
 

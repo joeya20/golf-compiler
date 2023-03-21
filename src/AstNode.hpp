@@ -6,10 +6,11 @@
 #include <stdlib.h>
 #include <stdexcept>
 #include <iostream>
-#include "location.hh"
 #include <memory>
 #include <functional>
 #include <sstream>
+
+#include "location.hh"
 #include "Symbol.hpp"
 
 #define ARR_SIZE 50

@@ -1,8 +1,3 @@
-#include "SemanticAnalyzer.hpp"
-#include "AstNode.hpp"
-#include "location.hh"
-#include "util.hpp"
-#include <bits/types/struct_sched_param.h>
 #include <cstdint>
 #include <iostream>
 #include <memory>
@@ -10,6 +5,11 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include "SemanticAnalyzer.hpp"
+#include "AstNode.hpp"
+#include "location.hh"
+#include "util.hpp"
 
 namespace GoLF {
     const std::vector<SemanticAnalyzer::AllowedType> SemanticAnalyzer::arithmeticTypes =  {
@@ -246,65 +246,6 @@ namespace GoLF {
                 anal->paramDecls.pop_back();
             }
             break;
-        // case NodeKind::AssignStmt: {
-        //     /* check for symbol */
-        //     std::cout << "start AssignStmt" << std::endl;
-        //     auto lhs = node->children[0]->children[0];
-        //     lhs->symbol = anal->getIdent(lhs);
-        //     if(lhs->symbol->isConst) {
-        //         handleError("can't assign to a constant", node->children[0]->loc.begin.line, node->children[0]->loc.begin.column);
-        //     }
-        //     std::cout << "end AssignStmt" << std::endl;
-        //     break;
-        // }
-        // case NodeKind::FuncCall: {
-        //     std::cout << "start FuncCall" << std::endl;
-        //     auto expr = node->children[0]; 
-        //     expr->symbol = anal->getIdent(expr);
-        // //     for(auto & funcArg : node->children[1]->children) {
-        // //         funcArg->symbol = anal->getIdent(funcArg);
-        // //     }
-        //     std::cout << "end FuncCall" << std::endl;
-        //     break;
-        // }
-        // case NodeKind::BinaryExpr: {
-        //     auto lhs = node->children[0];
-        //     if(lhs->kind == NodeKind::Ident) {
-        //         lhs->symbol = anal->getIdent(lhs);
-        //     }
-        //     auto rhs = node->children[1];
-        //     if(rhs->kind == NodeKind::Ident) {
-        //         rhs->symbol = anal->getIdent(rhs);
-        //     }
-        //     break;
-        // }
-        /* this used to be need before but I changed my AST structure instead */
-        // case NodeKind::IfStmt: {
-        //     auto expr = node->children[0]; 
-        //     if(expr->kind == NodeKind::Ident) {
-        //         expr->symbol = anal->getIdent(expr);
-        //     }
-        // }
-        // case NodeKind::ForStmt: {
-        //     auto expr = node->children[0]; 
-        //     if(expr->kind == NodeKind::Ident) {
-        //         expr->symbol = anal->getIdent(expr);
-        //     }
-        // }
-        // case NodeKind::ReturnStmt: {
-        //     if(node->children.size() > 0) {
-        //         auto expr = node->children[0]; 
-        //         if(expr->kind == NodeKind::Ident) {
-        //             expr->symbol = anal->getIdent(expr);
-        //         }
-        //     }
-        // }
-        // case NodeKind::ExprStmt: {
-        //     auto & expr = node->children[0];
-        //     if(expr->kind == NodeKind::Ident) {
-        //             expr->symbol = anal->getIdent(expr);
-        //     }
-        // }
         default:
             break;
         }

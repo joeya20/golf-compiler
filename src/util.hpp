@@ -9,7 +9,6 @@
 // defined in main from command line arg
 extern std::string inputFileName;
 
-#include "util.hpp"
 #include "location.hh"
 
 namespace GoLF {
