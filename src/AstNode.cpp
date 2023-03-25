@@ -1,5 +1,7 @@
 #include "AstNode.hpp"
-#include <cstddef>
+#include "SemanticAnalyzer.hpp"
+#include <functional>
+#include <memory>
 
 namespace GoLF {
     AstNode::AstNode(Kind kind) {
@@ -91,6 +93,53 @@ namespace GoLF {
     // }
         return res;
     }
+
+    template <class T>
+    void AstNode::preOrderTraversal(
+    const T* t,
+    std::function<void(const T*,
+    std::shared_ptr<AstNode>)> callback) {
+        callback(t, shared_from_this());
+        for(size_t i = 0; i < this->children.size(); i++) {
+            preOrderTraversal(t, callback);
+        }
+    }
+
+    template <class T>
+    void AstNode::postOrderTraversal(
+    const T* t,
+    std::function<void(const T*, std::shared_ptr<AstNode>)> callback) {
+        for(size_t i = 0; i < this->children.size(); i++) {
+            postOrderTraversal(t, callback);
+        }
+        callback(t, shared_from_this());
+    }
+
+    template <class T>
+    void AstNode::prePostOrderTraversal(
+    const T* t,
+    std::function<void(const T*, std::shared_ptr<AstNode>)> preCallback, 
+    std::function<void(const T*, std::shared_ptr<AstNode>)> postCallback) {
+        preCallback(t, shared_from_this());
+        for(size_t i = 0; i < this->children.size(); i++) {
+            prePostOrderTraversal(t, preCallback, postCallback);
+        }        
+        postCallback(t, shared_from_this());
+    }
+
+    template void AstNode::preOrderTraversal<SemanticAnalyzer>(
+        const SemanticAnalyzer*, 
+        std::function<void(const SemanticAnalyzer*, std::shared_ptr<AstNode>)>
+    );
+    template void AstNode::postOrderTraversal<SemanticAnalyzer>(
+        const SemanticAnalyzer*,
+        std::function<void(const SemanticAnalyzer*, std::shared_ptr<AstNode>)>
+    );
+    template void AstNode::prePostOrderTraversal<SemanticAnalyzer>(
+        const SemanticAnalyzer*, 
+        std::function<void(const SemanticAnalyzer*, std::shared_ptr<AstNode>)>,
+        std::function<void(const SemanticAnalyzer*, std::shared_ptr<AstNode>)>
+    );
 
     std::ostream& operator<<(std::ostream& os, AstNode *node) {
         os << node->toString();

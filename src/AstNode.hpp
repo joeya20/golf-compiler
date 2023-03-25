@@ -114,8 +114,13 @@ namespace GoLF {
         Kind kind;
         std::string attr;
         std::vector<std::shared_ptr<AstNode>> children;
+
+        // populated in semantic analysis stage
         std::shared_ptr<Symbol> symbol = nullptr;
         std::string sig;    // return type for exprs; gets defined in pass 3 of semantic analysis
+
+        // populated in codegen
+        std::string reg;
 
         AstNode(Kind kind);
         AstNode(Kind kind, std::string attr);
@@ -127,6 +132,24 @@ namespace GoLF {
         std::string toString(int tabSize = 0);
 
         void addChild(std::shared_ptr<AstNode> child);
+        
+        // generic traversal functions
+        template <class T>
+        void preOrderTraversal(
+            const T *t, 
+            std::function<void(const T *, std::shared_ptr<AstNode>)> callback
+        );
+        template <class T>
+        void postOrderTraversal(
+            const T *t, 
+            std::function<void(const T *, std::shared_ptr<AstNode>)> callback
+        );
+        template <class T>
+        void prePostOrderTraversal(
+            const T *t,
+            std::function<void(const T *, std::shared_ptr<AstNode>)> preCallback,
+            std::function<void(const T *, std::shared_ptr<AstNode>)> postCallback
+        );
     };
 
     std::ostream& operator<<(std::ostream& os, AstNode *node);
