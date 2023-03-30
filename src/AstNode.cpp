@@ -44,19 +44,6 @@ namespace GoLF {
     std::string AstNode::toString(int tabSize) {
 
         std::string res (tabSize, ' ');
-        // handle lists; just ignore them and go to the next level
-        // this is done for output consistency with reference compiler
-        // if (this->kind == AstNode::Kind::ExprList ||
-        // this->kind == AstNode::Kind::ParamList ||
-        // this->kind == AstNode::Kind::StmtList) {
-        //     for(size_t i = 0; i < this->children.size(); i++) {
-        //         // std::cout << "tab size: " << tabSize << std::endl;
-        //         res += this->children[i]->toString(tabSize);
-        //     }
-        // }
-        // else {
-            //initiate res with tabSize * ' '
-            // res = std::string(tabSize, ' ');
         res += this->nodeKindToString[this->kind];
         if(this->attr.size() > 0) {
             res += " [";
@@ -64,14 +51,8 @@ namespace GoLF {
             res += ']';
         }
         if(this->sig != "") {
-            // if(this->kind == AstNode::Kind::FuncCall) {
-            //     res += " sig=";
-            //     res += this->symbol->sig;
-            // }
-            // if(this->kind == AstNode::Kind::Ident) {
-                res += " sig=";
-                res += this->sig;
-            // }
+            res += " sig=";
+            res += this->sig;
         }
         if(this->loc.begin.filename != nullptr) {
             res += " @ line ";

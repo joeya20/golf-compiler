@@ -94,7 +94,80 @@ void CodeGen::prePostOrderTraversal(
 
 // main function that gets called to generate MIPS assembly
 void CodeGen::generate() {
-    
+    emitPreamble();
+}
+
+// emit things that are always output, such as the built-in functions
+void CodeGen::emitPreamble() {
+    prog += 
+R"(
+    .data
+LtrueString:
+    .asciiz "true"
+LfalseString:
+    .asciiz "false"
+
+    .text
+Lhalt:
+    li $v0 10
+    syscall
+    jr $ra
+
+# will populate $v0
+LgetChar:
+    li $v0 12
+    syscall
+    jr $ra
+
+# assumes $a0 is loaded with address of string
+Llen:
+    # initialize length variable to 0
+    addi $t0 $0 0
+Lcount:
+    # load in character at address in $a0
+    lb $t1 $a0
+    # we've reached EOS if the byte == 0
+    beq $t1 $0 LretLen
+    # else we increment length and the address
+    addi $t0 $t0 1
+    addi $a0 $a0 1
+    j Lcount
+LretLen:
+    # move length to return register and return
+    addi $v0 $t0 0
+    jr $ra
+
+# assumes $a0 is loaded with boolean to print
+Lprintb:
+    # if the boolean value is 0 then print false
+    beq $0 $a0 LprintFalse
+    # else print true
+    la $a0 LtrueString
+    jal Lprints
+    jr $ra
+LprintFalse:
+    la $a0 LfalseString
+    jal Lprints
+    jr $ra
+
+# assume $a0 is loaded with integer to print
+Lprintc:
+    li $v0 11
+    syscall
+    jr $ra
+
+# assume $a0 is loaded with integer to print
+Lprinti:
+    li $v0 1
+    syscall
+    jr $ra
+
+# assume $a0 is loaded with adress of string to print
+Lprints:
+    li $v0 4
+    syscall
+    jr $ra
+)";
 }
 
 // returns label for jump and branch instructions
@@ -125,11 +198,18 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             //do prologue
             //do function body
             //do epilogue
+
             break;
+        case NodeKind::GlobVarDecl:
+            // emit to data segment
+            break;
+
         case NodeKind::IfStmt:
             break;
+
         case NodeKind::ForStmt:
             break;
+            
         default:
             break;
     }

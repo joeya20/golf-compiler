@@ -1,7 +1,10 @@
 #include <cstdint>
+#include <exception>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <string>
+#include <sys/types.h>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -218,14 +221,19 @@ namespace GoLF {
             }
             else if(expr->kind == NodeKind::FuncCall) {
                 auto ident = expr->children[0];
-                if(ident->kind != NodeKind::Ident) {
+                if (ident->kind == NodeKind::UnaryExpr) {
+                    ident = ident->children[0];
+                }
+                if(ident->kind == NodeKind::Ident) {
+                    ident->symbol = anal->getIdent(ident);
+                }
+                else {
                     handleError(
                         "can't call something that isn't a function"
                         , ident->loc.begin.line
                         , ident->loc.begin.column
                     );
                 }
-                ident->symbol = anal->getIdent(expr->children[0]);
             }
             break;
         }
@@ -354,6 +362,9 @@ namespace GoLF {
             break;
         case NodeKind::FuncCall: {
             auto identNode = node->children[0];
+            if(identNode->kind == NodeKind::UnaryExpr) {
+                identNode = identNode->children[0];
+            }
             node->sig = identNode->symbol->rvSig;
             if(identNode->sig[0] == 'f') {
                 std::string argsSig = "f(";
@@ -452,15 +463,10 @@ namespace GoLF {
             }
             break;
         case NodeKind::IntLit: {
-            if(node->attr.size() > 11) {
-                handleError(
-                    "integer literal out of range"
-                    , node->loc.begin.line
-                    , node->loc.begin.column
-                );
+            try {
+                std::stoi(node->attr);
             }
-            auto val = std::stol(node->attr);
-            if(val > INT32_MAX || val < INT32_MIN) {
+            catch (std::out_of_range& ex) {
                 handleError(
                     "integer literal out of range"
                     , node->loc.begin.line

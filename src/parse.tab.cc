@@ -1333,8 +1333,8 @@ namespace  GoLF  {
   case 56: // UnaryExpr: UnaryOp UnaryExpr
 #line 360 "src/parse.y"
                                     {
-                                        if(yystack_[1].value.as < std::shared_ptr<AstNode> > ()->attr == "-" && 
-                                        yystack_[0].value.as < std::shared_ptr<AstNode> > ()->kind == AstNode::Kind::IntLit && 
+                                        if(yystack_[0].value.as < std::shared_ptr<AstNode> > ()->kind == AstNode::Kind::IntLit &&
+                                        yystack_[1].value.as < std::shared_ptr<AstNode> > ()->attr == "-" && 
                                         yystack_[0].value.as < std::shared_ptr<AstNode> > ()->attr[0] != '-') {
                                             yylhs.value.as < std::shared_ptr<AstNode> > () = std::make_shared<AstNode>(AstNode::Kind::IntLit, "-" + yystack_[0].value.as < std::shared_ptr<AstNode> > ()->attr, yylhs.location);
                                         }

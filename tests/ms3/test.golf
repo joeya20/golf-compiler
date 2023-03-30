@@ -5,14 +5,15 @@ func main() {
     var z bool;
     var a string;
     var b string;
-    -k;
+    // -k;
     // -k;
     i < j;
     // i+test(i);
     // true = k;
     // i = 20;
     // j = -i;
-    // printi(test(10));
+    (printi)(test(10));
+    i = 00000000000000000000000000000000000000000000000000000000000000000000000;
     return;
 }
 
