@@ -22,9 +22,9 @@ struct CodeGen {
 	
 	CodeGen(std::shared_ptr<AstNode> root);
 	void generate();
-	std::string allocReg(RegType type);
-	void freeReg(RegType type, std::string &regId);
-
+	const std::string allocReg(RegType type);
+	void freeReg(RegType type, std::string& regId);
+	void emitPreamble();
 	std::string getLabel();
 
 	// generic pre-order traversal function

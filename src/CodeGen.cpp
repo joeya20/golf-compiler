@@ -1,15 +1,16 @@
-
 #include "CodeGen.hpp"
 #include "AstNode.hpp"
 #include "util.hpp"
 #include <memory>
+#include <sstream>
 #include <unordered_map>
+#include <assert.h>
 
 // use table-driven generation
 // generate string on entry and exit of a node
 namespace GoLF {
 
-static const std::unordered_map<std::string, std::string> opToAsm = {
+static std::unordered_map<std::string, std::string> opToAsm = {
     // binary ops
     {   "+"     ,    "add"  },
     {   "-"     ,    "sub"  }, 
@@ -21,11 +22,7 @@ static const std::unordered_map<std::string, std::string> opToAsm = {
     {   ">"     ,    "sgt"  },
     {   ">="    ,    "sge"  },
     {   "=="    ,    "seq"  },
-    {   "!="    ,    "sne"  },
-    // unary ops
-    {   "u-"    ,    "neg"  },
-    // {   "!"    ,     "neg"  },   // TODO: TBD
-
+    {   "!="    ,    "sne"  }
 };
 
 CodeGen::CodeGen(std::shared_ptr<AstNode> root) {
@@ -176,7 +173,7 @@ std::string CodeGen::getLabel() {
     return "L" + std::to_string(count);
 }
 
-std::string CodeGen::allocReg(CodeGen::RegType type) {
+const std::string CodeGen::allocReg(CodeGen::RegType type) {
     if(this->regPool[type].size() == 0) {
         // output error for now
         handleError("No register available!");
@@ -194,38 +191,174 @@ std::string CodeGen::allocReg(CodeGen::RegType type) {
 using NodeKind = AstNode::Kind;
 void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
     switch (node->kind) {
+        // here we just emit to the .data segment
+        // and update the symbol with the appropriate label
+        case NodeKind::GlobVarDecl:
+            emitData(label, value, allocType);
+            break;
         case NodeKind::FuncDecl:
             //do prologue
             //do function body
             //do epilogue
-
             break;
-        case NodeKind::GlobVarDecl:
-            // emit to data segment
+        case NodeKind::VarDecl:
             break;
-
+        // here we just want to populate the reg/label for the lhs identifier
+        // so we can easily generate the instruction on the post-order traversal
+        // we just fetch the reg/label from the symbol of the identifier
+        case NodeKind::AssignStmt: {
+            auto ident = node->children[0];
+            // check if the variable is local
+            if(ident->symbol->reg != "") {
+                ident->reg = ident->symbol->reg;
+            }
+            // check if the variable is global
+            else if(ident->symbol->label != "") {
+                ident->label = ident->symbol->label;
+            }
+            // Houston, we have a problem
+            else {
+               handleError("bad! assign pre");
+            }
+            break;
+        }
+        // unary expressions with identifiers are handled here
+        // two possiblities: local and global variable
+        // for local, we just get its register from the symbol
+        // for global, we load its value from the label
+        case NodeKind::UnaryExpr: {
+            auto operand = node->children[0];
+            if(operand->kind == NodeKind::Ident) {
+                if(operand->symbol->reg != "") {
+                    operand->reg = operand->symbol->reg;
+                }
+                else if(operand->symbol->label != "") {
+                    operand->reg = gen->allocReg(CodeGen::RegType::Temp);
+                    std::stringstream instr;
+                    instr
+                        << "lw "
+                        << operand->reg << ", "
+                        << operand->symbol->label;
+                    emitInst(instr);
+                }
+                // Houston, we have a problem
+                else {
+                    handleError("bad! unaryExpr pre");
+                }
+            }
+            break;
+        }
         case NodeKind::IfStmt:
             break;
-
         case NodeKind::ForStmt:
             break;
-            
         default:
             break;
     }
 }
 
-//handles leaf nodes
 void pass1PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
     switch (node->kind) {
-        case NodeKind::IntLit:
+        case NodeKind::IntLit: {
+            node->reg = gen->allocReg(CodeGen::RegType::Temp);
+            std::stringstream res;
+            res << "li " << node->reg << ", " << node->attr;
+            emitInst(res.str());
             break;
-        case NodeKind::StrLit:
+        }
+        case NodeKind::StrLit: { //TODO
+            // node->reg = gen->allocReg(CodeGen::RegType::Temp);
+            // std::stringstream res;
+            // res << "li " << node->reg << ", " << node->attr;
+            // emitInst(res.str());
             break;
-        case NodeKind::ForStmt:
+        }
+        // we need to either evaluate the result of the expression into a register
+        // or copy the register holding the result if there is no operation
+        // we only free the register if it is not a local variable
+        case NodeKind::UnaryExpr: {
+            if(node->attr != "") {
+                node->reg = gen->allocReg(CodeGen::RegType::Temp);
+                auto operand = node->children[0];
+                std::stringstream res;
+                if(node->attr == "u-") {
+                    res << "sub " << node->reg << ", $0, " << operand->reg;
+                }
+                else if(node->attr == "!") {
+                    res << "xori " << node->reg << ", " << operand->reg << ", 1";
+                }
+                else {
+                    handleError("bad!");
+                }
+                emitInst(res.str());
+                // register freeing for local identifiers is handled seperately
+                if(operand->kind != NodeKind::Ident || operand->label != "") {
+                    gen->freeReg(CodeGen::RegType::Temp, node->children[0]->reg);
+                }
+            }
+            else {
+                // if there is no operation just copy the reg from the child
+                node->reg = node->children[0]->reg;
+            }
             break;
+        }
+        // we need to evaluate the result of the expression into a register
+        // we only free the registers if they are not local variables
+        case NodeKind::BinaryExpr: {
+            auto lhs = node->children[0];
+            auto rhs = node->children[1];
+            node->reg = gen->allocReg(CodeGen::RegType::Temp);
+            std::stringstream res;
+            res
+                << opToAsm[node->attr] << " "
+                << node->reg << ", "
+                << node->children[0]->reg << ", "
+                << node->children[1]->reg;
+            emitInst(res.str());
+            if(lhs->kind != NodeKind::Ident || lhs->label != "") {
+                gen->freeReg(CodeGen::RegType::Temp, lhs->reg);
+            }
+            if(rhs->kind != NodeKind::Ident || rhs->label != "") {
+                gen->freeReg(CodeGen::RegType::Temp, rhs->reg);
+            }
+            break;
+        }
+        // the lhs of an assignment can be either a reg or a label for a globVar
+        // at this point, the reg/label for the lhs MUST have been allocated
+        case NodeKind::AssignStmt: {  
+            std::stringstream res;
+            auto lhs = node->children[0];
+            auto rhs = node->children[1];
+            assert(rhs->reg != ""); // DEBUG
+            if(lhs->reg != "") {
+                res
+                    << "move "
+                    << lhs->reg << ", "
+                    << rhs->reg;
+            }
+            else if(node->label != "") {
+                res
+                    << "sw "
+                    << rhs->reg << ", "
+                    << rhs->label;
+            }
+            else { // DEBUG
+               handleError("bad! assign post"); 
+            }
+            emitInst(res.str());
+            break;
+        }
         default:
             break;
     }
 }
+
+void CodeGen::emitData(const std::string& label, const std::string& allocType) {
+    
+}
+
+void CodeGen::emitInst() {
+
+}
+
 }

@@ -119,9 +119,11 @@ namespace GoLF {
         std::shared_ptr<Symbol> symbol = nullptr;
         std::string sig;    // return type for exprs; gets defined in pass 3 of semantic analysis
 
-        // populated in codegen
+        // populated in codegen if the node is
+        // an expression that is evaluated in a register
         std::string reg;
-
+        std::string label;
+        
         AstNode(Kind kind);
         AstNode(Kind kind, std::string attr);
         AstNode(Kind kind, location loc);
