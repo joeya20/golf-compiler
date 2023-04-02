@@ -1,0 +1,7 @@
+var foo int
+
+func main() {
+    var i int;
+    i = 10;
+    i = i + 20;
+}

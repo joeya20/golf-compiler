@@ -31,6 +31,9 @@ int main(int argc, char **argv) {
     analyzer.doAnalysis();
     std::cout << root << std::endl;
 
+    GoLF::CodeGen generator(root);
+    generator.generate();
+    std::cout << generator.prog << std::endl;
     //close input file stream
     inputFile.close();
 }

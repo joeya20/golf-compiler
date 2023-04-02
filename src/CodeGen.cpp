@@ -1,10 +1,10 @@
 #include "CodeGen.hpp"
-#include "AstNode.hpp"
 #include "util.hpp"
 #include <memory>
 #include <sstream>
 #include <unordered_map>
 #include <assert.h>
+#include <algorithm>
 
 // use table-driven generation
 // generate string on entry and exit of a node
@@ -39,36 +39,37 @@ CodeGen::CodeGen(std::shared_ptr<AstNode> root) {
             {"$v0", "$v1"}},
     };
     this->root = root;
+    this->orderedstringLits[std::string{""}] = this->emptyStringLabel;
 }
 
 void CodeGen::preOrderTraversal(
     std::shared_ptr<AstNode> node,
     std::function<void(CodeGen *, std::shared_ptr<AstNode>)>
         callback) {
-  callback(this, node);
-  for (size_t i = 0; i < node->children.size(); i++) {
-    try {
-        preOrderTraversal(node->children[i], callback);
+    callback(this, node);
+    for (size_t i = 0; i < node->children.size(); i++) {
+        try {
+            preOrderTraversal(node->children[i], callback);
+        }
+        catch (StopTraversalException& stop) {
+            break;
+        }
     }
-    catch (StopTraversalException& stop) {
-        break;
-    }
-  }
 }
 
 void CodeGen::postOrderTraversal(
     std::shared_ptr<AstNode> node,
     std::function<void(CodeGen *, std::shared_ptr<AstNode>)>
         callback) {
-  for (size_t i = 0; i < node->children.size(); i++) {
-    try {
-        postOrderTraversal(node->children[i], callback);
+    for (size_t i = 0; i < node->children.size(); i++) {
+        try {
+            postOrderTraversal(node->children[i], callback);
+        }
+        catch (StopTraversalException& stop) {
+            break;
+        }
     }
-    catch (StopTraversalException& stop) {
-        break;
-    }
-  }
-  callback(this, node);
+    callback(this, node);
 }
 
 void CodeGen::prePostOrderTraversal(
@@ -77,27 +78,34 @@ void CodeGen::prePostOrderTraversal(
         preCallback,
     std::function<void(CodeGen *, std::shared_ptr<AstNode>)>
         postCallback) {
-  preCallback(this, node);
-  for (size_t i = 0; i < node->children.size(); i++) {
-    try {
-        prePostOrderTraversal(node->children[i], preCallback, postCallback);
+    preCallback(this, node);
+    for (size_t i = 0; i < node->children.size(); i++) {
+        try {
+            prePostOrderTraversal(node->children[i], preCallback, postCallback);
+        }
+        catch (StopTraversalException& stop) {
+            break;
+        }
     }
-    catch (StopTraversalException& stop) {
-        break;
-    }
-  }
-  postCallback(this, node);
+    postCallback(this, node);
 }
 
 // main function that gets called to generate MIPS assembly
 void CodeGen::generate() {
     emitPreamble();
+    // do traversal(s)
+    prePostOrderTraversal(this->root, pass1PreOrderCallback, pass1PostOrderCallback);
+    emitDataSeg();
+    prog += "\n\n";
+    emitTextSeg();
 }
 
 // emit things that are always output, such as the built-in functions
 void CodeGen::emitPreamble() {
     prog += 
 R"(
+
+# start of RTS
     .data
 LtrueString:
     .asciiz "true"
@@ -164,13 +172,49 @@ Lprints:
     li $v0 4
     syscall
     jr $ra
+# end of RTS
+
 )";
+}
+
+void CodeGen::emitDataSeg() {
+    prog += dataSeg;
+}
+
+void CodeGen::emitTextSeg() {
+    prog += textSeg;
+}
+
+void CodeGen::emitDataWord(const std::string& label) {
+    dataSeg += label + ":\n";
+    dataSeg += "\t .word 0\n";
+}
+
+// emit all strings after traversal, before emitDataSeg
+void CodeGen::emitStrLits() {
+    for(auto & str : orderedstringLits) {
+        dataSeg += str.second + ":\n";
+        dataSeg += "\t .asciiz \"";
+        dataSeg += str.first + "\"\n";
+    }
+}
+
+void CodeGen::emitLabel(const std::string& label) {
+    currFuncBody += label + ":\n";
+}
+
+void CodeGen::emitInst(const std::string& inst) {
+    currFuncBody += "\t" + inst + "\n";
 }
 
 // returns label for jump and branch instructions
 std::string CodeGen::getLabel() {
     static int count = 1;
     return "L" + std::to_string(count);
+}
+
+std::string CodeGen::idToAsm(std::string& id) {
+    return "L" + id;
 }
 
 const std::string CodeGen::allocReg(CodeGen::RegType type) {
@@ -183,9 +227,12 @@ const std::string CodeGen::allocReg(CodeGen::RegType type) {
     return res;
 }
 
-// std::string CodeGen::allocStaticMem();
-// std::string CodeGen::allocStackMem();
-// void CodeGen::emit();
+void CodeGen::freeReg(CodeGen::RegType type, const std::string& regId) {
+    // DEBUG: make sure we allocated the register properly
+    assert(std::find(regPool[type].begin(), regPool[type].end(), regId) == regPool[type].end());
+    regPool[type].push_back(regId);
+}
+
 
 /**************** callback functions ******************/ 
 using NodeKind = AstNode::Kind;
@@ -193,21 +240,70 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
     switch (node->kind) {
         // here we just emit to the .data segment
         // and update the symbol with the appropriate label
-        case NodeKind::GlobVarDecl:
-            emitData(label, value, allocType);
+        // we should have a special case for strings
+        case NodeKind::GlobVarDecl: {
+            auto ident = node->children[0];
+            auto type = node->children[1];
+
+            // if its a string, we just assign it the empty string label
+            if(type->attr == "string") {
+                ident->label = gen->emptyStringLabel;
+            }
+            // else (for ints and bools) we allocate a word in the data segment
+            else {
+                ident->label = gen->idToAsm(ident->attr);
+                gen->emitDataWord(ident->label);
+            }
+        }
             break;
-        case NodeKind::FuncDecl:
+        case NodeKind::FuncDecl: {
+            auto ident = node->children[0];
+            auto sign = node->children[1];
+            auto params = sign->children[0];
+            auto body = node->children[2];
+
             //do prologue
             //do function body
-            //do epilogue
+            auto label = gen->idToAsm(ident->attr);
+            gen->emitLabel(label);
+
+            // allocate a register for each param
+            for(auto & paramDecl : params->children) {
+                paramDecl->symbol->reg = gen->allocReg(CodeGen::RegType::Saved);
+            }
+
+            // traverse function body to generate instructions
+            gen->prePostOrderTraversal(body, pass1PreOrderCallback, pass1PostOrderCallback);
+            
+            // free param registers
+            for(auto & paramDecl : params->children) {
+                gen->freeReg(CodeGen::RegType::Saved, paramDecl->symbol->reg);
+            }
+
+            // update text segment and reset currFuncBody
+            gen->textSeg += "\n\n" + gen->currFuncBody;
+            gen->currFuncBody = "";
+            throw StopTraversalException();
             break;
-        case NodeKind::VarDecl:
+        }
+        // allocate a register for variable
+        // keep track of how many/which register is used
+        // so we can the populate the function prologue
+        case NodeKind::VarDecl: {
+            auto ident = node->children[0];
+            auto type = node->children[1];
+            ident->symbol->reg = gen->allocReg(CodeGen::RegType::Saved);
             break;
-        // here we just want to populate the reg/label for the lhs identifier
+        }
+        case NodeKind::IfStmt:
+            break;
+        case NodeKind::ForStmt:
+            break;
+        // we just want to populate the reg/label for the lhs identifier
         // so we can easily generate the instruction on the post-order traversal
         // we just fetch the reg/label from the symbol of the identifier
         case NodeKind::AssignStmt: {
-            auto ident = node->children[0];
+            auto ident = node->children[0]->children[0];
             // check if the variable is local
             if(ident->symbol->reg != "") {
                 ident->reg = ident->symbol->reg;
@@ -229,6 +325,9 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         case NodeKind::UnaryExpr: {
             auto operand = node->children[0];
             if(operand->kind == NodeKind::Ident) {
+                // DEBUG: make sure that both label and reg are not populated for the same variable
+                assert(operand->symbol->reg == "" || operand->symbol->label == "");
+
                 if(operand->symbol->reg != "") {
                     operand->reg = operand->symbol->reg;
                 }
@@ -239,19 +338,18 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                         << "lw "
                         << operand->reg << ", "
                         << operand->symbol->label;
-                    emitInst(instr);
+                    gen->emitInst(instr.str());
                 }
-                // Houston, we have a problem
+                // DEBUG: make sure that both label and reg are not both empty
                 else {
                     handleError("bad! unaryExpr pre");
                 }
             }
             break;
         }
-        case NodeKind::IfStmt:
+        case NodeKind::FuncCall: {
             break;
-        case NodeKind::ForStmt:
-            break;
+        }
         default:
             break;
     }
@@ -259,18 +357,23 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
 
 void pass1PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
     switch (node->kind) {
+        // load integer value into a register
         case NodeKind::IntLit: {
             node->reg = gen->allocReg(CodeGen::RegType::Temp);
             std::stringstream res;
             res << "li " << node->reg << ", " << node->attr;
-            emitInst(res.str());
+            gen->emitInst(res.str());
             break;
         }
-        case NodeKind::StrLit: { //TODO
-            // node->reg = gen->allocReg(CodeGen::RegType::Temp);
-            // std::stringstream res;
-            // res << "li " << node->reg << ", " << node->attr;
-            // emitInst(res.str());
+        // we keep track of every str lit in a map and emit them all at the end
+        // load the address of the str lit into a register
+        case NodeKind::StrLit: { 
+            auto label = gen->getLabel();
+            gen->orderedstringLits[node->attr] = label;
+            node->reg = gen->allocReg(CodeGen::RegType::Temp);
+            std::stringstream res;
+            res << "la " << node->reg << ", " << label;
+            gen->emitInst(res.str());
             break;
         }
         // we need to either evaluate the result of the expression into a register
@@ -290,7 +393,7 @@ void pass1PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 else {
                     handleError("bad!");
                 }
-                emitInst(res.str());
+                gen->emitInst(res.str());
                 // register freeing for local identifiers is handled seperately
                 if(operand->kind != NodeKind::Ident || operand->label != "") {
                     gen->freeReg(CodeGen::RegType::Temp, node->children[0]->reg);
@@ -314,7 +417,7 @@ void pass1PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 << node->reg << ", "
                 << node->children[0]->reg << ", "
                 << node->children[1]->reg;
-            emitInst(res.str());
+            gen->emitInst(res.str());
             if(lhs->kind != NodeKind::Ident || lhs->label != "") {
                 gen->freeReg(CodeGen::RegType::Temp, lhs->reg);
             }
@@ -327,7 +430,7 @@ void pass1PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // at this point, the reg/label for the lhs MUST have been allocated
         case NodeKind::AssignStmt: {  
             std::stringstream res;
-            auto lhs = node->children[0];
+            auto lhs = node->children[0]->children[0];
             auto rhs = node->children[1];
             assert(rhs->reg != ""); // DEBUG
             if(lhs->reg != "") {
@@ -345,20 +448,11 @@ void pass1PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             else { // DEBUG
                handleError("bad! assign post"); 
             }
-            emitInst(res.str());
+            gen->emitInst(res.str());
             break;
         }
         default:
             break;
     }
 }
-
-void CodeGen::emitData(const std::string& label, const std::string& allocType) {
-    
-}
-
-void CodeGen::emitInst() {
-
-}
-
 }
