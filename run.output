@@ -1,6 +1,6 @@
-Run started on Sat Mar 25 14:25:24 2023
+Run started on Mon Apr  3 15:52:10 2023
 
-Hostname: csx3.cs.ucalgary.ca
+Hostname: linux11-wa.cs.ucalgary.ca
 
 -------------------------------------------------------------------------------
 Running make |
@@ -9,7 +9,8 @@ Running make |
 % /usr/bin/make
 
 STDOUT:
-make: 'golf' is up to date.
+g++ -c -Wall -o build/CodeGen.o src/CodeGen.cpp
+g++ -Wall -o golf build/util.o build/lex.yy.o build/lexer.o build/parse.tab.o build/AstNode.o build/SemanticAnalyzer.o build/SymbolTable.o build/Symbol.o build/CodeGen.o build/main.o
 
 
 STDERR:
@@ -69,1009 +70,490 @@ error: /i/do/not/exist: Error opening input file
 RETURN CODE: 1
 
 -------------------------------------------------------------------------------
-Test: later global "int" redeclaration |
-----------------------------------------
+Test: hello, world |
+--------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t1
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t1:4:9: expected type, got 'int'
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: global var declaration loop |
------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t2
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t2:4:9: expected type, got 'int'
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: local var version of check.t2 |
--------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t3
-
-STDOUT:
-Program <symbol addr: 0xb05eb0>
-    FuncDecl @ line 4 @ col 1
-        Ident [main] sig=f() @ line 4 @ col 6 <symbol addr: 0xb05eb0>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0xb04a90>
-        Block
-            VarDecl @ line 5 @ col 2
-                Ident [int] sig=int @ line 5 @ col 6 <symbol addr: 0xb05f50>
-                Type [int] @ line 5 @ col 10 <symbol addr: 0xb04c70>
-            ExprStmt @ line 6 @ col 2
-                UnaryExpr sig=void @ line 6 @ col 2
-                    FuncCall sig=void @ line 6 @ col 2
-                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0xb05300>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 6 @ col 9
-                                Ident [int] sig=int @ line 6 @ col 9 <symbol addr: 0xb05f50>
-
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t1 > out.s
 
 STDERR:
 
 
 RETURN CODE: 0
 
--------------------------------------------------------------------------------
-Test: global name test |
-------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t4
+% /home/profs/aycock/411/bin/spim -file out.s
 
 STDOUT:
-Program <symbol addr: 0x2427ca0>
-    GlobVarDecl @ line 3 @ col 1
-        Ident [b4int] sig=int @ line 3 @ col 5 <symbol addr: 0x2427b60>
-        Type [int] @ line 3 @ col 11 <symbol addr: 0x2426920>
-    FuncDecl @ line 5 @ col 1
-        Ident [b4func] sig=f() @ line 5 @ col 6 <symbol addr: 0x2427c00>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x2426790>
-        Block
-            ExprStmt @ line 6 @ col 2
-                UnaryExpr sig=void @ line 6 @ col 2
-                    FuncCall sig=void @ line 6 @ col 2
-                        Ident [printi] sig=f(int) @ line 6 @ col 2 <symbol addr: 0x2426fb0>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 6 @ col 9
-                                Ident [b4int] sig=int @ line 6 @ col 9 <symbol addr: 0x2427b60>
-            ExprStmt @ line 7 @ col 2
-                UnaryExpr sig=void @ line 7 @ col 2
-                    FuncCall sig=void @ line 7 @ col 2
-                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0x2426fb0>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 7 @ col 9
-                                Ident [aft3rint] sig=int @ line 7 @ col 9 <symbol addr: 0x2427de0>
-            ExprStmt @ line 8 @ col 2
-                UnaryExpr sig=void @ line 8 @ col 2
-                    FuncCall sig=void @ line 8 @ col 2
-                        Ident [aft3rfunc] sig=f() @ line 8 @ col 2 <symbol addr: 0x2427d40>
-                        FuncArgs
-    FuncDecl @ line 11 @ col 1
-        Ident [main] sig=f() @ line 11 @ col 6 <symbol addr: 0x2427ca0>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x2426790>
-        Block
-            ExprStmt @ line 12 @ col 2
-                UnaryExpr sig=void @ line 12 @ col 2
-                    FuncCall sig=void @ line 12 @ col 2
-                        Ident [b4func] sig=f() @ line 12 @ col 2 <symbol addr: 0x2427c00>
-                        FuncArgs
-    FuncDecl @ line 15 @ col 1
-        Ident [aft3rfunc] sig=f() @ line 15 @ col 6 <symbol addr: 0x2427d40>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x2426790>
-        Block
-            ExprStmt @ line 16 @ col 2
-                UnaryExpr sig=void @ line 16 @ col 2
-                    FuncCall sig=void @ line 16 @ col 2
-                        Ident [printi] sig=f(int) @ line 16 @ col 2 <symbol addr: 0x2426fb0>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 16 @ col 9
-                                Ident [b4int] sig=int @ line 16 @ col 9 <symbol addr: 0x2427b60>
-            ExprStmt @ line 17 @ col 2
-                UnaryExpr sig=void @ line 17 @ col 2
-                    FuncCall sig=void @ line 17 @ col 2
-                        Ident [printi] sig=f(int) @ line 17 @ col 2 <symbol addr: 0x2426fb0>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 17 @ col 9
-                                Ident [aft3rint] sig=int @ line 17 @ col 9 <symbol addr: 0x2427de0>
-    GlobVarDecl @ line 20 @ col 1
-        Ident [aft3rint] sig=int @ line 20 @ col 5 <symbol addr: 0x2427de0>
-        Type [int] @ line 20 @ col 14 <symbol addr: 0x2426920>
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+The following symbols are undefined:
+main
 
 
+
+STDERR:
+spim: (parser) Unknown character on line 1 of file out.s
+	  Program <symbol addr: 0x1daa310>
+	          ^
+spim: (parser) syntax error on line 2 of file out.s
+Instruction references undefined symbol at 0x00400014
+  [0x00400014]	0x0c000000  jal 0x00000000 [main]           ; 188: jal main
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: var init in loop block |
+------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t2 > out.s
 
 STDERR:
 
 
 RETURN CODE: 0
 
--------------------------------------------------------------------------------
-Test: block scope check |
--------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t5
+% /home/profs/aycock/411/bin/spim -file out.s
 
 STDOUT:
-Program <symbol addr: 0x1ac08a0>
-    FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x1ac08a0>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x1abf480>
-        Block
-            VarDecl @ line 4 @ col 2
-                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0x1ac0940>
-                Type [int] @ line 4 @ col 8 <symbol addr: 0x1abf660>
-            Block
-                VarDecl @ line 6 @ col 3
-                    Ident [x] sig=bool @ line 6 @ col 7 <symbol addr: 0x1ac0a50>
-                    Type [bool] @ line 6 @ col 9 <symbol addr: 0x1abf570>
-                Block
-                    VarDecl @ line 8 @ col 4
-                        Ident [x] sig=string @ line 8 @ col 8 <symbol addr: 0x1ac0d30>
-                        Type [string] @ line 8 @ col 10 <symbol addr: 0x1abf750>
-                    AssignStmt @ line 9 @ col 4
-                        UnaryExpr sig=string @ line 9 @ col 4
-                            Ident [x] sig=string @ line 9 @ col 4 <symbol addr: 0x1ac0d30>
-                        UnaryExpr sig=string @ line 9 @ col 8
-                            StrLit ["asdf"] sig=string @ line 9 @ col 8
-                    Block
-                        VarDecl @ line 11 @ col 5
-                            Ident [x] sig=int @ line 11 @ col 9 <symbol addr: 0x1ac0e40>
-                            Type [int] @ line 11 @ col 11 <symbol addr: 0x1abf660>
-                        AssignStmt @ line 12 @ col 5
-                            UnaryExpr sig=int @ line 12 @ col 5
-                                Ident [x] sig=int @ line 12 @ col 5 <symbol addr: 0x1ac0e40>
-                            BinaryExpr [+] sig=int @ line 12 @ col 11
-                                UnaryExpr sig=int @ line 12 @ col 9
-                                    Ident [x] sig=int @ line 12 @ col 9 <symbol addr: 0x1ac0e40>
-                                UnaryExpr sig=int @ line 12 @ col 13
-                                    IntLit [1] sig=int @ line 12 @ col 13
-                    ExprStmt @ line 14 @ col 4
-                        UnaryExpr sig=void @ line 14 @ col 4
-                            FuncCall sig=void @ line 14 @ col 4
-                                Ident [prints] sig=f(string) @ line 14 @ col 4 <symbol addr: 0x1abfde0>
-                                FuncArgs
-                                    UnaryExpr sig=string @ line 14 @ col 11
-                                        Ident [x] sig=string @ line 14 @ col 11 <symbol addr: 0x1ac0d30>
-                ExprStmt @ line 16 @ col 3
-                    UnaryExpr sig=void @ line 16 @ col 3
-                        FuncCall sig=void @ line 16 @ col 3
-                            Ident [printb] sig=f(bool) @ line 16 @ col 3 <symbol addr: 0x1abfb10>
-                            FuncArgs
-                                UnaryExpr sig=bool @ line 16 @ col 10
-                                    Ident [x] sig=bool @ line 16 @ col 10 <symbol addr: 0x1ac0a50>
-            ExprStmt @ line 18 @ col 2
-                UnaryExpr sig=void @ line 18 @ col 2
-                    FuncCall sig=void @ line 18 @ col 2
-                        Ident [printi] sig=f(int) @ line 18 @ col 2 <symbol addr: 0x1abfcf0>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 18 @ col 9
-                                Ident [x] sig=int @ line 18 @ col 9 <symbol addr: 0x1ac0940>
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+The following symbols are undefined:
+main
 
 
 
 STDERR:
+spim: (parser) Unknown character on line 1 of file out.s
+	  Program <symbol addr: 0x517c20>
+	          ^
+spim: (parser) syntax error on line 2 of file out.s
+Instruction references undefined symbol at 0x00400014
+  [0x00400014]	0x0c000000  jal 0x00000000 [main]           ; 188: jal main
 
 
 RETURN CODE: 0
 
 -------------------------------------------------------------------------------
-Test: global var declaration, complex loop |
---------------------------------------------
+Test: zero values |
+-------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t6
-
-STDOUT:
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t3 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t6:3:9: expected type, got 'bool'
+error: /home/profs/aycock/411/TEST/final/gen.t3: No register available!
 
 
 RETURN CODE: 1
 
--------------------------------------------------------------------------------
-Test: parameter scope test |
-----------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t7
-
-STDOUT:
-Program <symbol addr: 0x1f47800>
-    FuncDecl @ line 3 @ col 1
-        Ident [foo] sig=f(int) @ line 3 @ col 6 <symbol addr: 0x1f47620>
-        FuncSign
-            Params
-                ParamDecl @ line 3 @ col 10
-                    Ident [int] sig=int @ line 3 @ col 10 <symbol addr: 0x1f478a0>
-                    Type [int] @ line 3 @ col 14 <symbol addr: 0x1f463e0>
-            Type [int] @ line 3 @ col 19 <symbol addr: 0x1f463e0>
-        Block
-            ExprStmt @ line 4 @ col 2
-                UnaryExpr sig=void @ line 4 @ col 2
-                    FuncCall sig=void @ line 4 @ col 2
-                        Ident [printi] sig=f(int) @ line 4 @ col 2 <symbol addr: 0x1f46a70>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 4 @ col 9
-                                Ident [int] sig=int @ line 4 @ col 9 <symbol addr: 0x1f478a0>
-            ReturnStmt @ line 5 @ col 2
-                UnaryExpr sig=int @ line 5 @ col 9
-                    Ident [int] sig=int @ line 5 @ col 9 <symbol addr: 0x1f478a0>
-    FuncDecl @ line 8 @ col 1
-        Ident [bar] sig=f(int) @ line 8 @ col 6 <symbol addr: 0x1f476c0>
-        FuncSign
-            Params
-                ParamDecl @ line 8 @ col 10
-                    Ident [bar] sig=int @ line 8 @ col 10 <symbol addr: 0x1f47a20>
-                    Type [int] @ line 8 @ col 14 <symbol addr: 0x1f463e0>
-            Type [$void] <symbol addr: 0x1f46200>
-        Block
-            EmptyStmt @ line 8 @ col 20
-    FuncDecl @ line 11 @ col 1
-        Ident [string] sig=f(int) @ line 11 @ col 6 <symbol addr: 0x1f47760>
-        FuncSign
-            Params
-                ParamDecl @ line 11 @ col 13
-                    Ident [string] sig=int @ line 11 @ col 13 <symbol addr: 0x1f47ac0>
-                    Type [int] @ line 11 @ col 20 <symbol addr: 0x1f463e0>
-            Type [bool] @ line 11 @ col 25 <symbol addr: 0x1f462f0>
-        Block
-            ReturnStmt @ line 12 @ col 2
-                UnaryExpr sig=bool @ line 12 @ col 9
-                    Ident [true] sig=bool @ line 12 @ col 9 <symbol addr: 0x1f466b0>
-    FuncDecl @ line 15 @ col 1
-        Ident [main] sig=f() @ line 15 @ col 6 <symbol addr: 0x1f47800>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x1f46200>
-        Block
-            EmptyStmt @ line 15 @ col 14
-
-
-
-STDERR:
-
-
-RETURN CODE: 0
+(GoLF compiler unsuccessful, skipping test)
 
 -------------------------------------------------------------------------------
-Test: constants can't be changed |
-----------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t8
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t8:4:2: can't assign to a constant
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: nonexistent type name |
+Test: nested function calls |
 -----------------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t9
-
-STDOUT:
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t4 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t9:3:7: type 'notthere' is not defined.
 
 
-RETURN CODE: 1
+*** TERMINATION VIA SIGNAL: Segmentation fault
 
--------------------------------------------------------------------------------
-Test: type name not a type |
-----------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t10
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t10:4:7: expected type, got 't'
-
-
-RETURN CODE: 1
+(GoLF compiler unsuccessful, skipping test)
 
 -------------------------------------------------------------------------------
-Test: formal parameters need types |
-------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t11
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t11:6:21: expected type, got 'main'
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: multiple (main) functions, same name |
---------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t12
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t12:7:6: identifier 'main' already defined
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: no main function |
-------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t13
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t13: missing main() function
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: main can't have arguments |
----------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t14
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t14:3:1: main() can't have arguments
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: main can't have a return value |
---------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t15
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t15:3:1:  main() can't have a return value
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: dup check for formal parameters |
----------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t16
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t16:7:10: identifier 'i' already defined
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: function call as lvalue |
--------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t17
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t17:6:2: can only assign to a variable
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: function name as lvalue |
--------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t18
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t18:6:2: operand type mismatch for '='
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: humongous integer literal |
----------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t19
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t19:5:6: integer literal out of range
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: positive integer literal out of range |
----------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t20
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t20:6:6: integer literal out of range
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: negative integer literal out of range |
----------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t21
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t21:5:7: integer literal out of range
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: "break" not inside "for" loop |
--------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t22
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t22:7:2: break statement must be inside a for loop
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: "break" in block, but not in "for" |
-------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t23
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t23:5:3: break statement must be inside a for loop
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: "break" in "if" block |
------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t24
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t24:5:3: break statement must be inside a for loop
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: missing return statement |
---------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t25
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t25:6:1: no return statement in function 'foo'
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: returning value from void function |
-------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t26
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t26:4:2: this function can't return a value
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: return type mismatch |
-----------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t27
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t27:7:2: returned value has the wrong type
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: missing return type |
+Test: recursive Fibonacci |
 ---------------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t28
-
-STDOUT:
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t5 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t28:7:2: this function must return a value
+error: /home/profs/aycock/411/TEST/final/gen.t5:21:14: returned value has the wrong type
 
 
 RETURN CODE: 1
 
--------------------------------------------------------------------------------
-Test: "if" expr not a boolean type |
-------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t29
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t29:4:5: if expression must be boolean type
-
-
-RETURN CODE: 1
+(GoLF compiler unsuccessful, skipping test)
 
 -------------------------------------------------------------------------------
-Test: "if"-"else" not a boolean type |
---------------------------------------
+Test: iterative Fibonacci |
+---------------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t30
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t30:4:5: if expression must be boolean type
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: "for" expr not a boolean type |
--------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t31
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t31:10:6: for expression must be boolean type
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: legit expression statements |
------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t32
-
-STDOUT:
-Program <symbol addr: 0x1d37780>
-    FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x1d37780>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x1d36360>
-        Block
-            VarDecl @ line 4 @ col 2
-                Ident [i] sig=int @ line 4 @ col 6 <symbol addr: 0x1d37820>
-                Type [int] @ line 4 @ col 8 <symbol addr: 0x1d36540>
-            ExprStmt @ line 5 @ col 2
-                UnaryExpr sig=int @ line 5 @ col 2
-                    Ident [i] sig=int @ line 5 @ col 2 <symbol addr: 0x1d37820>
-            ExprStmt @ line 6 @ col 2
-                UnaryExpr sig=int @ line 6 @ col 2
-                    IntLit [42] sig=int @ line 6 @ col 2
-
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t6 > out.s
 
 STDERR:
 
 
 RETURN CODE: 0
 
--------------------------------------------------------------------------------
-Test: built-in routine check |
-------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t33
+% /home/profs/aycock/411/bin/spim -file out.s
 
 STDOUT:
-Program <symbol addr: 0x506d80>
-    FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x506d80>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x505960>
-        Block
-            ExprStmt @ line 4 @ col 9
-                UnaryExpr sig=void @ line 4 @ col 9
-                    FuncCall sig=void @ line 4 @ col 9
-                        Ident [prints] sig=f(string) @ line 4 @ col 9 <symbol addr: 0x5062c0>
-                        FuncArgs
-                            UnaryExpr sig=string @ line 4 @ col 16
-                                StrLit ["Hello, world!\n"] sig=string @ line 4 @ col 16
-            ExprStmt @ line 5 @ col 9
-                UnaryExpr sig=void @ line 5 @ col 9
-                    FuncCall sig=void @ line 5 @ col 9
-                        Ident [printb] sig=f(bool) @ line 5 @ col 9 <symbol addr: 0x505ff0>
-                        FuncArgs
-                            UnaryExpr sig=bool @ line 5 @ col 16
-                                Ident [true] sig=bool @ line 5 @ col 16 <symbol addr: 0x505e10>
-            ExprStmt @ line 6 @ col 9
-                UnaryExpr sig=void @ line 6 @ col 9
-                    FuncCall sig=void @ line 6 @ col 9
-                        Ident [printi] sig=f(int) @ line 6 @ col 9 <symbol addr: 0x5061d0>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 6 @ col 16
-                                IntLit [123] sig=int @ line 6 @ col 16
-            ExprStmt @ line 7 @ col 9
-                UnaryExpr sig=void @ line 7 @ col 9
-                    FuncCall sig=void @ line 7 @ col 9
-                        Ident [printc] sig=f(int) @ line 7 @ col 9 <symbol addr: 0x5060e0>
-                        FuncArgs
-                            UnaryExpr sig=int @ line 7 @ col 16
-                                IntLit [123] sig=int @ line 7 @ col 16
-            VarDecl @ line 8 @ col 9
-                Ident [ch] sig=int @ line 8 @ col 13 <symbol addr: 0x506e20>
-                Type [int] @ line 8 @ col 16 <symbol addr: 0x505b40>
-            AssignStmt @ line 9 @ col 2
-                UnaryExpr sig=int @ line 9 @ col 2
-                    Ident [ch] sig=int @ line 9 @ col 2 <symbol addr: 0x506e20>
-                UnaryExpr sig=int @ line 9 @ col 7
-                    FuncCall sig=int @ line 9 @ col 7
-                        Ident [getchar] sig=f() @ line 9 @ col 7 <symbol addr: 0x5063b0>
-                        FuncArgs
-            ExprStmt @ line 10 @ col 2
-                UnaryExpr sig=void @ line 10 @ col 2
-                    FuncCall sig=void @ line 10 @ col 2
-                        Ident [halt] sig=f() @ line 10 @ col 2 <symbol addr: 0x5064a0>
-                        FuncArgs
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+The following symbols are undefined:
+main
 
 
 
 STDERR:
+spim: (parser) Unknown character on line 1 of file out.s
+	  Program <symbol addr: 0x122c220>
+	          ^
+spim: (parser) syntax error on line 2 of file out.s
+Instruction references undefined symbol at 0x00400014
+  [0x00400014]	0x0c000000  jal 0x00000000 [main]           ; 188: jal main
 
 
 RETURN CODE: 0
 
 -------------------------------------------------------------------------------
-Test: actual parameter type check |
------------------------------------
+Test: string reversal |
+-----------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t34
-
-STDOUT:
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t7 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t34:4:2: number/type of arguments in function call doesn't match function declaration
+golf: src/CodeGen.cpp:472: void GoLF::pass2PostOrderCallback(CodeGen*, std::shared_ptr<AstNode>): Assertion `rhs->reg != ""' failed.
+
+
+*** TERMINATION VIA SIGNAL: Aborted
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: hunting minint |
+----------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t8 > out.s
+
+STDERR:
+golf: src/CodeGen.cpp:235: void GoLF::CodeGen::freeReg(RegType, const std::string&): Assertion `std::find(regPool[type].begin(), regPool[type].end(), regId) == regPool[type].end()' failed.
+
+
+*** TERMINATION VIA SIGNAL: Aborted
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: negating minint |
+-----------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t9 > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.t9:7:10: integer literal out of range
 
 
 RETURN CODE: 1
 
--------------------------------------------------------------------------------
-Test: operand type mismatch |
------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t35
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t35:10:15: operand type mismatch for '+'
-
-
-RETURN CODE: 1
+(GoLF compiler unsuccessful, skipping test)
 
 -------------------------------------------------------------------------------
-Test: another actual parameter type check |
--------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t36
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t36:7:9: number/type of arguments in function call doesn't match function declaration
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: return+argument checks |
-------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t37
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t37:8:16: number/type of arguments in function call doesn't match function declaration
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: scope check and undefined variable |
-------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t38
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t38:10:3: identifier 'c' is not defined
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: redefined variable |
+Test: minint div and mod |
 --------------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t39
-
-STDOUT:
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t10 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t39:13:7: identifier 'b' already defined
+error: /home/profs/aycock/411/TEST/final/gen.t10:4:10: integer literal out of range
 
 
 RETURN CODE: 1
 
--------------------------------------------------------------------------------
-Test: comparable and ordered comparisons |
-------------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t40
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t40:8:7: operand type mismatch for '>'
-
-
-RETURN CODE: 1
+(GoLF compiler unsuccessful, skipping test)
 
 -------------------------------------------------------------------------------
-Test: int/bool distinction |
-----------------------------
+Test: division by zero |
+------------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t41
-
-STDOUT:
-
-
-STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t41:5:2: operand type mismatch for '='
-
-
-RETURN CODE: 1
-
--------------------------------------------------------------------------------
-Test: deep type propagation |
------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t42
-
-STDOUT:
-Program <symbol addr: 0x11df8c0>
-    FuncDecl @ line 3 @ col 1
-        Ident [main] sig=f() @ line 3 @ col 6 <symbol addr: 0x11df8c0>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x11de4a0>
-        Block
-            VarDecl @ line 4 @ col 2
-                Ident [x] sig=int @ line 4 @ col 6 <symbol addr: 0x11df960>
-                Type [int] @ line 4 @ col 8 <symbol addr: 0x11de680>
-            ExprStmt @ line 5 @ col 2
-                BinaryExpr [>=] sig=bool @ line 5 @ col 18
-                    BinaryExpr [-] sig=int @ line 5 @ col 12
-                        BinaryExpr [+] sig=int @ line 5 @ col 4
-                            UnaryExpr sig=int @ line 5 @ col 2
-                                IntLit [2] sig=int @ line 5 @ col 2
-                            BinaryExpr [*] sig=int @ line 5 @ col 8
-                                UnaryExpr sig=int @ line 5 @ col 6
-                                    IntLit [3] sig=int @ line 5 @ col 6
-                                UnaryExpr sig=int @ line 5 @ col 10
-                                    IntLit [5] sig=int @ line 5 @ col 10
-                        UnaryExpr sig=int @ line 5 @ col 14
-                            IntLit [123] sig=int @ line 5 @ col 14
-                    UnaryExpr [u-] sig=int @ line 5 @ col 21
-                        UnaryExpr sig=int @ line 5 @ col 22
-                            UnaryExpr [u-] sig=int @ line 5 @ col 23
-                                UnaryExpr sig=int @ line 5 @ col 24
-                                    UnaryExpr [u-] sig=int @ line 5 @ col 25
-                                        UnaryExpr sig=int @ line 5 @ col 26
-                                            Ident [x] sig=int @ line 5 @ col 26 <symbol addr: 0x11df960>
-            VarDecl @ line 7 @ col 2
-                Ident [b] sig=bool @ line 7 @ col 6 <symbol addr: 0x11dfa70>
-                Type [bool] @ line 7 @ col 8 <symbol addr: 0x11de590>
-            ExprStmt @ line 8 @ col 2
-                BinaryExpr [!=] sig=bool @ line 8 @ col 34
-                    UnaryExpr [!] sig=bool @ line 8 @ col 2
-                        UnaryExpr [!] sig=bool @ line 8 @ col 3
-                            UnaryExpr [!] sig=bool @ line 8 @ col 4
-                                UnaryExpr sig=bool @ line 8 @ col 5
-                                    BinaryExpr [||] sig=bool @ line 8 @ col 6
-                                        BinaryExpr [&&] sig=bool @ line 8 @ col 6
-                                            UnaryExpr sig=bool @ line 8 @ col 6
-                                                Ident [true] sig=bool @ line 8 @ col 6 <symbol addr: 0x11de950>
-                                            UnaryExpr sig=bool @ line 8 @ col 14
-                                                Ident [false] sig=bool @ line 8 @ col 14 <symbol addr: 0x11dea40>
-                                        BinaryExpr [==] sig=bool @ line 8 @ col 25
-                                            UnaryExpr sig=bool @ line 8 @ col 23
-                                                Ident [b] sig=bool @ line 8 @ col 23 <symbol addr: 0x11dfa70>
-                                            UnaryExpr sig=bool @ line 8 @ col 28
-                                                Ident [true] sig=bool @ line 8 @ col 28 <symbol addr: 0x11de950>
-                    UnaryExpr sig=bool @ line 8 @ col 37
-                        BinaryExpr [<=] sig=bool @ line 8 @ col 40
-                            UnaryExpr sig=int @ line 8 @ col 38
-                                IntLit [5] sig=int @ line 8 @ col 38
-                            UnaryExpr sig=int @ line 8 @ col 43
-                                IntLit [6] sig=int @ line 8 @ col 43
-
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t11 > out.s
 
 STDERR:
 
 
 RETURN CODE: 0
 
--------------------------------------------------------------------------------
-Test: redefining "true" and "false" |
--------------------------------------
-
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t43
+% /home/profs/aycock/411/bin/spim -file out.s
 
 STDOUT:
-Program <symbol addr: 0x1eb9ab0>
-    GlobVarDecl @ line 3 @ col 1
-        Ident [true] sig=int @ line 3 @ col 5 <symbol addr: 0x1eb9a10>
-        Type [int] @ line 3 @ col 10 <symbol addr: 0x1eb87d0>
-    FuncDecl @ line 5 @ col 1
-        Ident [main] sig=f() @ line 5 @ col 6 <symbol addr: 0x1eb9ab0>
-        FuncSign
-            Params
-            Type [$void] <symbol addr: 0x1eb85f0>
-        Block
-            VarDecl @ line 6 @ col 2
-                Ident [false] sig=int @ line 6 @ col 6 <symbol addr: 0x1eb9b50>
-                Type [int] @ line 6 @ col 12 <symbol addr: 0x1eb87d0>
-            ExprStmt @ line 7 @ col 2
-                UnaryExpr sig=void @ line 7 @ col 2
-                    FuncCall sig=void @ line 7 @ col 2
-                        Ident [printi] sig=f(int) @ line 7 @ col 2 <symbol addr: 0x1eb8e60>
-                        FuncArgs
-                            BinaryExpr [*] sig=int @ line 7 @ col 14
-                                UnaryExpr sig=int @ line 7 @ col 9
-                                    Ident [true] sig=int @ line 7 @ col 9 <symbol addr: 0x1eb9a10>
-                                UnaryExpr sig=int @ line 7 @ col 16
-                                    Ident [false] sig=int @ line 7 @ col 16 <symbol addr: 0x1eb9b50>
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+The following symbols are undefined:
+main
 
 
+
+STDERR:
+spim: (parser) Unknown character on line 1 of file out.s
+	  Program <symbol addr: 0x1f25c70>
+	          ^
+spim: (parser) syntax error on line 2 of file out.s
+Instruction references undefined symbol at 0x00400014
+  [0x00400014]	0x0c000000  jal 0x00000000 [main]           ; 188: jal main
+
+
+RETURN CODE: 0
+
+-------------------------------------------------------------------------------
+Test: basic Booleans |
+----------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t12 > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.t12: bad! unaryExpr pre
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: string escapes |
+----------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t13 > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.t13: No register available!
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: all your base are belong to us |
+--------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t14 > out.s
+
+STDERR:
+
+
+*** TERMINATION VIA SIGNAL: Segmentation fault
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: short-circuiting |
+------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t15 > out.s
+
+STDERR:
+
+
+*** TERMINATION VIA SIGNAL: Segmentation fault
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: dynamic semantic check |
+------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t16 > out.s
+
+STDERR:
+
+
+*** TERMINATION VIA SIGNAL: Segmentation fault
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: less obvious division by zero |
+-------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t17 > out.s
 
 STDERR:
 
 
 RETURN CODE: 0
 
+% /home/profs/aycock/411/bin/spim -file out.s
+
+STDOUT:
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+The following symbols are undefined:
+main
+
+
+
+STDERR:
+spim: (parser) Unknown character on line 1 of file out.s
+	  Program <symbol addr: 0x1323dd0>
+	          ^
+spim: (parser) syntax error on line 2 of file out.s
+Instruction references undefined symbol at 0x00400014
+  [0x00400014]	0x0c000000  jal 0x00000000 [main]           ; 188: jal main
+
+
+RETURN CODE: 0
+
 -------------------------------------------------------------------------------
-Test: call of non-function |
+Test: recursive-descent calculator |
+------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t18 > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.t18:22:2: returned value has the wrong type
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: string operations |
+-------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t19 > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.t19:10:9: number/type of arguments in function call doesn't match function declaration
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: redefining built-ins |
 ----------------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t44
-
-STDOUT:
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t20 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t44:4:2: can't call something that isn't a function
+error: /home/profs/aycock/411/TEST/final/gen.t20:4:9: number/type of arguments in function call doesn't match function declaration
 
 
 RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
 
 -------------------------------------------------------------------------------
-Test: type id used in wrong context |
--------------------------------------
+Test: register blow-out |
+-------------------------
 
-% ./golf /home/profs/aycock/411/TEST/ms3/check.t45
-
-STDOUT:
-
+% ./golf /home/profs/aycock/411/TEST/final/gen.t21 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/ms3/check.t45:5:6: expected identifier, got type 'int'
+error: /home/profs/aycock/411/TEST/final/gen.t21: No register available!
 
 
 RETURN CODE: 1
 
-Run ended on Sat Mar 25 14:25:24 2023
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: nested "for" loops |
+--------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t22 > out.s
+
+STDERR:
+golf: src/CodeGen.cpp:235: void GoLF::CodeGen::freeReg(RegType, const std::string&): Assertion `std::find(regPool[type].begin(), regPool[type].end(), regId) == regPool[type].end()' failed.
+
+
+*** TERMINATION VIA SIGNAL: Aborted
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: EOF and scope |
+---------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t23 > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.t23: bad! unaryExpr pre
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: banners |
+---------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t24 > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.t24:48:9: number/type of arguments in function call doesn't match function declaration
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: div and mod table |
+-------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.t25 > out.s
+
+STDERR:
+
+
+*** TERMINATION VIA SIGNAL: Segmentation fault
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: basic maze generation from Entombed (1982) |
+--------------------------------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.entombed > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.entombed:770:1: returned value has the wrong type
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: the Game of Life |
+------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.life > out.s
+
+STDERR:
+golf: src/CodeGen.cpp:235: void GoLF::CodeGen::freeReg(RegType, const std::string&): Assertion `std::find(regPool[type].begin(), regPool[type].end(), regId) == regPool[type].end()' failed.
+
+
+*** TERMINATION VIA SIGNAL: Aborted
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: selection sort |
+----------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.select > out.s
+
+STDERR:
+golf: src/CodeGen.cpp:235: void GoLF::CodeGen::freeReg(RegType, const std::string&): Assertion `std::find(regPool[type].begin(), regPool[type].end(), regId) == regPool[type].end()' failed.
+
+
+*** TERMINATION VIA SIGNAL: Aborted
+
+(GoLF compiler unsuccessful, skipping test)
+
+-------------------------------------------------------------------------------
+Test: prime number sieve |
+--------------------------
+
+% ./golf /home/profs/aycock/411/TEST/final/gen.sieve > out.s
+
+STDERR:
+error: /home/profs/aycock/411/TEST/final/gen.sieve: No register available!
+
+
+RETURN CODE: 1
+
+(GoLF compiler unsuccessful, skipping test)
+
+Run ended on Mon Apr  3 15:52:13 2023
 

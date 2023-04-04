@@ -93,5 +93,6 @@ struct CodeGen {
 };
 
 void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node);
-void pass1PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node);
+void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node);
+void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node);
 } // namespace GoLF

@@ -1,7 +1,12 @@
-var foo int
-
 func main() {
-    var i int;
-    i = 10;
-    i = i + 20;
+    if(true) {
+        b = true;
+        i = 1 + 2;
+    } else {
+        b = false;
+        i = 0;
+    }
 }
+
+var b bool;
+var i int;

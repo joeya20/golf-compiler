@@ -37,6 +37,8 @@ void SymbolTable::insertUniverseBlock() {
     for(int i = 0; i < 14; ++i) {
         universe[temp[i].name] = std::make_shared<Symbol>(temp[i].name, temp[i].sig, temp[i].rvSig, temp[i].isConst, temp[i].isType);
     }
+    universe["true"]->label = "Ltrue";
+    universe["false"]->label = "Lfalse";
     scopeStack.push_back(universe);
 }
 
