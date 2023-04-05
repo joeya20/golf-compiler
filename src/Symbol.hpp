@@ -16,7 +16,7 @@ struct Symbol {
     std::string label;
     Symbol(std::string& name, location& loc);
     Symbol(std::string& name, location& loc, bool isType, bool isConst);
-    Symbol(std::string& name, std::string& sig, std::string& rvSig, bool& isType, bool& isConst);
+    Symbol(std::string& name, std::string& sig, std::string& rvSig, std::string& asmLabel, bool& isType, bool& isConst);
 };
 
 }

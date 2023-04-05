@@ -15,10 +15,10 @@ namespace GoLF {
 class StopTraversalException : public std::exception {};
 
 struct CodeGen {
-	enum RegType { Arg, Ret, Saved, Temp };
+	// enum RegType { Arg, Ret, Saved, Temp };
 	enum AllocType { Asciiz, Word };
 	std::shared_ptr<AstNode> root;
-	std::unordered_map<RegType, std::vector<std::string>> regPool;
+	std::vector<std::string> regPool;
 	// this map will automatically store string literals in lexographic order
 	// so comparisons in the assembly code can be simple address comparisons
 	// also gets rid of duplicates
@@ -31,10 +31,13 @@ struct CodeGen {
 	std::string dataSeg = "\t.data\n";
 	// holds the text segment of the entire program
 	std::string textSeg = "\t.text\n";
-
+	// holds the current offset from the frame pointer when allocating local variables
+	// offset 0 is reserved for $fp
+	// offset -4 is reserved for $ra
+	int offsetFromFp = -4;
 	// holds the instructions of the current function body
 	std::string currFuncBody = "";
-
+	std::string lastExitLabel = "";
 	// A template for function declarations.
 	// The prologue only saves any saved registers used for
 	// local variables, not the function arguments, etc.
@@ -72,8 +75,8 @@ struct CodeGen {
 	void emitDataWord(const std::string& label);
 	void emitStrLits();
 
-	const std::string allocReg(RegType type);
-	void freeReg(CodeGen::RegType type, const std::string& regId);
+	const std::string allocReg();
+	void freeReg(const std::string& regId);
 	std::string getLabel();
 	std::string idToAsm(std::string& id);
 	void emitLabel(const std::string& label);

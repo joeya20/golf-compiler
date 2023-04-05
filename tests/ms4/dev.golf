@@ -1,12 +1,18 @@
 func main() {
-    if(true) {
-        b = true;
-        i = 1 + 2;
-    } else {
-        b = false;
-        i = 0;
-    }
+    var b bool;
+    var i int;
+    // for(b) {
+    //   i = i + 1;
+       if(i == 10) {
+        return;
+       }
+    // }
+    //b = true;
 }
 
-var b bool;
-var i int;
+func test() int {
+    var c int;
+    return c;
+}
+// var b bool;
+// var i int;

@@ -11,34 +11,33 @@ void SymbolTable::insertUniverseBlock() {
         std::string name;
         std::string sig;
         std::string rvSig;
+        std::string asmLabel;
         bool isConst;
         bool isType;
-        Entry(std::string name, std::string sig, std::string rvSig, bool isConst, bool isType)
-        : name(name), sig(sig), rvSig(rvSig), isConst(isConst), isType(isType) {}
+        Entry(std::string name, std::string sig, std::string rvSig, std::string asmLabel, bool isConst, bool isType)
+        : name(name), sig(sig), rvSig(rvSig), asmLabel(asmLabel), isConst(isConst), isType(isType) {}
     };
     Entry temp[14] = {
-        // name       sig           rvsig    isConst     isType
-        {"$void",   "void",         ""      , false,    true},
-        {"bool" ,   "bool",         ""      , false,    true},
-        {"int",     "int",          ""      , false,    true},
-        {"string",  "string",       ""      , false,    true},
-        {"$true",   "bool",         ""      , true,     false},
-        {"true",    "bool",         ""      , true,     false},
-        {"false",   "bool",         ""      , true,     false},
-        {"printb",  "f(bool)",      "void"  , false,    false},
-        {"printc",  "f(int)",       "void"  , false,    false},
-        {"printi",  "f(int)",       "void"  , false,    false},
-        {"prints",  "f(string)",    "void"  , false,    false},
-        {"getchar", "f()",          "int"   , false,    false},
-        {"halt",    "f()",          "void"  , false,    false},
-        {"len",     "f(str)",       "int"   , false,    false},    //TODO: ask about this function
+        // name       sig           rvsig        asmLabel       isConst     isType
+        {"$void",   "void",         ""      , "",           false,    true},
+        {"bool" ,   "bool",         ""      , "",           false,    true},
+        {"int",     "int",          ""      , "",           false,    true},
+        {"string",  "string",       ""      , "",           false,    true},
+        {"$true",   "bool",         ""      , "Ltrue",           true,     false},
+        {"true",    "bool",         ""      , "Ltrue",           true,     false},
+        {"false",   "bool",         ""      , "Lfalse",           true,     false},
+        {"printb",  "f(bool)",      "void"  , "Lprintb",           false,    false},
+        {"printc",  "f(int)",       "void"  , "Lprintc",           false,    false},
+        {"printi",  "f(int)",       "void"  , "Lprinti",           false,    false},
+        {"prints",  "f(string)",    "void"  , "Lprints",           false,    false},
+        {"getchar", "f()",          "int"   , "Lgetchar",           false,    false},
+        {"halt",    "f()",          "void"  , "Lhalt",           false,    false},
+        {"len",     "f(str)",       "int"   , "Llen",           false,    false},    //TODO: ask about this function
     };
     std::unordered_map<std::string, std::shared_ptr<Symbol>> universe;
     for(int i = 0; i < 14; ++i) {
-        universe[temp[i].name] = std::make_shared<Symbol>(temp[i].name, temp[i].sig, temp[i].rvSig, temp[i].isConst, temp[i].isType);
+        universe[temp[i].name] = std::make_shared<Symbol>(temp[i].name, temp[i].sig, temp[i].rvSig, temp[i].asmLabel, temp[i].isConst, temp[i].isType);
     }
-    universe["true"]->label = "Ltrue";
-    universe["false"]->label = "Lfalse";
     scopeStack.push_back(universe);
 }
 
