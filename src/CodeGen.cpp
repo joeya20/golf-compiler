@@ -29,8 +29,10 @@ static std::unordered_map<std::string, std::string> opToAsm = {
 CodeGen::CodeGen(std::shared_ptr<AstNode> root) {
     // crappy reg allocator
     // $v0 is reserved for return values
+    // $v1 is not used
     // there is at most 1 return value so this makes life easier
-    this->regPool = {"$v1", "$a3", "$a2", "$a1", "$a0", "$s7", "$s6",
+    // $a0 - $a3 are used for arguments 1 - 4
+    this->regPool = {"$s7", "$s6",
                      "$s5", "$s4", "$s3", "$s2", "$s1", "$s0", "$t9", "$t8",
                      "$t7", "$t6", "$t5", "$t4", "$t3", "$t2", "$t1", "$t0"};
     this->root = root;
@@ -268,6 +270,10 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             gen->freeReg(reg);
         }
     }
+    else if(node->kind == NodeKind::FuncDecl) {
+        auto ident = node->children[0];
+        ident->symbol->label = gen->idToAsm(ident->attr);
+    }
 }
 
 void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
@@ -283,6 +289,12 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             auto label = gen->idToAsm(ident->attr);
             gen->textSeg += label + ":\n";
 
+            // set up the argument registers
+            for(size_t i = 0; i < params->children.size(); i++) {
+                auto paramIdent = params->children[i]->children[0];
+                paramIdent->symbol->reg = "$a" + std::to_string(i);
+            }
+
             // traverse function body to generate body instructions and determine stack size
             gen->prePostOrderTraversal(body, pass2PreOrderCallback, pass2PostOrderCallback);
 
@@ -290,16 +302,16 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             std::stringstream prologue;
             prologue << "\t# prologue\n";
             // grow stack to save $fp and $ra
-            prologue <<  "\taddi $sp, $sp, -8\n";
+            prologue << "\taddi $sp, $sp, -8\n";
             // save $ra
-            prologue <<  "\tsw   $ra, 4($sp)\n";
+            prologue << "\tsw   $ra, 4($sp)\n";
             // save $fp
-            prologue <<  "\tsw   $fp, 0($sp)\n";
+            prologue << "\tsw   $fp, 0($sp)\n";
             // move $sp to $fp
-            prologue <<  "\tmove $fp, $sp\n";
+            prologue << "\tmove $fp, $sp\n";
             // now allocate memory for local variables if necessary
             if(gen->offsetFromFp < -4) {
-                prologue <<  "\taddi $sp, $sp, " << gen->offsetFromFp+4 << "\n";
+                prologue << "\taddi $sp, $sp, " << gen->offsetFromFp+4 << "\n";
             }
             gen->textSeg += prologue.str();
             
@@ -312,16 +324,13 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             epilogue << "\t# epilogue\n";
             // now deallocate memory used for local variables if necessary
             if(gen->offsetFromFp < -4) {
-                epilogue <<  "\taddi $sp, $sp, " << abs(gen->offsetFromFp+4) << "\n";
+                epilogue << "\taddi $sp, $sp, " << abs(gen->offsetFromFp+4) << "\n";
             }
             // restore $ra and $fp
-            epilogue <<  "\tlw   $fp, 0($sp)\n";
-            epilogue <<  "\tlw   $ra, 4($sp)\n";
+            epilogue << "\tlw   $fp, 0($sp)\n";
+            epilogue << "\tlw   $ra, 4($sp)\n";
             // shrink stack again
-            epilogue <<  "\taddi $sp, $sp, 8\n";
-            if(ident->attr == "main") {
-                epilogue << "\tj Lhalt\n";
-            }
+            epilogue << "\taddi $sp, $sp, 8\n";
             epilogue << "\tjr $ra\n";
             gen->textSeg += epilogue.str();
 
@@ -334,33 +343,29 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // we need to clean up the stack
         // and setup the return value in $v0 if applicable
         case NodeKind::ReturnStmt: {
-            std::stringstream epilogue;
+            std::stringstream retInst;
+            retInst << "# return inst\n";
             // if there is a return expr
             // we need to evaluate it and put it in $v0
             if(node->children.size() > 0) {
                 // first evaluate return expr
                 gen->prePostOrderTraversal(node->children[0], pass2PreOrderCallback, pass2PostOrderCallback);
                 // then move the expr value to $v0
-                epilogue << "move $v0, " << node->children[0]->reg << "\n";
+                retInst << "\tmove $v0, " << node->children[0]->reg << "\n";
                 gen->freeReg(node->children[0]->reg);
-                // shrink stack to dealloc any local variables
-                // we do this by setting $sp to $fp
-                epilogue << "\tmove $sp, $fp\n";
             }
-            else {
-                // shrink stack to dealloc any local variables
-                // we do this by setting $sp to $fp
-                epilogue << "\tmove $sp, $fp\n";
-            }
+            // shrink stack to dealloc any local variables
+            // we do this by setting $sp to $fp
+            retInst << "\tmove $sp, $fp\n";
 
             // restore $fp and $ra
-            epilogue <<  "\tlw   $fp, 0($sp)\n";
-            epilogue <<  "\tlw   $ra, 4($sp)\n";
+            retInst <<  "\tlw   $fp, 0($sp)\n";
+            retInst <<  "\tlw   $ra, 4($sp)\n";
 
             // return
-            epilogue << "\tjr $ra\n";
+            retInst << "\tjr $ra";
             // clean up
-            gen->emitInst(epilogue.str());
+            gen->emitInst(retInst.str());
             throw StopTraversalException();
             break;
         }
@@ -477,9 +482,9 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                handleError("bad! assign pre");
             }
 
-            // visit RHS only so we don't load in the value of the LHS unnecesarily
             gen->prePostOrderTraversal(rhs, pass2PreOrderCallback, pass2PostOrderCallback);
 
+            std::cout << "good\n";
             std::stringstream inst;
             assert(rhs->reg != ""); // DEBUG
             if(ident->reg != "") {
@@ -504,47 +509,11 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             throw StopTraversalException();
             break;
         }
-        // unary expressions with identifiers are handled here
-        // two possiblities: local and global variable
-        // for local, we just get its register from the symbol
-        // for global, we load its value from the label
-        // TODO: boolean short-circuiting
-        case NodeKind::UnaryExpr: {
-            auto operand = node->children[0];
-            if(operand->kind == NodeKind::Ident) {
-                // DEBUG: make sure that both label and reg are not populated for the same variable
-                assert(operand->symbol->reg == "" || operand->symbol->label == "");
-
-                if(operand->symbol->reg != "") {
-                    operand->reg = operand->symbol->reg;
-                }
-                else if(operand->symbol->label != "") {
-                    operand->reg = gen->allocReg();
-                    std::stringstream instr;
-                    if(operand->sig == "string") {
-                        instr
-                            << "la "
-                            << operand->reg << ", "
-                            << operand->symbol->label;
-                    }
-                    else {
-                        instr
-                            << "lw "
-                            << operand->reg << ", "
-                            << operand->symbol->label;
-                    }
-                    gen->emitInst(instr.str());
-                }
-                // DEBUG: make sure that both label and reg are not both empty
-                else {
-                    handleError("bad! unaryExpr pre");
-                }
-            }
+        // a weird bug happens and my code gets emitted in the wrong order if I dont have this here
+        case NodeKind::ExprStmt:
+            gen->prePostOrderTraversal(node->children[0], pass2PreOrderCallback, pass2PostOrderCallback);
+            throw StopTraversalException();
             break;
-        }
-        case NodeKind::FuncCall: {
-            break;
-        }
         default:
             break;
     }
@@ -571,13 +540,85 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             gen->emitInst(res.str());
             break;
         }
+        case NodeKind::FuncCall: {
+            auto ident = node->children[0];
+            auto args = node->children[1];
+            // handle args if necessary
+            std::cout << "args size: " << args->children.size() << std::endl;
+            if (args->children.size() > 0) {                
+                if (args->children.size() > 4) {
+                    handleError("Too many arguments to generate function");
+                }
+
+                std::string inst;
+                inst = "addi $sp, $sp, " + std::to_string(int(args->children.size()) * -4);
+                gen->emitInst(inst);
+                for (size_t i = 0; i < args->children.size(); i++) {
+                    inst = "sw $a" + std::to_string(i) + ", " + std::to_string(i*-4) + "($sp)";
+                    gen->emitInst(inst);
+                    inst = "move $a" + std::to_string(i) + ", " +
+                            args->children[i]->reg;
+                    gen->emitInst(inst);
+                    gen->freeReg(args->children[i]->reg);
+                }
+            }
+            // now handle function call
+            node->reg = gen->allocReg();
+            std::string inst;
+            // jump to function
+            inst = "jal " + ident->symbol->label;
+            gen->emitInst(inst);
+            if (ident->symbol->rvSig != "void") {
+                inst = "move " + node->reg + ", $v0";
+                gen->emitInst(inst);
+            }
+
+            if (args->children.size() > 0) {
+                for (size_t i = 0; i < args->children.size(); i++) {
+                    inst = "lw $a" + std::to_string(i) + ", " + std::to_string(i*-4) + "($sp)";
+                    gen->emitInst(inst);
+                }
+                inst = "addi $sp, $sp, " + std::to_string(int(args->children.size()) * 4);
+                gen->emitInst(inst);
+            }
+            break;
+        }
         // we need to either evaluate the result of the expression into a register
         // or copy the register holding the result if there is no operation
         // we only free the register if it is not a local variable
         case NodeKind::UnaryExpr: {
+            auto operand = node->children[0];
+            if(operand->kind == NodeKind::Ident) {
+                // DEBUG: make sure that both label and reg are not populated for the same variable
+                assert(operand->symbol->reg == "" || operand->symbol->label == "");
+                std::cout << operand->attr << std::endl;
+                if(operand->symbol->reg != "") {
+                    operand->reg = operand->symbol->reg;
+                }
+                else if(operand->symbol->label != "") {
+                    operand->reg = gen->allocReg();
+                    std::stringstream instr;
+                    if(operand->sig == "string") {
+                        instr
+                            << "la "
+                            << operand->reg << ", "
+                            << operand->symbol->label;
+                    }
+                    else {
+                        instr
+                            << "lw "
+                            << operand->reg << ", "
+                            << operand->symbol->label;
+                    }
+                    gen->emitInst(instr.str());
+                }
+                // DEBUG: make sure that both label and reg are not both empty
+                else {
+                    handleError("bad! unaryExpr pre");
+                }
+            }
             if(node->attr != "") {
                 node->reg = gen->allocReg();
-                auto operand = node->children[0];
                 std::stringstream res;
                 if(node->attr == "u-") {
                     res << "sub " << node->reg << ", $0, " << operand->reg;

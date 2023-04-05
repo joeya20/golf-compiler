@@ -1,18 +1,16 @@
 func main() {
     var b bool;
     var i int;
-    // for(b) {
-    //   i = i + 1;
-       if(i == 10) {
-        return;
-       }
-    // }
-    //b = true;
+    i = testn();
+    test(i);
 }
 
-func test() int {
-    var c int;
-    return c;
+func testn() int {
+    return 1;
 }
-// var b bool;
-// var i int;
+
+func test(i int) {
+    var j int;
+    j = i + 10;
+    return;
+}
