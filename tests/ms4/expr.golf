@@ -1,0 +1,8 @@
+func main() {
+    var i int;
+    i = 1 % 1;
+}
+
+func test() int {
+    return 10;
+}

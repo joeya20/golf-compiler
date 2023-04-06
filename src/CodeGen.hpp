@@ -30,7 +30,13 @@ struct CodeGen {
 	// holds the data segment of the entire program
 	std::string dataSeg = "\t.data\n";
 	// holds the text segment of the entire program
-	std::string textSeg = "\t.text\n";
+	std::string textSeg = R"(
+	.text
+	.globl main
+main:
+	jal Lmain
+	j Lhalt
+)";
 	// holds the current offset from the frame pointer when allocating local variables
 	// offset 0 is reserved for $fp
 	// offset -4 is reserved for $ra
@@ -38,37 +44,11 @@ struct CodeGen {
 	// holds the instructions of the current function body
 	std::string currFuncBody = "";
 	std::string lastExitLabel = "";
-	// A template for function declarations.
-	// The prologue only saves any saved registers used for
-	// local variables, not the function arguments, etc.
-	// Those are handled ad-hoc when a funcCall is actually encountered.
-	const std::string funcTemplate {R"(
-	# prologue
-    addi $sp, $sp, -4 	# allocate space for $ra
-    sw $ra, 4($sp)		# save $ra
-{}
-	# body
-{}
-	# epilogue
-    lw $ra, 4($sp) 		# allocate space for $ra
-    addi $sp, $sp, 4 	# allocate space for $ra
-    jr $ra
-{}
-)"};
-	// a template for if stmts
-	const std::string ifTemplate {R"(
-
-)"};
-	// a template for for stmts
-	const std::string forTemplate {R"(
-
-)"};
-
 	const std::string emptyStringLabel = "LemptyString";
 
 	CodeGen(std::shared_ptr<AstNode> root);
 	void generate();
-	void emitPreamble();
+	void emitRTS();
 	void emitDataSeg();
 	void emitTextSeg();
 
