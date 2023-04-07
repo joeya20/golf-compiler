@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <set>
 #include <vector>
 #include <map>
 
@@ -24,7 +25,7 @@ struct CodeGen {
 	// also gets rid of duplicates
 	// {strLit : label}
 	std::map<std::string, std::string> orderedstringLits;
-
+	std::set<std::string> regsInUse;
 	// holds the complete program to emit at the end
 	std::string prog;
 	// holds the data segment of the entire program
@@ -44,6 +45,7 @@ main:
 	// holds the instructions of the current function body
 	std::string currFuncBody = "";
 	std::string lastExitLabel = "";
+	std::string lastRetLabel = "";
 	const std::string emptyStringLabel = "LemptyString";
 
 	CodeGen(std::shared_ptr<AstNode> root);

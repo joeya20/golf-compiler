@@ -30,7 +30,7 @@ void SymbolTable::insertUniverseBlock() {
         {"printc",  "f(int)",       "void"  , "Lprintc",           false,    false},
         {"printi",  "f(int)",       "void"  , "Lprinti",           false,    false},
         {"prints",  "f(string)",    "void"  , "Lprints",           false,    false},
-        {"getchar", "f()",          "int"   , "Lgetchar",           false,    false},
+        {"getchar", "f()",          "int"   , "LgetChar",           false,    false},
         {"halt",    "f()",          "void"  , "Lhalt",           false,    false},
         {"len",     "f(str)",       "int"   , "Llen",           false,    false},    //TODO: ask about this function
     };

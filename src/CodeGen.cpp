@@ -27,15 +27,34 @@ static std::unordered_map<std::string, std::string> opToAsm = {
 		"/"     ,
 		"div %s, %s, %s"
 	}, 
-    {   "%"     ,
+    {   
+        "%"     ,
 		"rem %s, %s, %s"
 	},
-    {   "<"     ,    "slt"  },
-    {   "<="    ,    "sle"  },
-    {   ">"     ,    "sgt"  },
-    {   ">="    ,    "sge"  },
-    {   "=="    ,    "seq"  },
-    {   "!="    ,    "sne"  }
+    {   
+        "<"     ,    
+        "slt %s, %s, %s"  
+    },
+    {   
+        "<="    ,    
+        "sle %s, %s, %s"  
+    },
+    {   
+        ">"     ,
+        "sgt %s, %s, %s"  
+    },
+    {   
+        ">="    ,
+        "sge %s, %s, %s"  
+    },
+    {   
+        "=="    ,
+        "seq %s, %s, %s"  
+    },
+    {
+        "!="    ,
+        "sne %s, %s, %s"  
+    }
 };
 
 CodeGen::CodeGen(std::shared_ptr<AstNode> root) {
@@ -276,13 +295,15 @@ std::string CodeGen::idToAsm(std::string& id) {
 
 const std::string CodeGen::allocReg() {
     
-    std::cout << "adding\n";
+    // std::cout << "adding\n";
     if(this->regPool.size() == 0) {
         // output error for now
         handleError("No register available!");
     }
     auto res = regPool.back();
     regPool.pop_back();
+    assert(std::find(regsInUse.begin(), regsInUse.end(), res) == regsInUse.end());
+    regsInUse.insert(res);
     return res;
 }
 
@@ -290,10 +311,12 @@ void CodeGen::freeReg(const std::string& regId) {
 	if(regId[1] == 'a') {
 		return;
 	}
-    std::cout << "removing " << regId << "\n";
+    // std::cout << "removing " << regId << "\n";
     // DEBUG: make sure we allocated the register properly
     assert(std::find(regPool.begin(), regPool.end(), regId) == regPool.end());
     regPool.push_back(regId);
+    assert(std::find(regsInUse.begin(), regsInUse.end(), regId) != regsInUse.end());
+    regsInUse.erase(regId);
 }
 
 
@@ -313,7 +336,7 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // if its a string, we initialize the value of the pointer to the emptystring label
         // before main
         if(type->attr == "string") {
-            std::cout << "globvardecl-label\n";
+            // std::cout << "globvardecl-label\n";
             auto reg = gen->allocReg();
             std::stringstream inst;
             // first load in the address of the empty string
@@ -342,13 +365,19 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             //do function body
             auto label = gen->idToAsm(ident->attr);
             gen->textSeg += label + ":\n";
+            gen->lastRetLabel = gen->getLabel();
 
             // set up the argument registers
+            // argument 1 will be stored at -4($fp)
+            // argument 2 will be stored at -8($fp)
+            // argument 3 will be stored at -12($fp)
+            // argument 4 will be stored at -16($fp)
             for(size_t i = 0; i < params->children.size(); i++) {
                 auto paramIdent = params->children[i]->children[0];
-                paramIdent->symbol->reg = "$a" + std::to_string(i);
+                paramIdent->symbol->label = std::to_string(int(i+1)*-4) + "($fp)" ;
             }
-
+            gen->offsetFromFp = int(params->children.size()+1) * -4; // evaluates to -4 if there are no params
+            // std::cout << "res: " << gen->offsetFromFp << "\n";
             // traverse function body to generate body instructions and determine stack size
             gen->prePostOrderTraversal(body, pass2PreOrderCallback, pass2PostOrderCallback);
 
@@ -366,39 +395,40 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             // now allocate memory for local variables if necessary
             if(gen->offsetFromFp < -4) {
                 prologue << "\taddi $sp, $sp, " << gen->offsetFromFp+4 << "\n";
+                for(size_t i = 0; i < params->children.size(); i++) {
+                    auto paramIdent = params->children[i]->children[0];
+                    prologue << "\tsw $a" << i << ", " << paramIdent->symbol->label << "\n";
+                }
             }
+
             gen->textSeg += prologue.str();
             
             gen->textSeg += "\t# body\n";
             // add function body
             gen->textSeg += gen->currFuncBody;
 
-            // if there is no result parameter we can just do regular cleanup
-            if(ident->symbol->rvSig == "void") {
-                std::stringstream epilogue;
-                epilogue << "\t# epilogue\n";
-                // now deallocate memory used for local variables if necessary
-                if(gen->offsetFromFp < -4) {
-                    epilogue << "\taddi $sp, $sp, " << abs(gen->offsetFromFp+4) << "\n";
-                }
-                // restore $ra and $fp
-                epilogue << "\tlw   $fp, 0($sp)\n";
-                epilogue << "\tlw   $ra, 4($sp)\n";
-                // shrink stack again
-                epilogue << "\taddi $sp, $sp, 8\n";
-                epilogue << "\tjr $ra\n";
-                gen->textSeg += epilogue.str();
+            // at this point we should have jumped to the ret label for non-void functions
+            if(ident->symbol->rvSig != "void") {
+                gen->textSeg += "\t# error\n\tj LnoReturnError\n";
             }
-            // if there is a result parameter then we need to go to error
-            else {
-                std::string errorInst = "";
-                errorInst +=  "\t# epilogue\n";
-                errorInst += "\tjal LnoReturnError\n";
-                gen->textSeg += errorInst;
+
+            gen->textSeg += gen->lastRetLabel + ":\n";
+            std::stringstream epilogue;
+            epilogue << "\t# epilogue\n";
+            // now deallocate memory used for local variables if necessary
+            if(gen->offsetFromFp < -4) {
+                epilogue << "\taddi $sp, $sp, " << abs(gen->offsetFromFp+4) << "\n";
             }
+            // restore $ra and $fp
+            epilogue << "\tlw   $fp, 0($sp)\n";
+            epilogue << "\tlw   $ra, 4($sp)\n";
+            // shrink stack again
+            epilogue << "\taddi $sp, $sp, 8\n";
+            epilogue << "\tjr $ra\n";
+            gen->textSeg += epilogue.str();
+
             // cleanup
             gen->currFuncBody = "";
-            gen->offsetFromFp = -4;
             throw StopTraversalException();
             break;
         }
@@ -416,16 +446,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 retInst << "\tmove $v0, " << node->children[0]->reg << "\n";
                 gen->freeReg(node->children[0]->reg);
             }
-            // shrink stack to dealloc any local variables
-            // we do this by setting $sp to $fp
-            retInst << "\tmove $sp, $fp\n";
-
-            // restore $fp and $ra
-            retInst <<  "\tlw   $fp, 0($sp)\n";
-            retInst <<  "\tlw   $ra, 4($sp)\n";
-
-            // return
-            retInst << "\tjr $ra";
+            retInst << "\tj " << gen->lastRetLabel;
             // clean up
             gen->emitInst(retInst.str());
             throw StopTraversalException();
@@ -437,7 +458,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             ident->symbol->label = std::to_string(gen->offsetFromFp) + "($fp)";
             std::stringstream inst;
             if(type->attr == "string") {
-                    std::cout << "2\n";
+                    // std::cout << "2\n";
                 auto reg = gen->allocReg();
                 inst << "la " << reg << ", " << gen->emptyStringLabel << "\n";
                 inst << "\tsw " << reg << ", " << ident->symbol->label;
@@ -516,6 +537,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
 
             // clean-up: free register and stop traversing downward
             gen->freeReg(expr->reg);
+            gen->lastExitLabel = "";
             throw StopTraversalException();
             break;
         }
@@ -530,8 +552,8 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         case NodeKind::AssignStmt: {
             auto ident = node->children[0]->children[0];
             auto rhs = node->children[1];
-            std::cout << "reg: " << ident->symbol->reg << std::endl;
-            std::cout << "lbl: " << ident->symbol->label << std::endl;
+            // std::cout << "reg: " << ident->symbol->reg << std::endl;
+            // std::cout << "lbl: " << ident->symbol->label << std::endl;
             // check if the variable is local
             if(ident->symbol->reg != "") {
                 ident->reg = ident->symbol->reg;
@@ -579,6 +601,62 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             }
             throw StopTraversalException();
             break;
+        case NodeKind::FuncCall: {
+            auto ident = node->children[0];
+            auto args = node->children[1];
+            std::string inst;
+
+            // handle args if necessary            
+            if (args->children.size() > 4) {
+                handleError("Too many arguments to generate function");
+            }
+
+            gen->prePostOrderTraversal(args, pass2PreOrderCallback, pass2PostOrderCallback);
+
+            for (size_t i = 0; i < args->children.size(); i++) {
+                inst = "move $a" + std::to_string(i) + ", " +
+                        args->children[i]->reg;
+                gen->emitInst(inst);
+                gen->freeReg(args->children[i]->reg);
+            }
+
+            // save regs in use
+            if(gen->regsInUse.size() > 0) {
+                inst = "addi $sp, $sp, " + std::to_string(int(gen->regsInUse.size()) * -4);
+                gen->emitInst(inst);
+                int offset = 0;
+                for(auto & reg : gen->regsInUse) {
+                    inst = "sw " + reg + ", " + std::to_string(offset) + "($sp)";
+                    gen->emitInst(inst);
+                    offset += 4;
+                }
+            }
+            
+            // now handle function call
+            assert(ident->symbol->label != "");
+            inst = "jal " + ident->symbol->label;
+            gen->emitInst(inst);
+
+            // do cleanup
+            if(gen->regsInUse.size() > 0) {
+                int offset = 0;
+                for(auto & reg : gen->regsInUse) {
+                    inst = "lw " + reg + ", " + std::to_string(offset) + "($sp)";
+                    gen->emitInst(inst);
+                    offset += 4;
+                }
+                inst = "addi $sp, $sp, " + std::to_string(int(gen->regsInUse.size()) * 4);
+                gen->emitInst(inst);
+            }
+
+            node->reg = gen->allocReg();
+            if (ident->symbol->rvSig != "void") {
+                inst = "move " + node->reg + ", $v0";
+                gen->emitInst(inst);
+            }
+            throw StopTraversalException();
+            break;
+        }
         default:
             break;
     }
@@ -603,49 +681,6 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             node->reg = gen->allocReg();
             std::string inst = "la " + node->reg + ", " + gen->orderedstringLits[node->attr];
             gen->emitInst(inst);
-            break;
-        }
-        case NodeKind::FuncCall: {
-            auto ident = node->children[0];
-            auto args = node->children[1];
-            // handle args if necessary
-            if (args->children.size() > 0) {                
-                if (args->children.size() > 4) {
-                    handleError("Too many arguments to generate function");
-                }
-
-                std::string inst;
-                inst = "addi $sp, $sp, " + std::to_string(int(args->children.size()) * -4);
-                gen->emitInst(inst);
-                for (size_t i = 0; i < args->children.size(); i++) {
-                    inst = "sw $a" + std::to_string(i) + ", " + std::to_string(int(i)*-4) + "($sp)";
-                    gen->emitInst(inst);
-                    inst = "move $a" + std::to_string(i) + ", " +
-                            args->children[i]->reg;
-                    gen->emitInst(inst);
-                    gen->freeReg(args->children[i]->reg);
-                }
-            }
-            // now handle function call
-            node->reg = gen->allocReg();
-            std::string inst;
-            // jump to function
-            inst = "jal " + ident->symbol->label;
-            gen->emitInst(inst);
-            if (ident->symbol->rvSig != "void") {
-                inst = "move " + node->reg + ", $v0";
-                gen->emitInst(inst);
-            }
-
-            // restore argument regs if necessary
-            if (args->children.size() > 0) {
-                for (size_t i = 0; i < args->children.size(); i++) {
-                    inst = "lw $a" + std::to_string(i) + ", " + std::to_string(int(i)*-4) + "($sp)";
-                    gen->emitInst(inst);
-                }
-                inst = "addi $sp, $sp, " + std::to_string(int(args->children.size()) * 4);
-                gen->emitInst(inst);
-            }
             break;
         }
         // we need to either evaluate the result of the expression into a register
@@ -676,7 +711,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     res = "subu " + node->reg + ", $0, " + operand->reg;
                 }
                 else if(node->attr == "!") {
-                    res = "xori " + node->reg + ", " + node->reg + ", 1";
+                    res = "xori " + node->reg + ", " + operand->reg + ", 1";
                 }
                 else {
                     handleError("bad unaryexpr op!");
@@ -705,7 +740,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
 				std::string checkInst;
 				checkInst = "addi $sp, $sp, -8";
 				gen->emitInst(checkInst);
-				checkInst = "sw $a0, -4($sp)";
+				checkInst = "sw $a0, 4($sp)";
 				gen->emitInst(checkInst);
 				checkInst = "sw $a1, ($sp)";
 				gen->emitInst(checkInst);
@@ -717,7 +752,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
 				gen->emitInst(checkInst);
 				checkInst = "move " + rhs->reg + ", $v0";
 				gen->emitInst(checkInst);
-				checkInst = "lw $a0, -4($sp)";
+				checkInst = "lw $a0, 4($sp)";
 				gen->emitInst(checkInst);
 				checkInst = "lw $a1, ($sp)";
 				gen->emitInst(checkInst);

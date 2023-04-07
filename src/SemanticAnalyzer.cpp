@@ -435,8 +435,11 @@ namespace GoLF {
                 }
             }
             anal->funcReturnSig = node->children[0]->symbol->rvSig;
+            // std::cout << "func: " << node->children[0]->symbol->name << "\n";
+            // std::cout << "assigning rvsig: " << node->children[0]->symbol->rvSig << "\n";
             break;
         case NodeKind::ReturnStmt:
+            // std::cout << "inc func ret sig: " << anal->funcReturnSig << "\n";
             if(node->children.size() > 0 && anal->funcReturnSig == "void") {
                 handleError(
                     "this function can't return a value"
@@ -453,13 +456,15 @@ namespace GoLF {
             }
             else if(node->children.size() > 0 && anal->funcReturnSig != "void") {
                 if(node->children[0]->sig != anal->funcReturnSig) {
+                    // std::cout << "node sig: " << node->children[0]->sig << "\n";
+                    // std::cout << "func ret sig: " << anal->funcReturnSig << "\n";
                     handleError(
                         "returned value has the wrong type"
                         , node->loc.begin.line
                         , node->loc.begin.column
                     );
                 }
-                anal->funcReturnSig = "";
+                anal->retCount++;
             }
             break;
         case NodeKind::IntLit: {
@@ -539,7 +544,7 @@ namespace GoLF {
             anal->forLoopCount--;
             break;
         case NodeKind::FuncDecl:
-            if(anal->funcReturnSig != "" && anal->funcReturnSig != "void") {
+            if(anal->funcReturnSig != "void" && anal->retCount == 0) {
                 std::string errorMsg {"no return statement in function '" + node->children[0]->attr + "'"};
                 handleError(
                     errorMsg.c_str()
@@ -547,6 +552,7 @@ namespace GoLF {
                     , node->loc.begin.column
                 );
             }
+            anal->retCount = 0;
             break;
         default:
             break;

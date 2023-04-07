@@ -50,6 +50,7 @@ struct SemanticAnalyzer {
     std::vector<std::shared_ptr<AstNode>> paramDecls;
     // counter to store number of for loops for pass 4
     int forLoopCount;
+    int retCount = 0;
     //string to store the current funcDecl's rvSig for pass 4
     std::string funcReturnSig;
     
