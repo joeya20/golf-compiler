@@ -1,8 +1,17 @@
 func main() {
-    var i int;
-    i = 1 % 1;
-}
-
-func test() int {
-    return 10;
+    printi(5 / 3);
+    printc(10);
+    printi(-5 / 3);
+    printc(10);
+    printi(5 / -3);
+    printc(10);
+    printi(-5 / -3);
+    printc(10);
+    printi(5 % 3);
+    printc(10);
+    printi(-5 % 3);
+    printc(10);
+    printi(5 % -3);
+    printc(10);
+    printi(-5 % -3);
 }

@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     GoLF::SemanticAnalyzer analyzer(root);
 
     analyzer.doAnalysis();
-    std::cout << root << std::endl;
+    // std::cout << root << std::endl;
 
     GoLF::CodeGen generator(root);
     generator.generate();

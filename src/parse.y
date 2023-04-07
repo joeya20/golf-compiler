@@ -358,10 +358,12 @@ UnaryExpr   : PrimaryExpr           {
                                         $$->addChild($1);
                                     }
             | UnaryOp UnaryExpr     {
-                                        if($2->kind == AstNode::Kind::IntLit &&
-                                        $1->attr == "-" && 
-                                        $2->attr[0] != '-') {
-                                            $$ = std::make_shared<AstNode>(AstNode::Kind::IntLit, "-" + $2->attr, @$);
+                                        if($2->kind == AstNode::Kind::UnaryExpr &&
+                                        $2->children[0]->kind == AstNode::Kind::IntLit &&
+                                        $1->attr == "u-" && 
+                                        $2->children[0]->attr[0] != '-') {
+                                            $$ = $2;
+                                            $2->children[0]->attr = "-" + $2->children[0]->attr;
                                         }
                                         else {
                                             $$ = $1;

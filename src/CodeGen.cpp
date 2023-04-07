@@ -124,6 +124,8 @@ LfalseString:
 	.asciiz "false"
 LnoReturnErrorString:
 	.asciiz "Runtime error: no value returned from function"
+LdivByZeroString:
+	.asciiz "Runtime error: division by zero"
 	.align 4
 Ltrue:
 	.word 1
@@ -131,10 +133,28 @@ Lfalse:
 	.word 0
 
 	.text
-# $a0 - left operand
-# $a1 - right operand
-Ldivmodchk:
-	
+# $a0 - dividend
+# $a1 - divisor
+# checking for two things:
+# division by 0: runtime error
+# right operand = INT_MIN: return $v0 = 1
+# we use $v1 here since we know its never used elsewhere
+LdivModChk:
+	beq $0, $a1, LdivByZeroError
+    li $v1, -2147483648
+    beq $a0, $v1, LsecondCheck
+LdivModChkDone:
+    move $v0, $a1
+    jr $ra
+LsecondCheck:
+    li $v1, -1
+    bne $a1, $v1, LdivModChkDone
+    li $v0, 1
+    jr $ra
+LdivByZeroError:
+	la $a0 LdivByZeroString
+	jal Lprints
+	jal Lhalt
 LnoReturnError:
 	la $a0 LnoReturnErrorString
 	jal Lprints
@@ -142,6 +162,7 @@ LnoReturnError:
 Lhalt:
 	li $v0 10
 	syscall
+    jr $ra
 # will populate $v0
 LgetChar:
 	li $v0 12
@@ -692,7 +713,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
 				gen->emitInst(checkInst);
 				checkInst = "move $a1, " + rhs->reg;
 				gen->emitInst(checkInst);
-				checkInst = "jal Ldivmodchk";
+				checkInst = "jal LdivModChk";
 				gen->emitInst(checkInst);
 				checkInst = "move " + rhs->reg + ", $v0";
 				gen->emitInst(checkInst);
