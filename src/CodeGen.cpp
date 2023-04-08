@@ -604,6 +604,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         case NodeKind::FuncCall: {
             auto ident = node->children[0];
             auto args = node->children[1];
+            std::cout << "handling funccall " << ident->attr << "\n";
             std::string inst;
 
             // handle args if necessary            
@@ -657,6 +658,56 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             throw StopTraversalException();
             break;
         }
+        case NodeKind::BinaryExpr: {
+            if(node->attr == "||" || node->attr == "&&") {
+                auto lhs = node->children[0];
+                auto rhs = node->children[1];
+
+                // we always have to evaluate the lhs
+                gen->prePostOrderTraversal(lhs, pass2PreOrderCallback,
+                                           pass2PostOrderCallback);
+                // just use the lhs reg to be a bit cleaner
+                node->reg = lhs->reg;
+
+                if(node->attr == "&&") {
+                    std::string inst;
+                    auto skipLabel = gen->getLabel();
+                    // if the first lhs is false, dont execute rhs
+                    inst = "beq $0, " + node->reg + ", " + skipLabel;
+                    gen->emitInst(inst);
+                    std::cout << "enter\n";
+                    gen->prePostOrderTraversal(rhs, pass2PreOrderCallback,
+                                           pass2PostOrderCallback);
+                    std::cout << "exit\n";
+                    // the final result is a simple bitwise AND of the two operands
+                    inst = "and " + node->reg + ", " + lhs->reg + ", " + rhs->reg;
+                    gen->emitInst(inst);
+                    gen->emitLabel(skipLabel);
+                    gen->freeReg(rhs->reg);
+                }
+                else if (node->attr == "||") {
+                    std::string inst;
+                    // just use the lhs reg to be a bit cleaner
+                    node->reg = lhs->reg;
+                    auto skipLabel = gen->getLabel();
+                    // if the first lhs is true, dont execute rhs
+                    inst = "bne $0, " + node->reg + ", " + skipLabel;
+                    gen->emitInst(inst);
+                    std::cout << "enter\n";
+                    gen->prePostOrderTraversal(rhs, pass2PreOrderCallback,
+                                           pass2PostOrderCallback);
+                    std::cout << "exit\n";
+                    // the final result is a simple bitwise OR of the two operands
+                    inst = "or " + node->reg + ", " + lhs->reg + ", " + rhs->reg;
+                    gen->emitInst(inst);
+                    gen->emitLabel(skipLabel);
+                    gen->freeReg(rhs->reg);
+                }
+                std::cout << "here\n";
+                throw StopTraversalException();
+            }
+            break;
+        }            
         default:
             break;
     }
@@ -687,6 +738,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // or copy the register holding the result if there is no operation
         // we only free the register if it is not a local variable
         case NodeKind::UnaryExpr: {
+            std::cout << "3\n";
             auto operand = node->children[0];
             if(operand->kind == NodeKind::Ident) {
                 // DEBUG: make sure that both label and reg are not populated for the same variable
@@ -734,38 +786,43 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // we need to evaluate the result of the expression into a register
         // we only free the registers if they are not local variables
         case NodeKind::BinaryExpr: {
-            auto lhs = node->children[0];
-            auto rhs = node->children[1];
-			if(node->attr == "/" || node->attr == "%") {
-				std::string checkInst;
-				checkInst = "addi $sp, $sp, -8";
-				gen->emitInst(checkInst);
-				checkInst = "sw $a0, 4($sp)";
-				gen->emitInst(checkInst);
-				checkInst = "sw $a1, ($sp)";
-				gen->emitInst(checkInst);
-				checkInst = "move $a0, " + lhs->reg;
-				gen->emitInst(checkInst);
-				checkInst = "move $a1, " + rhs->reg;
-				gen->emitInst(checkInst);
-				checkInst = "jal LdivModChk";
-				gen->emitInst(checkInst);
-				checkInst = "move " + rhs->reg + ", $v0";
-				gen->emitInst(checkInst);
-				checkInst = "lw $a0, 4($sp)";
-				gen->emitInst(checkInst);
-				checkInst = "lw $a1, ($sp)";
-				gen->emitInst(checkInst);
-				checkInst = "addi $sp, $sp, 8";
-				gen->emitInst(checkInst);
-			}
+            std::cout << "1\n";
+            if(node->attr != "&&" && node->attr != "||") {
+                std::cout << "2\n";
+                auto lhs = node->children[0];
+                auto rhs = node->children[1];
+                if(node->attr == "/" || node->attr == "%") {
+                    std::string checkInst;
+                    checkInst = "addi $sp, $sp, -8";
+                    gen->emitInst(checkInst);
+                    checkInst = "sw $a0, 4($sp)";
+                    gen->emitInst(checkInst);
+                    checkInst = "sw $a1, ($sp)";
+                    gen->emitInst(checkInst);
+                    checkInst = "move $a0, " + lhs->reg;
+                    gen->emitInst(checkInst);
+                    checkInst = "move $a1, " + rhs->reg;
+                    gen->emitInst(checkInst);
+                    checkInst = "jal LdivModChk";
+                    gen->emitInst(checkInst);
+                    checkInst = "move " + rhs->reg + ", $v0";
+                    gen->emitInst(checkInst);
+                    checkInst = "lw $a0, 4($sp)";
+                    gen->emitInst(checkInst);
+                    checkInst = "lw $a1, ($sp)";
+                    gen->emitInst(checkInst);
+                    checkInst = "addi $sp, $sp, 8";
+                    gen->emitInst(checkInst);
+			    }
 
-            node->reg = gen->allocReg();
-            char inst[256];	//no buffer overflows pls!!
-            sprintf(inst, opToAsm[node->attr].c_str(), node->reg.c_str(), lhs->reg.c_str(), rhs->reg.c_str());
-            gen->emitInst(std::string(inst));
-            gen->freeReg(lhs->reg);
-            gen->freeReg(rhs->reg);
+                node->reg = gen->allocReg();
+                char inst[256];	//no buffer overflows pls!!
+                sprintf(inst, opToAsm[node->attr].c_str(), node->reg.c_str(), lhs->reg.c_str(), rhs->reg.c_str());
+                gen->emitInst(std::string(inst));
+                gen->freeReg(lhs->reg);
+                gen->freeReg(rhs->reg);
+            }
+            std::cout << "3\n";
             break;
         }
         default:
