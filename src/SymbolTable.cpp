@@ -32,7 +32,7 @@ void SymbolTable::insertUniverseBlock() {
         {"prints",  "f(string)",    "void"  , "Lprints",           false,    false},
         {"getchar", "f()",          "int"   , "LgetChar",           false,    false},
         {"halt",    "f()",          "void"  , "Lhalt",           false,    false},
-        {"len",     "f(str)",       "int"   , "Llen",           false,    false},    //TODO: ask about this function
+        {"len",     "f(string)",       "int"   , "Llen",           false,    false},    //TODO: ask about this function
     };
     std::unordered_map<std::string, std::shared_ptr<Symbol>> universe;
     for(int i = 0; i < 14; ++i) {

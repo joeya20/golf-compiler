@@ -1,5 +1,6 @@
 #include "CodeGen.hpp"
 #include "util.hpp"
+#include <cstddef>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -137,14 +138,15 @@ R"(
 
 # start of RTS
 	.data
-LtrueString:
+trueString:
 	.asciiz "true"
-LfalseString:
+falseString:
 	.asciiz "false"
-LnoReturnErrorString:
+noReturnErrorString:
 	.asciiz "Runtime error: no value returned from function"
-LdivByZeroString:
+divByZeroString:
 	.asciiz "Runtime error: division by zero"
+input:  .space 2
 	.align 4
 Ltrue:
 	.word 1
@@ -158,73 +160,88 @@ Lfalse:
 # division by 0: runtime error
 # right operand = INT_MIN: return $v0 = 1
 # we use $v1 here since we know its never used elsewhere
-LdivModChk:
-	beq $0, $a1, LdivByZeroError
+divModChk:
+	beq $0, $a1, divByZeroError
     li $v1, -2147483648
-    beq $a0, $v1, LsecondCheck
-LdivModChkDone:
+    beq $a0, $v1, secondCheck
+divModChkDone:
     move $v0, $a1
     jr $ra
-LsecondCheck:
+secondCheck:
     li $v1, -1
-    bne $a1, $v1, LdivModChkDone
+    bne $a1, $v1, divModChkDone
     li $v0, 1
     jr $ra
-LdivByZeroError:
-	la $a0 LdivByZeroString
+divByZeroError:
+	la $a0, divByZeroString
 	jal Lprints
-	jal Lhalt
-LnoReturnError:
-	la $a0 LnoReturnErrorString
+	jal halt
+noReturnError:
+	la $a0, noReturnErrorString
 	jal Lprints
-	jal Lhalt
-Lhalt:
-	li $v0 10
+	jal halt
+halt:
+	li, $v0, 10
 	syscall
     jr $ra
 # will populate $v0
+# literally copy/pasted from Shankar's Tutorial notes "RTS Functions"
+# https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
 LgetChar:
-	li $v0 12
-	syscall
-	jr $ra
+    addi $sp, $sp, -4
+    sw $ra, 0($sp)
+
+    li $v0, 8                       # System call for read_string
+    la $a0, input                   # Pass in buffer (size = n+1)
+    li $a1, 2                       # Size = n+1 as read_string adds null
+    syscall
+
+    lb $v0, input
+    bne $v0, $zero, ret
+
+    li $v0, -1                      # If 0, map to -1 and return
+ret:
+    lw $ra 0($sp)
+    addi $sp $sp, 4
+    jr $ra
 
 # assumes $a0 is loaded with address of string
 Llen:
 	# initialize length variable to 0
-	addi $t0 $0 0
-Lcount:
+	addi $t0, $0, 0
+count:
 	# load in character at address in $a0
-	lb $t1 ($a0)
+	lb $t1, ($a0)
 	# we've reached EOS if the byte == 0
-	beq $t1 $0 LretLen
+	beq $t1, $0, retLen
 	# else we increment length and the address
-	addi $t0 $t0 1
-	addi $a0 $a0 1
-	j Lcount
-LretLen:
+	addi $t0, $t0, 1
+	addi $a0, $a0, 1
+	j count
+retLen:
 	# move length to return register and return
-	addi $v0 $t0 0
+	addi $v0, $t0, 0
 	jr $ra
 
 # assumes $a0 is loaded with boolean to print
 Lprintb:
 	# if the boolean value is 0 then print false
-	beq $0 $a0 LprintFalse
+	beq $0 $a0 printFalse
 	# else print true
 	addi $sp, $sp, -8
 	sw $ra, -4($sp)
 	sw $a0, 0($sp)
-	la $a0 LtrueString
+	la $a0, trueString
 	jal Lprints
 	lw $a0, 0($sp)
 	lw $ra, -4($sp)
 	addi $sp, $sp, 8
 	jr $ra
-LprintFalse:
+printFalse:
 	addi $sp, $sp, -8
 	sw $ra, -4($sp)
 	sw $a0, 0($sp)
-	la $a0 LfalseString
+	la $a0, falseString
 	jal Lprints
 	lw $a0, 0($sp)
 	lw $ra, -4($sp)
@@ -261,17 +278,21 @@ void CodeGen::emitTextSeg() {
     prog += textSeg;
 }
 
-void CodeGen::emitDataWord(const std::string& label) {
+void CodeGen::emitDataWord(const std::string& label, const std::string& initVal) {
     dataSeg += label + ":\n";
-    dataSeg += "\t.word 0\n";
+    dataSeg += "\t.word " + initVal + "\n";
 }
 
 // emit all strings after traversal, before emitDataSeg
 void CodeGen::emitStrLits() {
     for(auto & str : orderedstringLits) {
         dataSeg += str.second + ":\n";
-        dataSeg += "\t.asciiz ";
-        dataSeg += str.first + "\n";
+        // we omit the quotes
+        for(size_t i = 1; i < str.first.length()-1; i++) {
+            int c = str.first[i];
+            dataSeg += "\t.byte " + std::to_string(c) + "\n";
+        }
+        dataSeg += "\t.byte 0\n";
     }
 }
 
@@ -332,19 +353,11 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         auto ident = node->children[0];
         auto type = node->children[1];
         ident->symbol->label = gen->idToAsm(ident->attr);
-        gen->emitDataWord(ident->symbol->label);
-        // if its a string, we initialize the value of the pointer to the emptystring label
-        // before main
-        if(type->attr == "string") {
-            // std::cout << "globvardecl-label\n";
-            auto reg = gen->allocReg();
-            std::stringstream inst;
-            // first load in the address of the empty string
-            inst << "la " << reg << ", " << gen->emptyStringLabel << "\n";
-            // then save it to the data word allocated for the string
-            inst << "\tsw " << reg << ", " << ident->symbol->label;
-            gen->emitInst(inst.str());
-            gen->freeReg(reg);
+        if(type->attr == "int" || type->attr == "bool") {
+            gen->emitDataWord(ident->symbol->label, "0");
+        }
+        else {
+            gen->emitDataWord(ident->symbol->label, gen->emptyStringLabel);
         }
     }
     else if(node->kind == NodeKind::FuncDecl) {
@@ -409,7 +422,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
 
             // at this point we should have jumped to the ret label for non-void functions
             if(ident->symbol->rvSig != "void") {
-                gen->textSeg += "\t# error\n\tj LnoReturnError\n";
+                gen->textSeg += "\t# error\n\tj noReturnError\n";
             }
 
             gen->textSeg += gen->lastRetLabel + ":\n";
@@ -524,25 +537,24 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             // check expr; exit loop if false
             testInst << "beq " << expr->reg << ", $0, " << exitLabel;
             gen->emitInst(testInst.str());
-            // update some things for break stmts
-            assert(gen->lastExitLabel == "");
-            gen->lastExitLabel = exitLabel;
+            gen->freeReg(expr->reg);
+
+            // update the exit label for any break statements
+            gen->forStmtExitLabels.push_back(exitLabel);
             // emit loop body
             gen->prePostOrderTraversal(block, pass2PreOrderCallback, pass2PostOrderCallback);
             // emit loop unconditional jump
             jumpInst << "j " << loopLabel;
             gen->emitInst(jumpInst.str());
             // emit exit label
-            gen->emitLabel(exitLabel);
+            gen->emitLabel(gen->forStmtExitLabels.back());
+            gen->forStmtExitLabels.pop_back();
 
-            // clean-up: free register and stop traversing downward
-            gen->freeReg(expr->reg);
-            gen->lastExitLabel = "";
             throw StopTraversalException();
             break;
         }
         case NodeKind::BreakStmt: {
-            std::string breakInst = "j " + gen->lastExitLabel;
+            std::string breakInst = "j " + gen->forStmtExitLabels.back();
             gen->emitInst(breakInst);
             break;
         }
@@ -604,7 +616,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         case NodeKind::FuncCall: {
             auto ident = node->children[0];
             auto args = node->children[1];
-            std::cout << "handling funccall " << ident->attr << "\n";
+            // std::cout << "handling funccall " << ident->attr << "\n";
             std::string inst;
 
             // handle args if necessary            
@@ -675,10 +687,10 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     // if the first lhs is false, dont execute rhs
                     inst = "beq $0, " + node->reg + ", " + skipLabel;
                     gen->emitInst(inst);
-                    std::cout << "enter\n";
+                    // std::cout << "enter\n";
                     gen->prePostOrderTraversal(rhs, pass2PreOrderCallback,
                                            pass2PostOrderCallback);
-                    std::cout << "exit\n";
+                    // std::cout << "exit\n";
                     // the final result is a simple bitwise AND of the two operands
                     inst = "and " + node->reg + ", " + lhs->reg + ", " + rhs->reg;
                     gen->emitInst(inst);
@@ -693,17 +705,17 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     // if the first lhs is true, dont execute rhs
                     inst = "bne $0, " + node->reg + ", " + skipLabel;
                     gen->emitInst(inst);
-                    std::cout << "enter\n";
+                    // std::cout << "enter\n";
                     gen->prePostOrderTraversal(rhs, pass2PreOrderCallback,
                                            pass2PostOrderCallback);
-                    std::cout << "exit\n";
+                    // std::cout << "exit\n";
                     // the final result is a simple bitwise OR of the two operands
                     inst = "or " + node->reg + ", " + lhs->reg + ", " + rhs->reg;
                     gen->emitInst(inst);
                     gen->emitLabel(skipLabel);
                     gen->freeReg(rhs->reg);
                 }
-                std::cout << "here\n";
+                // std::cout << "here\n";
                 throw StopTraversalException();
             }
             break;
@@ -726,11 +738,48 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // we keep track of every str lit in a map and emit them all at the end
         // load the address of the str lit into a register
         case NodeKind::StrLit: { 
-            if(gen->orderedstringLits.find(node->attr) == gen->orderedstringLits.end()) {
-                gen->orderedstringLits[node->attr] = gen->getLabel();
+            // handle special characters
+            std::string cleanString;
+            for(size_t i = 0; i < node->attr.size(); i++) {
+                int c = node->attr[i];
+                if(c == 92 && i < node->attr.length()-1) {
+                    int nextC = node->attr[i+1];
+                    switch (nextC) {
+                        case 98:   // \b
+                            cleanString += "\b";
+                            break;
+                        case 102:   // \f
+                            cleanString += "\f";
+                            break;
+                        case 110:   // \n
+                            cleanString += "\n";
+                            break;
+                        case 114:   // \r
+                            cleanString += "\r";
+                            break;
+                        case 116:   // \t
+                            cleanString += "\t";
+                            break;
+                        case 92:   /* \\ */
+                            cleanString += "\\";
+                            break;
+                        case 34:   // \"
+                            cleanString += "\"";
+                            break;
+                        default: 
+                            std::cout << "found char " << nextC << std::endl;
+                            break;
+                    }
+                    i += 1;
+                    continue;
+                }
+                cleanString += char(c);
+            }
+            if(gen->orderedstringLits.find(cleanString) == gen->orderedstringLits.end()) {
+                gen->orderedstringLits[cleanString] = gen->getLabel();
             }
             node->reg = gen->allocReg();
-            std::string inst = "la " + node->reg + ", " + gen->orderedstringLits[node->attr];
+            std::string inst = "la " + node->reg + ", " + gen->orderedstringLits[cleanString];
             gen->emitInst(inst);
             break;
         }
@@ -738,7 +787,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // or copy the register holding the result if there is no operation
         // we only free the register if it is not a local variable
         case NodeKind::UnaryExpr: {
-            std::cout << "3\n";
+            // std::cout << "3\n";
             auto operand = node->children[0];
             if(operand->kind == NodeKind::Ident) {
                 // DEBUG: make sure that both label and reg are not populated for the same variable
@@ -786,9 +835,9 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // we need to evaluate the result of the expression into a register
         // we only free the registers if they are not local variables
         case NodeKind::BinaryExpr: {
-            std::cout << "1\n";
+            // std::cout << "1\n";
             if(node->attr != "&&" && node->attr != "||") {
-                std::cout << "2\n";
+                // std::cout << "2\n";
                 auto lhs = node->children[0];
                 auto rhs = node->children[1];
                 if(node->attr == "/" || node->attr == "%") {
@@ -803,7 +852,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     gen->emitInst(checkInst);
                     checkInst = "move $a1, " + rhs->reg;
                     gen->emitInst(checkInst);
-                    checkInst = "jal LdivModChk";
+                    checkInst = "jal divModChk";
                     gen->emitInst(checkInst);
                     checkInst = "move " + rhs->reg + ", $v0";
                     gen->emitInst(checkInst);
@@ -822,7 +871,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 gen->freeReg(lhs->reg);
                 gen->freeReg(rhs->reg);
             }
-            std::cout << "3\n";
+            // std::cout << "3\n";
             break;
         }
         default:

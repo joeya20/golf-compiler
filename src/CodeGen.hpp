@@ -36,7 +36,7 @@ struct CodeGen {
 	.globl main
 main:
 	jal Lmain
-	j Lhalt
+	j halt
 )";
 	// holds the current offset from the frame pointer when allocating local variables
 	// offset 0 is reserved for $fp
@@ -44,9 +44,9 @@ main:
 	int offsetFromFp = -4;
 	// holds the instructions of the current function body
 	std::string currFuncBody = "";
-	std::string lastExitLabel = "";
+	std::vector<std::string> forStmtExitLabels;
 	std::string lastRetLabel = "";
-	const std::string emptyStringLabel = "LemptyString";
+	const std::string emptyStringLabel = "emptyString";
 
 	CodeGen(std::shared_ptr<AstNode> root);
 	void generate();
@@ -54,7 +54,7 @@ main:
 	void emitDataSeg();
 	void emitTextSeg();
 
-	void emitDataWord(const std::string& label);
+	void emitDataWord(const std::string& label, const std::string& initVal);
 	void emitStrLits();
 
 	const std::string allocReg();

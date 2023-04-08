@@ -44,5 +44,7 @@ make
 - [DONE] No return statements at all are present in a non-void function. Note that you're only checking for the existence of an appropriate return statement at the semantic checking stage, not whether it's actually executed.
 
 ### Milestone 4
-- Expressions
-- fix entry routine structure
+- t21
+- gen.life
+- gen.select
+- gen.sieve
