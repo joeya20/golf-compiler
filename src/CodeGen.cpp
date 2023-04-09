@@ -185,7 +185,7 @@ halt:
 	syscall
     jr $ra
 # will populate $v0
-# literally copy/pasted from Shankar's Tutorial notes "RTS Functions"
+# literally copy-pasted from Shankar's Tutorial notes "RTS Functions"
 # https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
 LgetChar:
     addi $sp, $sp, -4
@@ -498,6 +498,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 // if expr is false, go to end label
                 testInst << "beq " << expr->reg << ", $0, " << endLabel;
                 gen->emitInst(testInst.str());
+                gen->freeReg(expr->reg);
                 // generate if-block code
                 gen->prePostOrderTraversal(ifBlock, pass2PreOrderCallback, pass2PostOrderCallback);
                 gen->emitLabel(endLabel);
@@ -507,6 +508,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 // if expr is false, go to else label
                 testInst << "beq " << expr->reg << ", $0, " << elseLabel;
                 gen->emitInst(testInst.str());
+                gen->freeReg(expr->reg);
                 // generate if-block code
                 gen->prePostOrderTraversal(ifBlock, pass2PreOrderCallback, pass2PostOrderCallback);
                 // unconditional jump to end label
@@ -517,9 +519,6 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 gen->prePostOrderTraversal(elseBlock, pass2PreOrderCallback, pass2PostOrderCallback);
                 gen->emitLabel(endLabel);
             }
-            
-            // clean-up: free register and stop traversing downward
-            gen->freeReg(expr->reg);
             throw StopTraversalException();
             break;
         }
@@ -564,14 +563,8 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         case NodeKind::AssignStmt: {
             auto ident = node->children[0]->children[0];
             auto rhs = node->children[1];
-            // std::cout << "reg: " << ident->symbol->reg << std::endl;
-            // std::cout << "lbl: " << ident->symbol->label << std::endl;
-            // check if the variable is local
-            if(ident->symbol->reg != "") {
-                ident->reg = ident->symbol->reg;
-            }
-            // check if the variable is global
-            else if(ident->symbol->label != "") {
+            
+            if (ident->symbol->label != "") {
                 ident->label = ident->symbol->label;
             }
             // Houston, we have a problem
@@ -605,12 +598,9 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             throw StopTraversalException();
             break;
         }
-        // a weird bug happens and my code gets emitted in the wrong order if I dont have this here
         case NodeKind::ExprStmt:
             gen->prePostOrderTraversal(node->children[0], pass2PreOrderCallback, pass2PostOrderCallback);
-            if(node->children[0]->reg != "") {
-                gen->freeReg(node->children[0]->reg);
-            }
+            gen->freeReg(node->children[0]->reg);
             throw StopTraversalException();
             break;
         case NodeKind::FuncCall: {

@@ -45,6 +45,3 @@ make
 
 ### Milestone 4
 - t21
-- gen.life
-- gen.select
-- gen.sieve

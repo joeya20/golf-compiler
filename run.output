@@ -1,4 +1,4 @@
-Run started on Sat Apr  8 17:29:00 2023
+Run started on Sun Apr  9 14:28:43 2023
 
 Hostname: csx3.cs.ucalgary.ca
 
@@ -9,7 +9,8 @@ Running make |
 % /usr/bin/make
 
 STDOUT:
-make: 'golf' is up to date.
+g++ -c -Wall -o build/CodeGen.o src/CodeGen.cpp
+g++ -Wall -o golf build/util.o build/lex.yy.o build/lexer.o build/parse.tab.o build/AstNode.o build/SemanticAnalyzer.o build/SymbolTable.o build/Symbol.o build/CodeGen.o build/main.o
 
 
 STDERR:
@@ -995,12 +996,130 @@ Test: the Game of Life |
 % ./golf /home/profs/aycock/411/TEST/final/gen.life > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/final/gen.life: No register available!
 
 
-RETURN CODE: 1
+RETURN CODE: 0
 
-(GoLF compiler unsuccessful, skipping test)
+% /home/profs/aycock/411/bin/spim -file out.s
+
+STDOUT:
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+Generation 1:
+0 1 1 1 0 1 0 0 0 0 
+0 0 0 0 0 0 1 0 0 0 
+0 0 0 1 1 0 1 0 0 0 
+0 1 0 1 0 0 1 0 0 0 
+0 1 1 0 0 0 0 1 0 0 
+0 0 0 0 1 0 0 1 0 0 
+0 1 1 0 0 0 0 0 1 0 
+0 1 0 0 1 0 0 0 0 0 
+0 1 1 0 0 0 0 1 0 0 
+0 1 1 0 1 0 0 0 1 0 
+Generation 2:
+0 0 1 0 0 0 0 0 0 0 
+0 0 0 0 0 0 1 0 0 0 
+0 0 1 1 1 0 1 1 0 0 
+0 1 0 1 1 1 1 1 0 0 
+0 1 1 1 0 0 1 1 0 0 
+0 0 0 1 0 0 0 1 1 0 
+0 1 1 1 0 0 0 0 0 0 
+1 0 0 1 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 
+0 1 1 1 0 0 0 0 0 0 
+Generation 3:
+0 0 0 0 0 0 0 0 0 0 
+0 0 1 0 0 1 1 1 0 0 
+0 0 1 0 0 0 0 0 0 0 
+0 1 0 0 0 0 0 0 1 0 
+0 1 0 0 0 0 0 0 0 0 
+0 0 0 0 1 0 1 1 1 0 
+0 1 0 1 1 0 0 0 0 0 
+1 0 0 1 0 0 0 0 0 0 
+1 0 0 1 0 0 0 0 0 0 
+0 1 1 0 0 0 0 0 0 0 
+Generation 4:
+0 0 0 0 0 0 1 0 0 0 
+0 0 0 0 0 0 1 0 0 0 
+0 1 1 0 0 0 1 1 0 0 
+0 1 1 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 1 0 
+0 0 1 1 1 1 0 1 0 0 
+0 0 1 1 1 1 0 1 0 0 
+1 1 0 1 0 0 0 0 0 0 
+1 0 0 1 0 0 0 0 0 0 
+0 1 1 0 0 0 0 0 0 0 
+Generation 5:
+0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 1 1 0 0 0 
+0 1 1 0 0 0 1 1 0 0 
+0 1 1 0 0 0 0 1 0 0 
+0 1 0 0 1 0 0 0 0 0 
+0 0 1 0 0 1 0 1 1 0 
+0 0 0 0 0 1 0 0 0 0 
+1 1 0 0 0 0 0 0 0 0 
+1 0 0 1 0 0 0 0 0 0 
+0 1 1 0 0 0 0 0 0 0 
+Generation 6:
+0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 1 1 1 0 0 
+0 1 1 0 0 1 0 1 0 0 
+1 0 0 1 0 0 1 1 0 0 
+0 1 0 1 0 0 1 1 1 0 
+0 0 0 0 1 1 1 0 0 0 
+0 1 0 0 0 0 1 0 0 0 
+1 1 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 
+0 1 1 0 0 0 0 0 0 0 
+Generation 7:
+0 0 0 0 0 0 1 0 0 0 
+0 0 0 0 0 1 0 1 0 0 
+0 1 1 0 1 1 0 0 1 0 
+1 0 0 1 1 1 0 0 0 0 
+0 0 1 1 0 0 0 0 1 0 
+0 0 1 0 1 0 0 0 0 0 
+1 1 0 0 0 0 1 0 0 0 
+1 1 0 0 0 0 0 0 0 0 
+1 0 1 0 0 0 0 0 0 0 
+0 1 0 0 0 0 0 0 0 0 
+Generation 8:
+0 0 0 0 0 0 1 0 0 0 
+0 0 0 0 1 1 0 1 0 0 
+0 1 1 0 0 0 0 0 0 0 
+0 0 0 0 0 1 0 0 0 0 
+0 1 1 0 0 1 0 0 0 0 
+0 0 1 0 0 0 0 0 0 0 
+1 0 1 0 0 0 0 0 0 0 
+0 0 1 0 0 0 0 0 0 0 
+1 0 1 0 0 0 0 0 0 0 
+0 1 0 0 0 0 0 0 0 0 
+Generation 9:
+0 0 0 0 0 1 1 0 0 0 
+0 0 0 0 0 1 1 0 0 0 
+0 0 0 0 1 1 1 0 0 0 
+0 0 0 0 0 0 0 0 0 0 
+0 1 1 0 0 0 0 0 0 0 
+0 0 1 1 0 0 0 0 0 0 
+0 0 1 1 0 0 0 0 0 0 
+0 0 1 1 0 0 0 0 0 0 
+0 0 1 0 0 0 0 0 0 0 
+0 1 0 0 0 0 0 0 0 0 
+Generation 10:
+0 0 0 0 0 1 1 0 0 0 
+0 0 0 0 0 0 0 1 0 0 
+0 0 0 0 1 0 1 0 0 0 
+0 0 0 0 0 1 0 0 0 0 
+0 1 1 1 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 
+0 1 0 0 1 0 0 0 0 0 
+0 1 0 0 0 0 0 0 0 0 
+0 1 1 1 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 
+
+
+STDERR:
+
+
+RETURN CODE: 0
 
 -------------------------------------------------------------------------------
 Test: selection sort |
@@ -1009,12 +1128,35 @@ Test: selection sort |
 % ./golf /home/profs/aycock/411/TEST/final/gen.select > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/final/gen.select: No register available!
 
 
-RETURN CODE: 1
+RETURN CODE: 0
 
-(GoLF compiler unsuccessful, skipping test)
+% /home/profs/aycock/411/bin/spim -file out.s
+
+STDOUT:
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+30 23 4 9 86 63 48 61 98 39 8 73 18 35 0 
+0 23 4 9 86 63 48 61 98 39 8 73 18 35 30 
+0 4 23 9 86 63 48 61 98 39 8 73 18 35 30 
+0 4 8 9 86 63 48 61 98 39 23 73 18 35 30 
+0 4 8 9 86 63 48 61 98 39 23 73 18 35 30 
+0 4 8 9 18 63 48 61 98 39 23 73 86 35 30 
+0 4 8 9 18 23 48 61 98 39 63 73 86 35 30 
+0 4 8 9 18 23 30 61 98 39 63 73 86 35 48 
+0 4 8 9 18 23 30 35 98 39 63 73 86 61 48 
+0 4 8 9 18 23 30 35 39 98 63 73 86 61 48 
+0 4 8 9 18 23 30 35 39 48 63 73 86 61 98 
+0 4 8 9 18 23 30 35 39 48 61 73 86 63 98 
+0 4 8 9 18 23 30 35 39 48 61 63 86 73 98 
+0 4 8 9 18 23 30 35 39 48 61 63 73 86 98 
+0 4 8 9 18 23 30 35 39 48 61 63 73 86 98 
+
+
+STDERR:
+
+
+RETURN CODE: 0
 
 -------------------------------------------------------------------------------
 Test: prime number sieve |
@@ -1023,12 +1165,46 @@ Test: prime number sieve |
 % ./golf /home/profs/aycock/411/TEST/final/gen.sieve > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/final/gen.sieve: No register available!
 
 
-RETURN CODE: 1
+RETURN CODE: 0
 
-(GoLF compiler unsuccessful, skipping test)
+% /home/profs/aycock/411/bin/spim -file out.s
 
-Run ended on Sat Apr  8 17:29:09 2023
+STDOUT:
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97
+25 prime numbers <= 100
+
+
+STDERR:
+
+
+RETURN CODE: 0
+
+Run ended on Sun Apr  9 14:28:56 2023
 
