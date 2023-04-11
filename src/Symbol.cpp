@@ -14,11 +14,11 @@ Symbol::Symbol(std::string& name, location& loc, bool isType, bool isConst) {
     this->isConst = isConst; 
 }
 
-Symbol::Symbol(std::string& name, std::string& sig, std::string& rvSig, std::string& asmLabel, bool& isConst, bool& isType) {
+Symbol::Symbol(std::string& name, std::string& sig, std::string& rvSig, std::string& asmAddr, bool& isConst, bool& isType) {
     this->name = name;
     this->sig = sig;
     this->rvSig = rvSig;
-    this->label = asmLabel;
+    this->asmAddr = asmAddr;
     this->isType = isType;
     this->isConst = isConst;
 }

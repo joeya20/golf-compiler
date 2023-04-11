@@ -4465,7 +4465,7 @@ LINTERNALrandom:
 	jal divModChk
 	move $t1, $v0
 	lw $a0, 4($sp)
-	lw $a1, ($sp)
+	lw $a1, 0($sp)
 	addiu $sp, $sp, 8
 	rem $t0, $t0, $t1
 	sw $t0, LINTERNALX

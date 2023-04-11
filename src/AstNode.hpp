@@ -122,7 +122,7 @@ namespace GoLF {
         // populated in codegen if the node is
         // an expression that is evaluated in a register
         std::string reg;
-        std::string label;  // this is either a label or an offset from some register (i.e. 4($Sfp))
+        std::string asmAddr;  // this is either a label or an offset from some register (i.e. 4($Sfp))
         
         AstNode(Kind kind);
         AstNode(Kind kind, std::string attr);

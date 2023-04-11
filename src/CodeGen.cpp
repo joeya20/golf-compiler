@@ -319,8 +319,8 @@ const std::string CodeGen::allocReg() {
     // std::cout << "adding\n";
     if(this->regPool.size() == 0) {
         // output error for now
-        handleError("No register available!");
-        // return "";
+        // handleError("No register available!");
+        return "";
     }
     auto res = regPool.back();
     regPool.pop_back();
@@ -330,7 +330,7 @@ const std::string CodeGen::allocReg() {
 }
 
 void CodeGen::freeReg(const std::string& regId) {
-	if(regId[1] == 'a') {
+	if(regId == "" || regId[1] == 'a') {
 		return;
 	}
     // std::cout << "removing " << regId << "\n";
@@ -353,17 +353,17 @@ void pass1PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // we should have a special case for strings
         auto ident = node->children[0];
         auto type = node->children[1];
-        ident->symbol->label = gen->idToAsm(ident->attr);
+        ident->symbol->asmAddr = gen->idToAsm(ident->attr);
         if(type->attr == "int" || type->attr == "bool") {
-            gen->emitDataWord(ident->symbol->label, "0");
+            gen->emitDataWord(ident->symbol->asmAddr, "0");
         }
         else {
-            gen->emitDataWord(ident->symbol->label, gen->emptyStringLabel);
+            gen->emitDataWord(ident->symbol->asmAddr, gen->emptyStringLabel);
         }
     }
     else if(node->kind == NodeKind::FuncDecl) {
         auto ident = node->children[0];
-        ident->symbol->label = gen->idToAsm(ident->attr);
+        ident->symbol->asmAddr = gen->idToAsm(ident->attr);
     }
 }
 
@@ -388,7 +388,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             // argument 4 will be stored at -16($fp)
             for(size_t i = 0; i < params->children.size(); i++) {
                 auto paramIdent = params->children[i]->children[0];
-                paramIdent->symbol->label = std::to_string(int(i+1)*-4) + "($fp)" ;
+                paramIdent->symbol->asmAddr = std::to_string(int(i+1)*-4) + "($fp)" ;
             }
             gen->offsetFromFp = int(params->children.size()+1) * -4; // evaluates to -4 if there are no params
             // std::cout << "res: " << gen->offsetFromFp << "\n";
@@ -411,7 +411,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 prologue << "\taddiu $sp, $sp, " << gen->offsetFromFp+4 << "\n";
                 for(size_t i = 0; i < params->children.size(); i++) {
                     auto paramIdent = params->children[i]->children[0];
-                    prologue << "\tsw $a" << i << ", " << paramIdent->symbol->label << "\n";
+                    prologue << "\tsw $a" << i << ", " << paramIdent->symbol->asmAddr << "\n";
                 }
             }
 
@@ -469,16 +469,23 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         case NodeKind::VarDecl: {
             auto ident = node->children[0];
             auto type = node->children[1];
-            ident->symbol->label = std::to_string(gen->offsetFromFp) + "($fp)";
+            ident->symbol->asmAddr = std::to_string(gen->offsetFromFp) + "($fp)";
             std::stringstream inst;
             if(type->attr == "string") {
-                auto reg = gen->allocReg();
-                inst << "la " << reg << ", " << gen->emptyStringLabel << "\n";
-                inst << "\tsw " << reg << ", " << ident->symbol->label;
+                // we absolutely need a register here because there are no memory-memory instructions in MIPS
+                auto reg = gen->allocReg(); 
+                if(reg != "") {
+                    inst << "la " << reg << ", " << gen->emptyStringLabel << "\n";
+                    inst << "\tsw " << reg << ", " << ident->symbol->asmAddr;
+                }
+                // should never happen (I think) since registers are mainly used to evaluate expressions and should never live across statements
+                else {  
+                    handleError("Unable to allocate string, no registers available");
+                }
                 gen->freeReg(reg);
             }
             else {
-                inst << "sw $0" << ", " << ident->symbol->label << "\t\t# initializing var " << ident->attr;
+                inst << "sw $0" << ", " << ident->symbol->asmAddr << "\t\t# initializing var " << ident->attr;
             }
             gen->emitInst(inst.str());
             gen->offsetFromFp -= 4;
@@ -564,8 +571,8 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             auto ident = node->children[0]->children[0];
             auto rhs = node->children[1];
             
-            if (ident->symbol->label != "") {
-                ident->label = ident->symbol->label;
+            if (ident->symbol->asmAddr != "") {
+                ident->asmAddr = ident->symbol->asmAddr;
             }
             // Houston, we have a problem
             else {
@@ -582,11 +589,11 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     << ident->reg << ", "
                     << rhs->reg;
             }
-            else if(ident->label != "") {
+            else if(ident->asmAddr != "") {
                 inst
                     << "sw "
                     << rhs->reg << ", "
-                    << ident->label;
+                    << ident->asmAddr;
             }
             else { // DEBUG
                handleError("bad! assign post"); 
@@ -636,8 +643,8 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             }
             
             // now handle function call
-            assert(ident->symbol->label != "");
-            inst = "jal " + ident->symbol->label;
+            assert(ident->symbol->asmAddr != "");
+            inst = "jal " + ident->symbol->asmAddr;
             gen->emitInst(inst);
 
             // do cleanup
@@ -653,9 +660,22 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             }
 
             node->reg = gen->allocReg();
+            // if we run out of registers use the stack
+            // this will get automatically allocated in the function prologue
+            if(node->reg == "") {
+                node->asmAddr = std::to_string(gen->offsetFromFp) + "($fp)";
+                gen->offsetFromFp -= 4;
+            }
+
             if (ident->symbol->rvSig != "void") {
-                inst = "move " + node->reg + ", $v0";
-                gen->emitInst(inst);
+                if(node->reg != "") {
+                    inst = "move " + node->reg + ", $v0";
+                    gen->emitInst(inst);
+                }
+                else {
+                    inst = "sw $v0, " + node->asmAddr;
+                    gen->emitInst(inst);
+                }
             }
 
             throw StopTraversalException();
@@ -721,9 +741,30 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         // load integer value into a register
         case NodeKind::IntLit: {
             node->reg = gen->allocReg();
-            std::stringstream res;
-            res << "li " << node->reg << ", " << node->attr;
-            gen->emitInst(res.str());
+            std::string inst;
+            if(node->reg == "") {
+                // first allocate some dedicated stack memory for this integer literal
+                // this memory will be allocated for the lifetime of the function
+                node->asmAddr = std::to_string(gen->offsetFromFp) + "($fp)";
+                gen->offsetFromFp -= 4;
+
+                inst = "addiu $sp, $sp, -4";
+                gen->emitInst(inst);
+                inst = "sw $v1, 0($sp) # temporarily store $v1 on the stack";
+                gen->emitInst(inst);
+                inst = "li $v1, " + node->attr;
+                gen->emitInst(inst);
+                inst = "sw $v1, " + node->asmAddr;
+                gen->emitInst(inst);
+                inst = "lw $v1, 0($sp) # restore $v1";
+                gen->emitInst(inst);
+                inst = "addiu $sp, $sp, 4";
+                gen->emitInst(inst);
+            }
+            else {
+                inst = "li " + node->reg + ", " + node->attr;
+                gen->emitInst(inst);
+            }
             break;
         }
         // we keep track of every str lit in a map and emit them all at the end
@@ -770,8 +811,30 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 gen->orderedstringLits[cleanString] = gen->getLabel();
             }
             node->reg = gen->allocReg();
-            std::string inst = "la " + node->reg + ", " + gen->orderedstringLits[cleanString];
-            gen->emitInst(inst);
+            std::string inst;
+            if(node->reg == "") {
+                // first allocate some dedicated stack memory for this integer literal
+                // this memory will be allocated for the lifetime of the function
+                node->asmAddr = std::to_string(gen->offsetFromFp) + "($fp)";
+                gen->offsetFromFp -= 4;
+
+                inst = "addiu $sp, $sp, -4";
+                gen->emitInst(inst);
+                inst = "sw $v1, 0($sp) # temporarily store $v1 on the stack";
+                gen->emitInst(inst);
+                inst = "la $v1, " +  gen->orderedstringLits[cleanString];
+                gen->emitInst(inst);
+                inst = "sw $v1, " + node->asmAddr;
+                gen->emitInst(inst);
+                inst = "lw $v1, 0($sp) # restore $v1";
+                gen->emitInst(inst);
+                inst = "addiu $sp, $sp, 4";
+                gen->emitInst(inst);
+            } 
+            else {
+                inst = "la " + node->reg + ", " + gen->orderedstringLits[cleanString];
+                gen->emitInst(inst);
+            }
             break;
         }
         // we need to either evaluate the result of the expression into a register
@@ -782,13 +845,14 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             auto operand = node->children[0];
             if(operand->kind == NodeKind::Ident) {
                 // DEBUG: make sure that both label and reg are not populated for the same variable
-                assert(operand->symbol->reg == "" || operand->symbol->label == "");
+                assert(operand->symbol->reg == "" || operand->symbol->asmAddr == "");
                 if(operand->symbol->reg != "") {
+                    assert(operand->symbol->reg[1] == 'a');
                     operand->reg = operand->symbol->reg;
                 }
-                else if(operand->symbol->label != "") {
+                else if(operand->symbol->asmAddr != "") {
                     operand->reg = gen->allocReg();
-                    std::string instr = "lw " + operand->reg + ", " + operand->symbol->label;
+                    std::string instr = "lw " + operand->reg + ", " + operand->symbol->asmAddr;
                     gen->emitInst(instr);
                 }
                 // DEBUG: make sure that both label and reg are not both empty
@@ -797,28 +861,44 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 }
             }
  
-            assert(operand->reg != "");
-            if(node->attr != "") {
+            if(operand->reg != "") {
                 node->reg = operand->reg;
-                std::string res;
+                std::string inst;
                 if(node->attr == "u-") {
-                    res = "subu " + node->reg + ", $0, " + operand->reg;
+                    inst = "subu " + node->reg + ", $0, " + operand->reg;
+                    gen->emitInst(inst);
                 }
                 else if(node->attr == "!") {
-                    res = "xori " + node->reg + ", " + operand->reg + ", 1";
+                    inst = "xori " + node->reg + ", " + operand->reg + ", 1";
+                    gen->emitInst(inst);
                 }
-                else {
-                    handleError("bad unaryexpr op!");
-                }
-                gen->emitInst(res);
             }
             else {
-                // just pass the register upwards if there is no operation
-                node->reg = operand->reg;
+                node->asmAddr = operand->asmAddr;        
+                if(node->attr != "") {
+                    std::string inst;
+                    inst = "addiu $sp, $sp, -4";
+                    gen->emitInst(inst);
+                    inst = "sw $v1, 0($sp) # temporarily store $v1 on the stack";
+                    gen->emitInst(inst);
+                    inst = "lw $v1, " + operand->asmAddr;
+                    gen->emitInst(inst);
+                    if(node->attr == "u-") {
+                        inst = "subu $v1, $0, $v1";
+                        gen->emitInst(inst);
+                    }
+                    else if(node->attr == "!") {
+                        inst = "xori $v1, $v1, 1";
+                        gen->emitInst(inst);
+                    }
+                    inst = "sw $v1, " + node->asmAddr;
+                    gen->emitInst(inst);
+                    inst = "lw $v1, 0($sp) # restore $v1";
+                    gen->emitInst(inst);
+                    inst = "addiu $sp, $sp, 4";
+                    gen->emitInst(inst);
+                }        
             }
-
-            // DEBUG: we've done something wrong if we are leaving this function with no reg assigned
-            assert(node->reg != "");
             break;
         }
         // we need to evaluate the result of the expression into a register
@@ -826,7 +906,6 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
         case NodeKind::BinaryExpr: {
             // std::cout << "1\n";
             if(node->attr != "&&" && node->attr != "||") {
-                // std::cout << "2\n";
                 auto lhs = node->children[0];
                 auto rhs = node->children[1];
                 if(node->attr == "/" || node->attr == "%") {
@@ -837,28 +916,114 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     gen->emitInst(checkInst);
                     checkInst = "sw $a1, ($sp)";
                     gen->emitInst(checkInst);
-                    checkInst = "move $a0, " + lhs->reg;
-                    gen->emitInst(checkInst);
-                    checkInst = "move $a1, " + rhs->reg;
-                    gen->emitInst(checkInst);
+                    if(lhs->reg != "") {
+                        checkInst = "move $a0, " + lhs->reg;
+                        gen->emitInst(checkInst);
+                    }
+                    else {
+                        checkInst = "lw $a0, " + lhs->asmAddr;
+                        gen->emitInst(checkInst);
+                    }
+                    if(rhs->reg != "") {
+                        checkInst = "move $a1, " + rhs->reg;
+                        gen->emitInst(checkInst);
+                    }
+                    else {
+                        checkInst = "lw $a1, " + rhs->asmAddr;
+                        gen->emitInst(checkInst);
+                    }
                     checkInst = "jal divModChk";
                     gen->emitInst(checkInst);
-                    checkInst = "move " + rhs->reg + ", $v0";
-                    gen->emitInst(checkInst);
+                    if(rhs->reg != "") {
+                        checkInst = "move " + rhs->reg + ", $v0";
+                        gen->emitInst(checkInst);
+                    }
+                    else {
+                        checkInst = "sw $v0, " + rhs->asmAddr;
+                        gen->emitInst(checkInst);
+                    }
                     checkInst = "lw $a0, 4($sp)";
                     gen->emitInst(checkInst);
-                    checkInst = "lw $a1, ($sp)";
+                    checkInst = "lw $a1, 0($sp)";
                     gen->emitInst(checkInst);
                     checkInst = "addiu $sp, $sp, 8";
                     gen->emitInst(checkInst);
 			    }
-                assert(lhs->reg != "");
-                assert(rhs->reg != "");
-                node->reg = lhs->reg;
-                char inst[256];	//no buffer overflows pls!!
-                sprintf(inst, opToAsm[node->attr].c_str(), node->reg.c_str(), lhs->reg.c_str(), rhs->reg.c_str());
-                gen->emitInst(std::string(inst));
-                gen->freeReg(rhs->reg);
+                assert(lhs->reg != "" || lhs->asmAddr != "");
+                assert(rhs->reg != "" || rhs->asmAddr != "");
+
+                if(lhs->reg != "" && rhs->reg != "") {
+                    node->reg = lhs->reg;
+                    char inst[256];	//no buffer overflows pls!!
+                    sprintf(inst, opToAsm[node->attr].c_str(), node->reg.c_str(), lhs->reg.c_str(), rhs->reg.c_str());
+                    gen->emitInst(std::string(inst));
+                    gen->freeReg(rhs->reg);
+                }
+                else if(lhs->reg != "" && rhs->reg == "") {
+                    node->reg = lhs->reg;
+                    std::string tempInst;
+                    tempInst = "addiu $sp, $sp, -4";
+                    gen->emitInst(tempInst);
+                    tempInst = "sw $v1, 0($sp) # temporarily store $v1 on the stack";
+                    gen->emitInst(tempInst);
+                    tempInst = "lw $v1, " + rhs->asmAddr;
+                    gen->emitInst(tempInst);
+                    
+                    char inst[256];	//no buffer overflows pls!!
+                    sprintf(inst, opToAsm[node->attr].c_str(), node->reg.c_str(), lhs->reg.c_str(), "$v1");
+                    gen->emitInst(std::string(inst));
+
+                    tempInst = "lw $v1, 0($sp) # restore $v1";
+                    gen->emitInst(tempInst);
+                    tempInst = "addiu $sp, $sp, 4";
+                    gen->emitInst(tempInst);
+                }
+                else if (rhs->reg != "" && lhs->reg == "") {
+                    node->reg = rhs->reg;
+                    std::string tempInst;
+                    tempInst = "addiu $sp, $sp, -4";
+                    gen->emitInst(tempInst);
+                    tempInst = "sw $v1, 0($sp) # temporarily store $v1 on the stack";
+                    gen->emitInst(tempInst);
+                    tempInst = "lw $v1, " + lhs->asmAddr;
+                    gen->emitInst(tempInst);
+                    
+                    char inst[256];	//no buffer overflows pls!!
+                    sprintf(inst, opToAsm[node->attr].c_str(), node->reg.c_str(), "$v1", rhs->reg.c_str());
+                    gen->emitInst(std::string(inst));
+
+                    tempInst = "lw $v1, 0($sp) # restore $v1";
+                    gen->emitInst(tempInst);
+                    tempInst = "addiu $sp, $sp, 4";
+                    gen->emitInst(tempInst);
+                }
+                else {
+                    node->asmAddr = lhs->asmAddr;
+                    std::string tempInst;
+                    tempInst = "addiu $sp, $sp, -8";
+                    gen->emitInst(tempInst);
+                    tempInst = "sw $v1, 4($sp) # temporarily store $v1 on the stack";
+                    gen->emitInst(tempInst);
+                    tempInst = "sw $v0, 0($sp) # temporarily store $v0 on the stack";
+                    gen->emitInst(tempInst);
+                    tempInst = "lw $v0, " + lhs->asmAddr;
+                    gen->emitInst(tempInst);
+                    tempInst = "lw $v1, " + rhs->asmAddr;
+                    gen->emitInst(tempInst);
+                    
+                    char inst[256];	//no buffer overflows pls!!
+                    sprintf(inst, opToAsm[node->attr].c_str(), "$v0", "$v0", "$v1");
+                    gen->emitInst(std::string(inst));
+
+                    tempInst = "sw $v0, " +  node->asmAddr;
+                    gen->emitInst(tempInst);
+                    tempInst = "lw $v1, 4($sp) # restore $v1";
+                    gen->emitInst(tempInst);
+                    tempInst = "lw $v0, 0($sp) # restore $v0";
+                    gen->emitInst(tempInst);
+                    tempInst = "addiu $sp, $sp, 8";
+                    gen->emitInst(tempInst);
+                }
             }
             break;
         }

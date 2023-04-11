@@ -1,4 +1,4 @@
-Run started on Mon Apr 10 17:02:33 2023
+Run started on Mon Apr 10 23:00:52 2023
 
 Hostname: csx3.cs.ucalgary.ca
 
@@ -780,12 +780,20 @@ Test: register blow-out |
 % ./golf /home/profs/aycock/411/TEST/final/gen.t21 > out.s
 
 STDERR:
-error: /home/profs/aycock/411/TEST/final/gen.t21: No register available!
 
 
-RETURN CODE: 1
+RETURN CODE: 0
 
-(GoLF compiler unsuccessful, skipping test)
+% /home/profs/aycock/411/bin/spim -file out.s
+
+STDOUT:
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+903
+
+STDERR:
+
+
+RETURN CODE: 0
 
 -------------------------------------------------------------------------------
 Test: nested "for" loops |
@@ -1205,5 +1213,5 @@ STDERR:
 
 RETURN CODE: 0
 
-Run ended on Mon Apr 10 17:02:42 2023
+Run ended on Mon Apr 10 23:01:01 2023
 
