@@ -1,4 +1,4 @@
-Run started on Sun Apr  9 14:28:43 2023
+Run started on Mon Apr 10 17:02:33 2023
 
 Hostname: csx3.cs.ucalgary.ca
 
@@ -9,8 +9,7 @@ Running make |
 % /usr/bin/make
 
 STDOUT:
-g++ -c -Wall -o build/CodeGen.o src/CodeGen.cpp
-g++ -Wall -o golf build/util.o build/lex.yy.o build/lexer.o build/parse.tab.o build/AstNode.o build/SemanticAnalyzer.o build/SymbolTable.o build/Symbol.o build/CodeGen.o build/main.o
+make: 'golf' is up to date.
 
 
 STDERR:
@@ -1206,5 +1205,5 @@ STDERR:
 
 RETURN CODE: 0
 
-Run ended on Sun Apr  9 14:28:56 2023
+Run ended on Mon Apr 10 17:02:42 2023
 

@@ -188,7 +188,7 @@ halt:
 # literally copy-pasted from Shankar's Tutorial notes "RTS Functions"
 # https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
 LgetChar:
-    addi $sp, $sp, -4
+    addiu $sp, $sp, -4
     sw $ra, 0($sp)
 
     li $v0, 8                       # System call for read_string
@@ -202,25 +202,25 @@ LgetChar:
     li $v0, -1                      # If 0, map to -1 and return
 ret:
     lw $ra 0($sp)
-    addi $sp $sp, 4
+    addiu $sp $sp, 4
     jr $ra
 
 # assumes $a0 is loaded with address of string
 Llen:
 	# initialize length variable to 0
-	addi $t0, $0, 0
+	addiu $t0, $0, 0
 count:
 	# load in character at address in $a0
 	lb $t1, ($a0)
 	# we've reached EOS if the byte == 0
 	beq $t1, $0, retLen
 	# else we increment length and the address
-	addi $t0, $t0, 1
-	addi $a0, $a0, 1
+	addiu $t0, $t0, 1
+	addiu $a0, $a0, 1
 	j count
 retLen:
 	# move length to return register and return
-	addi $v0, $t0, 0
+	addiu $v0, $t0, 0
 	jr $ra
 
 # assumes $a0 is loaded with boolean to print
@@ -228,24 +228,24 @@ Lprintb:
 	# if the boolean value is 0 then print false
 	beq $0 $a0 printFalse
 	# else print true
-	addi $sp, $sp, -8
+	addiu $sp, $sp, -8
 	sw $ra, -4($sp)
 	sw $a0, 0($sp)
 	la $a0, trueString
 	jal Lprints
 	lw $a0, 0($sp)
 	lw $ra, -4($sp)
-	addi $sp, $sp, 8
+	addiu $sp, $sp, 8
 	jr $ra
 printFalse:
-	addi $sp, $sp, -8
+	addiu $sp, $sp, -8
 	sw $ra, -4($sp)
 	sw $a0, 0($sp)
 	la $a0, falseString
 	jal Lprints
 	lw $a0, 0($sp)
 	lw $ra, -4($sp)
-	addi $sp, $sp, 8
+	addiu $sp, $sp, 8
 	jr $ra
 
 # assume $a0 is loaded with integer to print
@@ -320,6 +320,7 @@ const std::string CodeGen::allocReg() {
     if(this->regPool.size() == 0) {
         // output error for now
         handleError("No register available!");
+        // return "";
     }
     auto res = regPool.back();
     regPool.pop_back();
@@ -398,7 +399,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             std::stringstream prologue;
             prologue << "\t# prologue\n";
             // grow stack to save $fp and $ra
-            prologue << "\taddi $sp, $sp, -8\n";
+            prologue << "\taddiu $sp, $sp, -8\n";
             // save $ra
             prologue << "\tsw   $ra, 4($sp)\n";
             // save $fp
@@ -407,7 +408,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             prologue << "\tmove $fp, $sp\n";
             // now allocate memory for local variables if necessary
             if(gen->offsetFromFp < -4) {
-                prologue << "\taddi $sp, $sp, " << gen->offsetFromFp+4 << "\n";
+                prologue << "\taddiu $sp, $sp, " << gen->offsetFromFp+4 << "\n";
                 for(size_t i = 0; i < params->children.size(); i++) {
                     auto paramIdent = params->children[i]->children[0];
                     prologue << "\tsw $a" << i << ", " << paramIdent->symbol->label << "\n";
@@ -430,13 +431,13 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             epilogue << "\t# epilogue\n";
             // now deallocate memory used for local variables if necessary
             if(gen->offsetFromFp < -4) {
-                epilogue << "\taddi $sp, $sp, " << abs(gen->offsetFromFp+4) << "\n";
+                epilogue << "\taddiu $sp, $sp, " << abs(gen->offsetFromFp+4) << "\n";
             }
             // restore $ra and $fp
             epilogue << "\tlw   $fp, 0($sp)\n";
             epilogue << "\tlw   $ra, 4($sp)\n";
             // shrink stack again
-            epilogue << "\taddi $sp, $sp, 8\n";
+            epilogue << "\taddiu $sp, $sp, 8\n";
             epilogue << "\tjr $ra\n";
             gen->textSeg += epilogue.str();
 
@@ -471,7 +472,6 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             ident->symbol->label = std::to_string(gen->offsetFromFp) + "($fp)";
             std::stringstream inst;
             if(type->attr == "string") {
-                    // std::cout << "2\n";
                 auto reg = gen->allocReg();
                 inst << "la " << reg << ", " << gen->emptyStringLabel << "\n";
                 inst << "\tsw " << reg << ", " << ident->symbol->label;
@@ -625,7 +625,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
 
             // save regs in use
             if(gen->regsInUse.size() > 0) {
-                inst = "addi $sp, $sp, " + std::to_string(int(gen->regsInUse.size()) * -4);
+                inst = "addiu $sp, $sp, " + std::to_string(int(gen->regsInUse.size()) * -4);
                 gen->emitInst(inst);
                 int offset = 0;
                 for(auto & reg : gen->regsInUse) {
@@ -648,7 +648,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     gen->emitInst(inst);
                     offset += 4;
                 }
-                inst = "addi $sp, $sp, " + std::to_string(int(gen->regsInUse.size()) * 4);
+                inst = "addiu $sp, $sp, " + std::to_string(int(gen->regsInUse.size()) * 4);
                 gen->emitInst(inst);
             }
 
@@ -657,6 +657,7 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 inst = "move " + node->reg + ", $v0";
                 gen->emitInst(inst);
             }
+
             throw StopTraversalException();
             break;
         }
@@ -795,8 +796,10 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     handleError("bad! unary");
                 }
             }
+ 
+            assert(operand->reg != "");
             if(node->attr != "") {
-                node->reg = gen->allocReg();
+                node->reg = operand->reg;
                 std::string res;
                 if(node->attr == "u-") {
                     res = "subu " + node->reg + ", $0, " + operand->reg;
@@ -808,16 +811,12 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     handleError("bad unaryexpr op!");
                 }
                 gen->emitInst(res);
-                if(operand->reg != "") {
-                    gen->freeReg(operand->reg);
-                }
             }
             else {
-                // if there is no operation just copy the reg from the child
-                if(operand->reg != "") {
-                    node->reg = operand->reg;
-                }
+                // just pass the register upwards if there is no operation
+                node->reg = operand->reg;
             }
+
             // DEBUG: we've done something wrong if we are leaving this function with no reg assigned
             assert(node->reg != "");
             break;
@@ -832,7 +831,7 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                 auto rhs = node->children[1];
                 if(node->attr == "/" || node->attr == "%") {
                     std::string checkInst;
-                    checkInst = "addi $sp, $sp, -8";
+                    checkInst = "addiu $sp, $sp, -8";
                     gen->emitInst(checkInst);
                     checkInst = "sw $a0, 4($sp)";
                     gen->emitInst(checkInst);
@@ -850,18 +849,17 @@ void pass2PostOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
                     gen->emitInst(checkInst);
                     checkInst = "lw $a1, ($sp)";
                     gen->emitInst(checkInst);
-                    checkInst = "addi $sp, $sp, 8";
+                    checkInst = "addiu $sp, $sp, 8";
                     gen->emitInst(checkInst);
 			    }
-
-                node->reg = gen->allocReg();
+                assert(lhs->reg != "");
+                assert(rhs->reg != "");
+                node->reg = lhs->reg;
                 char inst[256];	//no buffer overflows pls!!
                 sprintf(inst, opToAsm[node->attr].c_str(), node->reg.c_str(), lhs->reg.c_str(), rhs->reg.c_str());
                 gen->emitInst(std::string(inst));
-                gen->freeReg(lhs->reg);
                 gen->freeReg(rhs->reg);
             }
-            // std::cout << "3\n";
             break;
         }
         default:
