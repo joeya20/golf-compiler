@@ -23,10 +23,14 @@ make
 ./bin/golf <input file> > <output file>
 ```
 ### simulate using Mars:
-1. see instructions here: 
+1. see instructions [here](http://courses.missouristate.edu/kenvollmar/mars/)
 
 ### Cleaning
-1. Run clean Makefile recipe - ```make clean```
+1. Run clean Makefile recipe
+
+```bash
+make clean
+```
 
 ## Language Specification
 
