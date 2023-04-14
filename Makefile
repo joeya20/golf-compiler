@@ -9,7 +9,7 @@ SRC_PATH := src
 BIN_PATH := bin
 BUILD_PATH := build
 
-golf: $(BUILD_PATH)/util.o $(BUILD_PATH)/lex.yy.o $(BUILD_PATH)/lexer.o $(BUILD_PATH)/parse.tab.o $(BUILD_PATH)/AstNode.o $(BUILD_PATH)/SemanticAnalyzer.o $(BUILD_PATH)/SymbolTable.o $(BUILD_PATH)/Symbol.o $(BUILD_PATH)/CodeGen.o $(BUILD_PATH)/main.o
+$(BIN_PATH)/golf: $(BUILD_PATH)/util.o $(BUILD_PATH)/lex.yy.o $(BUILD_PATH)/lexer.o $(BUILD_PATH)/parse.tab.o $(BUILD_PATH)/AstNode.o $(BUILD_PATH)/SemanticAnalyzer.o $(BUILD_PATH)/SymbolTable.o $(BUILD_PATH)/Symbol.o $(BUILD_PATH)/CodeGen.o $(BUILD_PATH)/main.o
 	$(CXX) $(CFLAGS) -o $@ $^
 
 $(BUILD_PATH)/CodeGen.o: $(SRC_PATH)/CodeGen.cpp $(SRC_PATH)/CodeGen.hpp $(SRC_PATH)/util.hpp $(SRC_PATH)/AstNode.hpp
