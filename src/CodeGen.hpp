@@ -47,6 +47,13 @@ main:
 	std::vector<std::string> forStmtExitLabels;
 	std::string lastRetLabel = "";
 	const std::string emptyStringLabel = "emptyString";
+	bool emitHalt = true;
+	bool emitGetChar = true;
+	bool emitLen = true;
+	bool emitPrintb = true;
+	bool emitPrinti = true;
+	bool emitPrintc = true;
+	bool emitPrints = true;
 
 	CodeGen(std::shared_ptr<AstNode> root);
 	void generate();

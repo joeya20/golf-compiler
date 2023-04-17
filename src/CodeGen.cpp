@@ -133,7 +133,7 @@ void CodeGen::generate() {
 
 // emit things that are always output, such as the built-in functions
 void CodeGen::emitRTS() {
-    prog += 
+    std::string RTS = 
 R"(
 
 # start of RTS
@@ -184,6 +184,25 @@ halt:
 	li, $v0, 10
 	syscall
     jr $ra
+prints:
+	li $v0 4
+	syscall
+	jr $ra
+)";
+
+// a "user-exposed" halt in case they re-define it
+// likely duplicated asm code but its not too big of a deal
+if(emitHalt) {
+    RTS += R"(
+Lhalt:
+	li, $v0, 10
+	syscall
+    jr $ra
+)";
+}
+
+if(emitGetChar) {
+    RTS += R"(
 # will populate $v0
 # literally copy-pasted from Shankar's Tutorial notes "RTS Functions"
 # https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
@@ -204,7 +223,11 @@ ret:
     lw $ra 0($sp)
     addiu $sp $sp, 4
     jr $ra
+)";
+}
 
+if(emitLen) {
+    RTS += R"(
 # assumes $a0 is loaded with address of string
 Llen:
 	# initialize length variable to 0
@@ -222,7 +245,11 @@ retLen:
 	# move length to return register and return
 	addiu $v0, $t0, 0
 	jr $ra
+)";
+}
 
+if(emitPrintb) {
+    RTS += R"(
 # assumes $a0 is loaded with boolean to print
 Lprintb:
 	# if the boolean value is 0 then print false
@@ -232,7 +259,7 @@ Lprintb:
 	sw $ra, -4($sp)
 	sw $a0, 0($sp)
 	la $a0, trueString
-	jal Lprints
+	jal prints
 	lw $a0, 0($sp)
 	lw $ra, -4($sp)
 	addiu $sp, $sp, 8
@@ -242,31 +269,47 @@ printFalse:
 	sw $ra, -4($sp)
 	sw $a0, 0($sp)
 	la $a0, falseString
-	jal Lprints
+	jal prints
 	lw $a0, 0($sp)
 	lw $ra, -4($sp)
 	addiu $sp, $sp, 8
 	jr $ra
+)";
+}
 
+if(emitPrintc) {
+    RTS += R"(
 # assume $a0 is loaded with integer to print
 Lprintc:
 	li $v0 11
 	syscall
 	jr $ra
+)";
+}
 
+if(emitPrinti) {
+    RTS += R"(
 # assume $a0 is loaded with integer to print
 Lprinti:
 	li $v0 1
 	syscall
 	jr $ra
+)";
+}
 
+if(emitPrints) {
+    RTS += R"(
 # assume $a0 is loaded with adress of string to print
 Lprints:
 	li $v0 4
 	syscall
 	jr $ra
-# end of RTS
 )";
+}
+
+RTS += "# end of RTS\n\n";
+
+prog = RTS + prog;
 }
 
 void CodeGen::emitDataSeg() {
@@ -375,6 +418,27 @@ void pass2PreOrderCallback(CodeGen* gen, std::shared_ptr<AstNode> node) {
             auto params = sign->children[0];
             auto body = node->children[2];
 
+            if(ident->attr == "halt") {
+                gen->emitHalt = false;
+            }
+            else if(ident->attr == "getChar") {
+                gen->emitGetChar = false;
+            }
+            else if(ident->attr == "len") {
+                gen->emitLen = false;
+            }
+            else if(ident->attr == "prints") {
+                gen->emitPrints = false;
+            }
+            else if(ident->attr == "printi") {
+                gen->emitPrinti = false;
+            }
+            else if(ident->attr == "printc") {
+                gen->emitPrintc = false;
+            }
+            else if(ident->attr == "printb") {
+                gen->emitPrintb = false;
+            }
             //do prologue
             //do function body
             auto label = gen->idToAsm(ident->attr);
